@@ -104,6 +104,7 @@ void lisp_print(LispObject * obj) {
 
 	default:
 	    // TODO: error here
+	    printf("ERROR");
 	    break;
 	}
     }
@@ -117,7 +118,16 @@ void print_weakrefs() {
 	printf(" -> ");
 	current = current->weakref;
     }
-    printf("\n");
+    printf("NULL\n");
+}
+
+
+void free_all() {
+    while (weakrefs_head != NULL) {
+	LispObject * next = weakrefs_head->weakref;
+	free(weakrefs_head);
+	weakrefs_head = next;
+    }
 }
 
 
@@ -153,7 +163,27 @@ int main() {
     // creating c3 adds to weakrefs:
     // (cons 1 (cons 2 (cons 3 NIL))) -> (cons 2 (cons 3 NIL)) -> (cons 3 NIL)
 
+    /* LispObject * head = weakrefs_head; */
+    /* LispObject * next = weakrefs_head->weakref; */
+    /* free(weakrefs_head); */
+    /* weakrefs_head = next; */
     print_weakrefs();
+    /* lisp_print(head); */
+
+    free_all();
+
+    print_weakrefs();
+
+    /* long i = 1; */
+    /* while (1) { */
+    /* 	lisp_obj(LISP_INT); */
+    /* 	if (i % 100000000 == 0) { */
+    /* 	    free_all(); // without this line we get memory leak */
+    /* 	    i = 1; */
+    /* 	} */
+    /* 	++i; */
+    /* } */
+
 
     /* char input[INPUT_LEN]; */
     /* puts("Press Ctrl+c to Exit\n"); */
