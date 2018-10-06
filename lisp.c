@@ -53,30 +53,73 @@ LispObject * lisp_cons(LispObject * car, LispObject * cdr) {
 
 
 LispObject * lisp_car(LispObject * obj) {
+    // TODO: if obj is NIL return NIL
     // TODO: typecheck
     return obj->car;
 }
 
 
 LispObject * lisp_cdr(LispObject * obj) {
+    // TODO: if obj is NIL return NIL
     // TODO: typecheck
     return obj->cdr;
+}
+
+
+// TODO: return str
+void lisp_tostr(LispObject * obj) {
+
+    // TODO: weird indentation
+    switch(obj->type) {
+
+    case LISP_INT:
+	printf("%d", obj->value);
+	break;
+
+    case LISP_CONS:
+        printf("(cons ");
+	lisp_tostr(obj->car);
+	printf(" ");
+	lisp_tostr(obj->cdr);
+	printf(")");
+	break;
+
+    default:
+	// TODO: error
+	break;
+    }
 }
 
 
 int main() {
 
     LispObject * x = lisp_int(1);
-    printf("%d\n", x->value);
+    lisp_tostr(x);
+    printf("\n");
+    /* printf("%d\n", x->value); */
 
     LispObject * y = lisp_int(2);
-    printf("%d\n", y->value);
+    lisp_tostr(y);
+    printf("\n");
+    /* printf("%d\n", y->value); */
 
     LispObject * c = lisp_cons(x, y);
-    printf("%d\n", x);
-    printf("%d\n", lisp_car(c));
-    printf("%d\n", lisp_car(c)->value);
-    printf("%d\n", lisp_cdr(c)->value);
+    lisp_tostr(c);
+    printf("\n");
+    /* printf("%d\n", x); */
+    /* printf("%d\n", lisp_car(c)); */
+    /* printf("%d\n", lisp_car(c)->value); */
+    /* printf("%d\n", lisp_cdr(c)->value); */
+
+    LispObject * c2 = lisp_cons(x, c);
+    lisp_tostr(c2);
+    printf("\n");
+
+    LispObject * z = lisp_int(3);
+    LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, z)));
+    lisp_tostr(c3);
+    printf("\n");
+    // (cons 1 (cons 2 (cons 3 3)))
 
     /* char input[INPUT_LEN]; */
     /* puts("Press Ctrl+c to Exit\n"); */
