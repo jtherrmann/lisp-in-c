@@ -2,6 +2,10 @@
 #include <stdlib.h>
 
 #define INPUT_LEN 2048
+#define LISP_NIL NULL
+
+// TODO: note that in SBCL (consp ()) is NIL but (listp ()) is T, so list and
+// cons must be different types
 
 // TODO: temp sources list:
 // - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
@@ -53,14 +57,16 @@ LispObject * lisp_cons(LispObject * car, LispObject * cdr) {
 
 
 LispObject * lisp_car(LispObject * obj) {
-    // TODO: if obj is NIL return NIL
+    if (obj == LISP_NIL)
+	return LISP_NIL;
     // TODO: typecheck
     return obj->car;
 }
 
 
 LispObject * lisp_cdr(LispObject * obj) {
-    // TODO: if obj is NIL return NIL
+    if (obj == LISP_NIL)
+	return LISP_NIL;
     // TODO: typecheck
     return obj->cdr;
 }
@@ -68,25 +74,29 @@ LispObject * lisp_cdr(LispObject * obj) {
 
 // TODO: return str
 void lisp_tostr(LispObject * obj) {
+    if (obj == NULL) {
+	printf("NIL");
+    }
+    else {
+	// TODO: weird indentation
+	switch(obj->type) {
 
-    // TODO: weird indentation
-    switch(obj->type) {
+	case LISP_INT:
+	    printf("%d", obj->value);
+	    break;
 
-    case LISP_INT:
-	printf("%d", obj->value);
-	break;
+	case LISP_CONS:
+	    printf("(cons ");
+	    lisp_tostr(obj->car);
+	    printf(" ");
+	    lisp_tostr(obj->cdr);
+	    printf(")");
+	    break;
 
-    case LISP_CONS:
-        printf("(cons ");
-	lisp_tostr(obj->car);
-	printf(" ");
-	lisp_tostr(obj->cdr);
-	printf(")");
-	break;
-
-    default:
-	// TODO: error
-	break;
+	default:
+	    // TODO: error here
+	    break;
+	}
     }
 }
 
@@ -116,7 +126,7 @@ int main() {
     printf("\n");
 
     LispObject * z = lisp_int(3);
-    LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, z)));
+    LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL)));
     lisp_tostr(c3);
     printf("\n");
     // (cons 1 (cons 2 (cons 3 3)))
