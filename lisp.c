@@ -4,8 +4,11 @@
 #define INPUT_LEN 2048
 #define LISP_NIL NULL
 
-// TODO: note that in SBCL (consp ()) is NIL but (listp ()) is T, so list and
-// cons must be different types
+// TODO:
+// - address TODO/FIXME throughout files
+// - note that in SBCL (consp ()) is NIL but (listp ()) is T, so list and cons
+//   must be different types
+// - split into multiple files, *.c or *.h as appropriate
 
 // TODO: temp sources list:
 // - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
@@ -72,8 +75,7 @@ LispObject * lisp_cdr(LispObject * obj) {
 }
 
 
-// TODO: return str
-void lisp_tostr(LispObject * obj) {
+void lisp_print(LispObject * obj) {
     if (obj == NULL) {
 	printf("NIL");
     }
@@ -87,9 +89,9 @@ void lisp_tostr(LispObject * obj) {
 
 	case LISP_CONS:
 	    printf("(cons ");
-	    lisp_tostr(obj->car);
+	    lisp_print(obj->car);
 	    printf(" ");
-	    lisp_tostr(obj->cdr);
+	    lisp_print(obj->cdr);
 	    printf(")");
 	    break;
 
@@ -104,17 +106,17 @@ void lisp_tostr(LispObject * obj) {
 int main() {
 
     LispObject * x = lisp_int(1);
-    lisp_tostr(x);
+    lisp_print(x);
     printf("\n");
     /* printf("%d\n", x->value); */
 
     LispObject * y = lisp_int(2);
-    lisp_tostr(y);
+    lisp_print(y);
     printf("\n");
     /* printf("%d\n", y->value); */
 
     LispObject * c = lisp_cons(x, y);
-    lisp_tostr(c);
+    lisp_print(c);
     printf("\n");
     /* printf("%d\n", x); */
     /* printf("%d\n", lisp_car(c)); */
@@ -122,12 +124,12 @@ int main() {
     /* printf("%d\n", lisp_cdr(c)->value); */
 
     LispObject * c2 = lisp_cons(x, c);
-    lisp_tostr(c2);
+    lisp_print(c2);
     printf("\n");
 
     LispObject * z = lisp_int(3);
     LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL)));
-    lisp_tostr(c3);
+    lisp_print(c3);
     printf("\n");
     // (cons 1 (cons 2 (cons 3 3)))
 
