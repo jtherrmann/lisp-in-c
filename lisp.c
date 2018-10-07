@@ -18,7 +18,6 @@
 
 #define INPUT_LEN 2048
 #define INPUT_END '\n'
-#define isdigit(ch) (ch >= '0' && ch <= '9')
 
 
 // ============================================================================
@@ -159,6 +158,7 @@ LispObject * lisp_cdr(LispObject * obj) {
 LispObject * parseint();
 LispObject * parselist();
 LispObject * parsesym();
+bool is_digit(char ch);
 int power(int, int);
 void skipspace();
 
@@ -172,7 +172,7 @@ void skipspace();
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
 LispObject * parse() {
-    if (isdigit(input[input_index]))
+    if (is_digit(input[input_index]))
 	return parseint();  // parseint fulfills parse's post.
 
     if (input[input_index] == '(') {
@@ -212,7 +212,7 @@ LispObject * parseint() {
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
 	   && input[input_index] != INPUT_END) {
-    	if (!isdigit(input[input_index])) {
+    	if (!is_digit(input[input_index])) {
     	    printf("PARSE ERROR: non-digit char in number\n");
 	    exit(1);
 	}
@@ -238,6 +238,11 @@ LispObject * parseint() {
     skipspace();
 
     return lisp_int(total);
+}
+
+
+bool is_digit(char ch) {
+    return ch >= '0' && ch <= '9';
 }
 
 
