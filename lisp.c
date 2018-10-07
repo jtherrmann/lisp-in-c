@@ -11,10 +11,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+// ============================================================================
+// Macros
+// ============================================================================
+
 #define INPUT_LEN 2048
+#define INPUT_END '\n'
+#define isdigit(ch) (ch >= '0' && ch <= '9')
+
 #define LISP_NIL NULL
 
+
+// ============================================================================
+// Global variables
+// ============================================================================
+
+char input[INPUT_LEN];
+int input_index;
+
 struct LispObject * weakrefs_head = NULL;
+
+
+// ============================================================================
+// Lisp
+// ============================================================================
 
 // TODO: weird indentation
 typedef enum {
@@ -63,7 +84,6 @@ typedef struct LispObject {
 
 } LispObject;
 
-
 LispObject * lisp_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
     // TODO: check for malloc error code?
@@ -104,6 +124,158 @@ LispObject * lisp_cdr(LispObject * obj) {
 }
 
 
+// ============================================================================
+// Parse
+// ============================================================================
+
+LispObject * parseint();
+LispObject * parselist();
+LispObject * parsesym();
+int power(int, int);
+void skipspace();
+
+// parse
+// Convert part of the input str to a Lisp object.
+//
+// Pre:
+// - input[input_index] is a non-space char.
+//
+// Post:
+// - input[input_index] is the first non-space char after the parsed substr.
+LispObject * parse() {
+    if (isdigit(input[input_index]))
+	return parseint();  // parseint fulfills parse's post.
+
+    if (input[input_index] == '(') {
+	// Skip the '(' to start at the first element of the list.
+	input_index += 1;
+	skipspace();  // Meet parselist's pre.
+	return parselist();  // parselist fulfills parse's post.
+    }
+
+    // TODO: support ' (syntax for quote) and "" (syntax for str)
+    if (input[input_index] != ')'
+	&& input[input_index] != '\''
+	&& input[input_index] != '"')
+	return parsesym();
+    
+    printf("PARSE ERROR: unrecognized char\n");
+    exit(1);
+}
+
+// TODO: handle overflow; also, make ints as large as possible (e.g. signed
+// longs or whatever)
+//
+// parseint
+// Convert part of the input str to a Lisp int.
+//
+// Pre:
+// - input[input_index] is a char in the range '0'-'9'.
+//
+// Post:
+// - input[input_index] is the first non-space char after the parsed substr.
+LispObject * parseint() {
+
+    // Go to the end of the substr that represents the int.
+    int start = input_index;
+    while (input[input_index] != '('
+	   && input[input_index] != ')'
+	   && input[input_index] != ' '
+	   && input[input_index] != INPUT_END) {
+    	if (!isdigit(input[input_index])) {
+    	    printf("PARSE ERROR: non-digit char in number\n");
+	    exit(1);
+	}
+    	++input_index;
+    }
+    int end = input_index;
+    --input_index;
+
+    // Go back through the substr, adding up the values of the digits to get
+    // the overall value of the int.
+    int total = 0;
+    int place = 0;
+    int digit;
+    while (input_index >= start) {
+	digit = input[input_index] - 0x30;
+	total += digit * power(10, place);
+	++place;
+	--input_index;
+    }
+
+    // Fulfill post.
+    input_index = end;
+    skipspace();
+
+    return lisp_int(total);
+}
+
+
+// power
+// Return b to the power of n.
+//
+// Pre:
+// - n >= 0
+int power(int b, int n) {
+    if (n == 0)
+	return 1;
+
+    int total = b;
+    while (n > 1) {
+	total *= b;
+	--n;
+    }
+    return total;
+}
+
+
+// TODO
+LispObject * parsesym() {
+    printf("PARSE ERROR: parsesym not implemented\n");
+    exit(1);
+}
+
+// parselist
+// Convert part of the input str to a Lisp list.
+//
+// Pre:
+// - input[input_index] is a non-space char.
+//
+// Post:
+// - input[input_index] is the first non-space char after the parsed substr.
+LispObject * parselist() {
+    if (input[input_index] == ')') {
+	// Fulfill post.
+	++input_index;
+	skipspace();
+
+	// Return the empty list object.
+	return LISP_NIL;
+    }
+
+    if (input[input_index] == INPUT_END) {
+	printf("PARSE ERROR: incomplete list\n");
+	exit(1);
+    }
+
+    // Invariant: pre still true.
+
+    LispObject * car = parse(input);  // parselist's pre meets parse's pre.
+    LispObject * cdr = parselist(input);
+    return lisp_cons(car, cdr);
+}
+
+
+void skipspace() {
+    while (input[input_index] == ' ')
+	++input_index;
+}
+
+
+// ============================================================================
+// Print
+// ============================================================================
+
 void lisp_print(LispObject * obj) {
     if (obj == NULL) {
 	printf("NIL");
@@ -125,9 +297,8 @@ void lisp_print(LispObject * obj) {
 	    break;
 
 	default:
-	    // TODO: error here
-	    printf("ERROR");
-	    break;
+	    printf("PRINT ERROR: unrecognized type\n");
+	    exit(1);
 	}
     }
 }
@@ -144,6 +315,10 @@ void print_weakrefs() {
 }
 
 
+// ============================================================================
+// Misc
+// ============================================================================
+
 void free_all() {
     while (weakrefs_head != NULL) {
 	LispObject * next = weakrefs_head->weakref;
@@ -153,19 +328,23 @@ void free_all() {
 }
 
 
+// ============================================================================
+// Main
+// ============================================================================
+
 int main() {
 
-    LispObject * x = lisp_int(1);
+    /* LispObject * x = lisp_int(1); */
     /* lisp_print(x); */
     /* printf("\n"); */
     /* printf("%d\n", x->value); */
 
-    LispObject * y = lisp_int(2);
+    /* LispObject * y = lisp_int(2); */
     /* lisp_print(y); */
     /* printf("\n"); */
     /* printf("%d\n", y->value); */
 
-    LispObject * c = lisp_cons(x, y);
+    /* LispObject * c = lisp_cons(x, y); */
     /* lisp_print(c); */
     /* printf("\n"); */
     /* printf("%d\n", x); */
@@ -173,12 +352,12 @@ int main() {
     /* printf("%d\n", lisp_car(c)->value); */
     /* printf("%d\n", lisp_cdr(c)->value); */
 
-    LispObject * c2 = lisp_cons(x, c);
+    /* LispObject * c2 = lisp_cons(x, c); */
     /* lisp_print(c2); */
     /* printf("\n"); */
 
-    LispObject * z = lisp_int(3);
-    LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL)));
+    /* LispObject * z = lisp_int(3); */
+    /* LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL))); */
     /* lisp_print(c3); */
     /* printf("\n"); */
 
@@ -189,12 +368,12 @@ int main() {
     /* LispObject * next = weakrefs_head->weakref; */
     /* free(weakrefs_head); */
     /* weakrefs_head = next; */
-    print_weakrefs();
+    /* print_weakrefs(); */
     /* lisp_print(head); */
 
-    free_all();
+    /* free_all(); */
 
-    print_weakrefs();
+    /* print_weakrefs(); */
 
     /* long i = 1; */
     /* while (1) { */
@@ -207,14 +386,28 @@ int main() {
     /* } */
 
 
-    /* char input[INPUT_LEN]; */
-    /* puts("Press Ctrl+c to Exit\n"); */
+    printf("Welcome to Lisp!\n");
+    printf("Exit with Ctrl-c\n\n");
 
-    /* while (1) { */
-    /* 	fputs("> ", stdout); */
-    /* 	fgets(input, INPUT_LEN, stdin); */
-    /* 	fputs(input, stdout); */
-    /* } */
+    while (1) {
+    	fputs("> ", stdout);
+    	fgets(input, INPUT_LEN, stdin);
+
+	input_index = 0;
+	skipspace();  // Meet parse's pre.
+
+	if (input[input_index] != INPUT_END) {
+	    LispObject * obj = parse();
+
+	    if (input[input_index] != INPUT_END) {
+		printf("PARSE ERROR: multiple expressions\n");
+		exit(1);
+	    }
+
+	    lisp_print(obj);
+	    printf("\n");
+	}
+    }
 
     return 0;
 }
