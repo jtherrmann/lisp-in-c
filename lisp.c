@@ -90,6 +90,11 @@ typedef struct LispObject {
 } LispObject;
 
 
+bool lisp_null(LispObject * object) {
+    return object == LISP_NIL;
+}
+
+
 bool lisp_numberp(LispObject * object) {
     return object->type == LISP_INT;
 }
@@ -101,7 +106,7 @@ bool lisp_consp(LispObject * object) {
 
 
 bool lisp_listp(LispObject * object) {
-    return lisp_consp(object) || object == LISP_NIL;
+    return lisp_consp(object) || lisp_null(object);
 }
 
 
@@ -346,7 +351,7 @@ void skipspace() {
 void print_list(LispObject * obj);
 
 void print_obj(LispObject * obj) {
-    if (obj == LISP_NIL) {
+    if (lisp_null(obj)) {
 	printf("NIL");
     }
     else {
@@ -390,7 +395,7 @@ void print_list(LispObject * obj) {
 	    break;
 	printf(" ");
     }
-    if (obj != LISP_NIL) {
+    if (!lisp_null(obj)) {
 	printf(" . ");
 	print_obj(obj);
     }
