@@ -3,10 +3,9 @@
 // - note that in SBCL (consp ()) is NIL but (listp ()) is T, so list and cons
 //   must be different types
 // - split into multiple files, *.c or *.h as appropriate
-
-// TODO: temp sources list:
-// - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
-// - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
+// - temp sources list:
+//   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
+//   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +41,7 @@ typedef enum {
 	      LISP_INT,
 	      LISP_CONS
 } LispType;
+
 
 typedef struct LispObject {
     LispType type;
@@ -83,6 +83,7 @@ typedef struct LispObject {
     struct LispObject * weakref;
 
 } LispObject;
+
 
 LispObject * lisp_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
@@ -134,6 +135,7 @@ LispObject * parsesym();
 int power(int, int);
 void skipspace();
 
+
 // parse
 // Convert part of the input str to a Lisp object.
 //
@@ -162,6 +164,7 @@ LispObject * parse() {
     printf("PARSE ERROR: unrecognized char\n");
     exit(1);
 }
+
 
 // TODO: handle overflow; also, make ints as large as possible (e.g. signed
 // longs or whatever)
@@ -235,6 +238,7 @@ LispObject * parsesym() {
     exit(1);
 }
 
+
 // parselist
 // Convert part of the input str to a Lisp list.
 //
@@ -304,6 +308,13 @@ void lisp_print(LispObject * obj) {
 }
 
 
+// ============================================================================
+// Debugging
+// ============================================================================
+
+// TODO: remove these when they're no longer needed or make them available as
+// special interpreter commands
+
 void print_weakrefs() {
     LispObject * current = weakrefs_head;
     while (current != NULL) {
@@ -314,10 +325,6 @@ void print_weakrefs() {
     printf("NULL\n");
 }
 
-
-// ============================================================================
-// Misc
-// ============================================================================
 
 void free_all() {
     while (weakrefs_head != NULL) {
