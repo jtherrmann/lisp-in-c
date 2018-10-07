@@ -409,6 +409,9 @@ void free_all() {
 // Tests
 // ============================================================================
 
+bool objs_equal(LispObject * obj1, LispObject * obj2);
+
+
 void test_power() {
     assert(power(10, 0) == 1);
     assert(power(10, 1) == 10);
@@ -434,12 +437,103 @@ void test_power() {
 }
 
 
+void test_objs_equal() {
+    LispObject * obj1;
+    LispObject * obj2;
+
+    obj1 = lisp_int(1);
+    obj2 = LISP_NIL;
+    assert(!objs_equal(obj1, obj2));
+
+    obj1 = LISP_NIL;
+    obj2 = LISP_NIL;
+    assert(objs_equal(obj1, obj2));
+
+    obj1 = lisp_int(3);
+    obj2 = lisp_int(5);
+    assert(!objs_equal(obj1, obj2));
+
+    obj1 = lisp_int(3);
+    obj2 = lisp_int(3);
+    assert(objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(1), LISP_NIL);
+    obj2 = lisp_cons(lisp_int(2), LISP_NIL);
+    assert(!objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(1), LISP_NIL);
+    obj2 = lisp_cons(lisp_int(1), LISP_NIL);
+    assert(objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(5), lisp_int(10));
+    obj2 = lisp_cons(lisp_int(3), lisp_int(10));
+    assert(!objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(5), lisp_int(10));
+    obj2 = lisp_cons(lisp_int(5), lisp_int(10));
+    assert(objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(1),
+		     lisp_cons(lisp_int(2),
+			       lisp_cons(lisp_int(3), lisp_int(3))));
+    obj2 = lisp_cons(lisp_int(1),
+		     lisp_cons(lisp_int(2),
+			       lisp_cons(lisp_int(3), LISP_NIL)));
+    assert(!objs_equal(obj1, obj2));
+
+    obj1 = lisp_cons(lisp_int(1),
+		     lisp_cons(lisp_int(2),
+			       lisp_cons(lisp_int(3), LISP_NIL)));
+    obj2 = lisp_cons(lisp_int(1),
+		     lisp_cons(lisp_int(2),
+			       lisp_cons(lisp_int(3), LISP_NIL)));
+    assert(objs_equal(obj1, obj2));
+
+    obj2 = LISP_NIL;
+    assert(!objs_equal(obj1, obj2));
+
+    obj2 = obj1;
+    assert(objs_equal(obj1, obj2));
+}
+
+
 void run_tests() {
     printf("Running tests.\n");
 
     test_power();
+    test_objs_equal();
 
     printf("All tests pass.\n\n");
+}
+
+
+// ----------------------------------------------------------------------------
+// Test utilities
+// ----------------------------------------------------------------------------
+
+bool objs_equal(LispObject * obj1, LispObject * obj2) {
+    if (obj1 == obj2)
+	return true;
+
+    if (obj1 == LISP_NIL || obj2 == LISP_NIL)
+	return false;
+
+    if (obj1->type != obj2->type)
+	return false;
+
+    switch (obj1->type) {
+
+    case LISP_INT:
+	return obj1->value == obj2->value;
+
+    case LISP_CONS:
+	return objs_equal(obj1->car, obj2->car)
+	    && objs_equal(obj1->cdr, obj2->cdr);
+
+    default:
+	printf("COMPARISON ERROR: unrecognized type\n");
+	exit(1);
+    }
 }
 
 
