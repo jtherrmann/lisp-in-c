@@ -159,7 +159,7 @@ LispObject * parse() {
     if (input[input_index] != ')'
 	&& input[input_index] != '\''
 	&& input[input_index] != '"')
-	return parsesym();
+	return parsesym();  // parsesym fulfills parse's post.
     
     printf("PARSE ERROR: unrecognized char\n");
     exit(1);
@@ -232,8 +232,45 @@ int power(int b, int n) {
 }
 
 
-// TODO
+// parsesym
+// Convert part of the input str to a Lisp symbol.
+//
+// Pre:
+// - input[input_index] is a non-space char that is not (, ), ', ", or a digit
+//   in the range 0-9.
+//
+// Post:
+// - input[input_index] is the first non-space char after the parsed substr.
 LispObject * parsesym() {
+
+    // Go to the end of the substr that represents the symbol, in order to
+    // validate it and get its length.
+    int start = input_index;
+    while (input[input_index] != '('
+	   && input[input_index] != ')'
+	   && input[input_index] != ' '
+	   && input[input_index] != INPUT_END) {
+	if (input[input_index] == '\'' || input[input_index] == '"') {
+	    printf("PARSE ERROR: invalid char in symbol\n");
+	    exit(1);
+	}
+	++input_index;
+    }
+    int end = input_index;
+    input_index = start;
+    // TODO: may change how start, end, and input_index are used here
+
+    // TODO: a LispObject of type LISP_SYM stores its print name and the length
+    // of its print name; here, check if the substr denoted by start
+    // (inclusive) and end (exclusive) is equal to the print name of any symbol
+    // in the symbol interns list (by first comparing lens and then comparing
+    // chars if lens are equal) and if it is, return the interned symbol; if
+    // it's not, create a new symbol, add it onto the front of the interns
+    // list, and return it
+    // - in lisp_obj, if the type is LISP_SYM, add the obj to the symbol
+    //   interns list rather than the weakrefs list; then sweep the interns
+    //   list for unmarked symbols during GC
+
     printf("PARSE ERROR: parsesym not implemented\n");
     exit(1);
 }
@@ -293,6 +330,8 @@ void lisp_print(LispObject * obj) {
 	    break;
 
 	case LISP_CONS:
+	    // TODO: print lists properly but maybe leave this version in as a
+	    // debug option
 	    printf("(cons ");
 	    lisp_print(obj->car);
 	    printf(" ");
