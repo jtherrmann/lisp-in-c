@@ -24,8 +24,6 @@
 #define INPUT_END '\n'
 #define isdigit(ch) (ch >= '0' && ch <= '9')
 
-#define LISP_NIL NULL
-
 
 // ============================================================================
 // Global variables
@@ -35,6 +33,7 @@ char input[INPUT_LEN];
 int input_index;
 
 struct LispObject * weakrefs_head = NULL;
+struct LispObject * LISP_NIL;
 
 
 // ============================================================================
@@ -44,7 +43,8 @@ struct LispObject * weakrefs_head = NULL;
 // TODO: weird indentation
 typedef enum {
 	      LISP_INT,
-	      LISP_CONS
+	      LISP_CONS,
+	      LISP_NILTYPE
 } LispType;
 
 
@@ -90,12 +90,35 @@ typedef struct LispObject {
 } LispObject;
 
 
+bool lisp_numberp(LispObject * object) {
+    return object->type == LISP_INT;
+}
+
+
+bool lisp_consp(LispObject * object) {
+    return object->type == LISP_CONS;
+}
+
+
+bool lisp_listp(LispObject * object) {
+    return lisp_consp(object) || object == LISP_NIL;
+}
+
+
 LispObject * lisp_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
     // TODO: check for malloc error code?
     obj->type = type;
     obj->weakref = weakrefs_head;
     weakrefs_head = obj;
+    return obj;
+}
+
+
+LispObject * lisp_nil() {
+    LispObject * obj = lisp_obj(LISP_NILTYPE);
+    obj->car = obj;
+    obj->cdr = obj;
     return obj;
 }
 
@@ -115,17 +138,15 @@ LispObject * lisp_cons(LispObject * car, LispObject * cdr) {
 
 
 LispObject * lisp_car(LispObject * obj) {
-    if (obj == LISP_NIL)
-	return LISP_NIL;
-    // TODO: typecheck
+    // TODO: proper typecheck
+    assert(lisp_listp(obj));
     return obj->car;
 }
 
 
 LispObject * lisp_cdr(LispObject * obj) {
-    if (obj == LISP_NIL)
-	return LISP_NIL;
-    // TODO: typecheck
+    // TODO: proper typecheck
+    assert(lisp_listp(obj));
     return obj->cdr;
 }
 
@@ -325,7 +346,7 @@ void skipspace() {
 void print_list(LispObject * obj);
 
 void print_obj(LispObject * obj) {
-    if (obj == NULL) {
+    if (obj == LISP_NIL) {
 	printf("NIL");
     }
     else {
@@ -340,9 +361,9 @@ void print_obj(LispObject * obj) {
 	    // TODO: print lists properly but maybe leave this version in as a
 	    // debug option
 	    /* printf("(cons "); */
-	    /* print_obj(obj->car); */
+	    /* print_obj(lisp_car(obj)); */
 	    /* printf(" "); */
-	    /* print_obj(obj->cdr); */
+	    /* print_obj(lisp_cdr(obj)); */
 	    /* printf(")"); */
 	    print_list(obj);
 	    break;
@@ -359,14 +380,13 @@ void print_obj(LispObject * obj) {
 // Print a Lisp list.
 //
 // Pre:
-// - obj != LISP_NIL
 // - obj->type == LISP_CONS
 void print_list(LispObject * obj) {
     printf("(");
     while (true) {
-	print_obj(obj->car);
-	obj = obj->cdr;
-	if (obj == LISP_NIL || obj->type != LISP_CONS)
+	print_obj(lisp_car(obj));
+	obj = lisp_cdr(obj);
+	if (obj->type != LISP_CONS)
 	    break;
 	printf(" ");
     }
@@ -515,9 +535,6 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
     if (obj1 == obj2)
 	return true;
 
-    if (obj1 == LISP_NIL || obj2 == LISP_NIL)
-	return false;
-
     if (obj1->type != obj2->type)
 	return false;
 
@@ -527,8 +544,8 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
 	return obj1->value == obj2->value;
 
     case LISP_CONS:
-	return objs_equal(obj1->car, obj2->car)
-	    && objs_equal(obj1->cdr, obj2->cdr);
+	return objs_equal(lisp_car(obj1), lisp_car(obj2))
+	    && objs_equal(lisp_cdr(obj1), lisp_cdr(obj2));
 
     default:
 	printf("COMPARISON ERROR: unrecognized type\n");
@@ -601,6 +618,11 @@ int main() {
     /* LispObject * c = lisp_cons(x, lisp_cons(lisp_cons(x, y), lisp_cons(x, LISP_NIL))); */
     /* print_obj(c); */
     /* printf("\n"); */
+
+    LISP_NIL = lisp_nil();
+
+    // TODO: add to tests
+    assert(lisp_car(LISP_NIL) == LISP_NIL && lisp_cdr(LISP_NIL) == LISP_NIL);
 
     run_tests();
 
