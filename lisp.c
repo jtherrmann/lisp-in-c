@@ -10,6 +10,7 @@
 //   null, consp, listp, symbolp, etc.
 // - replace uses of 0 and 1 as bools with false/true
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -405,6 +406,44 @@ void free_all() {
 
 
 // ============================================================================
+// Tests
+// ============================================================================
+
+void test_power() {
+    assert(power(10, 0) == 1);
+    assert(power(10, 1) == 10);
+    assert(power(10, 2) == 100);
+    assert(power(10, 3) == 1000);
+
+    assert(power(-10, 0) == 1);
+    assert(power(-10, 1) == -10);
+    assert(power(-10, 2) == 100);
+    assert(power(-10, 3) == -1000);
+
+    assert(power(-15, 3) == -3375);
+    assert(power(-12, 4) == 20736);
+    assert(power(-6, 6) == 46656);
+    assert(power(-4, 7) == -16384);
+
+    assert(power(2, 12) == 4096);
+    assert(power(3, 3) == 27);
+    assert(power(5, 3) == 125);
+    assert(power(6, 5) == 7776);
+    assert(power(12, 4) == 20736);
+    assert(power(15, 3) == 3375);
+}
+
+
+void run_tests() {
+    printf("Running tests.\n");
+
+    test_power();
+
+    printf("All tests pass.\n\n");
+}
+
+
+// ============================================================================
 // Main
 // ============================================================================
 
@@ -469,6 +508,7 @@ int main() {
     /* print_obj(c); */
     /* printf("\n"); */
 
+    run_tests();
 
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
