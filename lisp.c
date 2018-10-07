@@ -1,14 +1,9 @@
 // TODO:
 // - address TODO/FIXME throughout files
-// - note that in SBCL (consp ()) is NIL but (listp ()) is T, so list and cons
-//   must be different types
 // - split into multiple files, *.c or *.h as appropriate
 // - temp sources list:
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
-// - replace checks of ->type and == LISP_NIL with type predicates like atom,
-//   null, consp, listp, symbolp, etc.
-// - replace uses of 0 and 1 as bools with false/true
 
 #include <assert.h>
 #include <stdbool.h>
@@ -78,7 +73,7 @@ typedef struct LispObject {
 	// LISP_INT
 	int value;
 
-	// LISP_CONS
+	// LISP_CONS and LISP_NILTYPE
 	struct {
 	    struct LispObject * car;
 	    struct LispObject * cdr;
@@ -351,47 +346,40 @@ void skipspace() {
 void print_list(LispObject * obj);
 
 void print_obj(LispObject * obj) {
-    if (lisp_null(obj)) {
+    if (lisp_null(obj))
 	printf("NIL");
-    }
+
+    else if (lisp_numberp(obj))
+	printf("%d", obj->value);
+
+    else if (lisp_consp(obj))
+	// TODO: print lists properly but maybe leave this version in as a
+	// debug option
+	/* printf("(cons "); */
+	/* print_obj(lisp_car(obj)); */
+	/* printf(" "); */
+	/* print_obj(lisp_cdr(obj)); */
+	/* printf(")"); */
+	print_list(obj);
+
     else {
-	// TODO: weird indentation
-	switch(obj->type) {
-
-	case LISP_INT:
-	    printf("%d", obj->value);
-	    break;
-
-	case LISP_CONS:
-	    // TODO: print lists properly but maybe leave this version in as a
-	    // debug option
-	    /* printf("(cons "); */
-	    /* print_obj(lisp_car(obj)); */
-	    /* printf(" "); */
-	    /* print_obj(lisp_cdr(obj)); */
-	    /* printf(")"); */
-	    print_list(obj);
-	    break;
-
-	default:
-	    printf("PRINT ERROR: unrecognized type\n");
-	    exit(1);
-	}
+	printf("PRINT ERROR: unrecognized type\n");
+	exit(1);
     }
 }
 
 
 // print_list
-// Print a Lisp list.
+// Print a non-empty Lisp list.
 //
 // Pre:
-// - obj->type == LISP_CONS
+// - lisp_consp(obj)
 void print_list(LispObject * obj) {
     printf("(");
     while (true) {
 	print_obj(lisp_car(obj));
 	obj = lisp_cdr(obj);
-	if (obj->type != LISP_CONS)
+	if (!lisp_consp(obj))
 	    break;
 	printf(" ");
     }
@@ -543,19 +531,15 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
     if (obj1->type != obj2->type)
 	return false;
 
-    switch (obj1->type) {
-
-    case LISP_INT:
+    if (lisp_numberp(obj1))
 	return obj1->value == obj2->value;
 
-    case LISP_CONS:
+    if (lisp_consp(obj1))
 	return objs_equal(lisp_car(obj1), lisp_car(obj2))
 	    && objs_equal(lisp_cdr(obj1), lisp_cdr(obj2));
 
-    default:
-	printf("COMPARISON ERROR: unrecognized type\n");
-	exit(1);
-    }
+    printf("COMPARISON ERROR: unrecognized type\n");
+    exit(1);
 }
 
 
@@ -607,7 +591,7 @@ int main() {
     /* print_weakrefs(); */
 
     /* long i = 1; */
-    /* while (1) { */
+    /* while (true) { */
     /* 	lisp_obj(LISP_INT); */
     /* 	if (i % 100000000 == 0) { */
     /* 	    free_all(); // without this line we get memory leak */
@@ -634,7 +618,7 @@ int main() {
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
-    while (1) {
+    while (true) {
     	fputs("> ", stdout);
     	fgets(input, INPUT_LEN, stdin);
 
