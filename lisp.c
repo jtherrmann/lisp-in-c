@@ -6,7 +6,11 @@
 // - temp sources list:
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
+// - replace checks of ->type and == LISP_NIL with type predicates like atom,
+//   null, consp, listp, symbolp, etc.
+// - replace uses of 0 and 1 as bools with false/true
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -317,7 +321,9 @@ void skipspace() {
 // Print
 // ============================================================================
 
-void lisp_print(LispObject * obj) {
+void print_list(LispObject * obj);
+
+void print_obj(LispObject * obj) {
     if (obj == NULL) {
 	printf("NIL");
     }
@@ -332,11 +338,12 @@ void lisp_print(LispObject * obj) {
 	case LISP_CONS:
 	    // TODO: print lists properly but maybe leave this version in as a
 	    // debug option
-	    printf("(cons ");
-	    lisp_print(obj->car);
-	    printf(" ");
-	    lisp_print(obj->cdr);
-	    printf(")");
+	    /* printf("(cons "); */
+	    /* print_obj(obj->car); */
+	    /* printf(" "); */
+	    /* print_obj(obj->cdr); */
+	    /* printf(")"); */
+	    print_list(obj);
 	    break;
 
 	default:
@@ -344,6 +351,29 @@ void lisp_print(LispObject * obj) {
 	    exit(1);
 	}
     }
+}
+
+
+// print_list
+// Print a Lisp list.
+//
+// Pre:
+// - obj != LISP_NIL
+// - obj->type == LISP_CONS
+void print_list(LispObject * obj) {
+    printf("(");
+    while (true) {
+	print_obj(obj->car);
+	obj = obj->cdr;
+	if (obj == LISP_NIL || obj->type != LISP_CONS)
+	    break;
+	printf(" ");
+    }
+    if (obj != LISP_NIL) {
+	printf(" . ");
+	print_obj(obj);
+    }
+    printf(")");
 }
 
 
@@ -357,7 +387,7 @@ void lisp_print(LispObject * obj) {
 void print_weakrefs() {
     LispObject * current = weakrefs_head;
     while (current != NULL) {
-	lisp_print(current);
+	print_obj(current);
 	printf(" -> ");
 	current = current->weakref;
     }
@@ -381,17 +411,17 @@ void free_all() {
 int main() {
 
     /* LispObject * x = lisp_int(1); */
-    /* lisp_print(x); */
+    /* print_obj(x); */
     /* printf("\n"); */
     /* printf("%d\n", x->value); */
 
     /* LispObject * y = lisp_int(2); */
-    /* lisp_print(y); */
+    /* print_obj(y); */
     /* printf("\n"); */
     /* printf("%d\n", y->value); */
 
     /* LispObject * c = lisp_cons(x, y); */
-    /* lisp_print(c); */
+    /* print_obj(c); */
     /* printf("\n"); */
     /* printf("%d\n", x); */
     /* printf("%d\n", lisp_car(c)); */
@@ -399,12 +429,12 @@ int main() {
     /* printf("%d\n", lisp_cdr(c)->value); */
 
     /* LispObject * c2 = lisp_cons(x, c); */
-    /* lisp_print(c2); */
+    /* print_obj(c2); */
     /* printf("\n"); */
 
     /* LispObject * z = lisp_int(3); */
     /* LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL))); */
-    /* lisp_print(c3); */
+    /* print_obj(c3); */
     /* printf("\n"); */
 
     // creating c3 adds to weakrefs:
@@ -415,7 +445,7 @@ int main() {
     /* free(weakrefs_head); */
     /* weakrefs_head = next; */
     /* print_weakrefs(); */
-    /* lisp_print(head); */
+    /* print_obj(head); */
 
     /* free_all(); */
 
@@ -430,6 +460,14 @@ int main() {
     /* 	} */
     /* 	++i; */
     /* } */
+
+
+    /* LispObject * x = lisp_int(1); */
+    /* LispObject * y = lisp_int(2); */
+    /* LispObject * c = lisp_cons(x, lisp_cons(x, y)); */
+    /* LispObject * c = lisp_cons(x, lisp_cons(lisp_cons(x, y), lisp_cons(x, LISP_NIL))); */
+    /* print_obj(c); */
+    /* printf("\n"); */
 
 
     printf("Welcome to Lisp!\n");
@@ -450,7 +488,7 @@ int main() {
 		exit(1);
 	    }
 
-	    lisp_print(obj);
+	    print_obj(obj);
 	    printf("\n");
 	}
     }
