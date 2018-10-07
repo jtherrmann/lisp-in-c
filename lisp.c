@@ -4,6 +4,7 @@
 // - temp sources list:
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
+// - add tests
 
 #include <assert.h>
 #include <stdbool.h>
