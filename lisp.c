@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 // ============================================================================
@@ -162,6 +163,7 @@ bool is_digit(char ch);
 int power(int, int);
 void skipspace();
 
+// TODO: parse negative ints
 
 // parse
 // Convert part of the input str to a Lisp object.
@@ -516,11 +518,63 @@ void test_objs_equal() {
 }
 
 
+// TODO: how to append the value of INPUT_END, instead of '\n', to the test
+// input strs?
+void test_parse() {
+    char input_int[] = "123\n";
+    strcpy(input, input_int);
+    input_index = 0;
+    assert(objs_equal(parse(), lisp_int(123)));
+
+    char input_nil[] = "()\n";
+    strcpy(input, input_nil);
+    input_index = 0;
+    assert(objs_equal(parse(), LISP_NIL));
+
+
+    // ------------------------------------------------------------------------
+    // input_list1
+
+    char input_list1[] = "(1 2 3)\n";
+    strcpy(input, input_list1);
+    input_index = 0;
+
+    // (cons 1 (cons 2 (cons 3 NIL)))
+    LispObject * list1 =
+	lisp_cons(lisp_int(1),
+		  lisp_cons(lisp_int(2),
+			    lisp_cons(lisp_int(3), LISP_NIL)));
+
+    assert(objs_equal(parse(), list1));
+
+
+    // ------------------------------------------------------------------------
+    // input_list2
+
+    char input_list2[] = "(1 2 3 (20 30 ()) 500)\n";
+    strcpy(input, input_list2);
+    input_index = 0;
+
+    // (cons 1 (cons 2 (cons 3 (cons (cons 20 (cons 30 (cons NIL NIL))) (cons 500 NIL)))))
+    LispObject * list2 =
+	lisp_cons(lisp_int(1),
+		  lisp_cons(lisp_int(2),
+			    lisp_cons(lisp_int(3),
+				      lisp_cons(lisp_cons(lisp_int(20),
+							  lisp_cons(lisp_int(30),
+								    lisp_cons(LISP_NIL, LISP_NIL))),
+						lisp_cons(lisp_int(500), LISP_NIL)))));
+
+    assert(objs_equal(parse(), list2));
+}
+
+
 void run_tests() {
     printf("Running tests.\n");
 
-    test_power();
     test_objs_equal();
+    test_power();
+    test_parse();
 
     printf("All tests pass.\n\n");
 }
