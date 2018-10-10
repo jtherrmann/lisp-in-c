@@ -15,6 +15,7 @@
 #include <string.h>
 
 #include "builtins.h"
+#include "gc.h"
 
 
 // ============================================================================
@@ -231,6 +232,8 @@ void skipspace() {
 // ============================================================================
 // Print
 // ============================================================================
+
+// FIXME: move to separate header/source so can be shared with gc.c
 
 void print_list(LispObject * obj);
 
@@ -525,6 +528,7 @@ int main() {
     /* printf("\n"); */
 
     LISP_NIL = get_nil();
+    weakrefs_head = NULL;
 
     // TODO: add to tests
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
