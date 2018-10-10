@@ -14,7 +14,7 @@
 //
 // Functions not declared in header.
 
-LispObject * _get_obj(LispType type) {
+LispObject * get_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
     // TODO: check for malloc error code?
     obj->type = type;
@@ -33,7 +33,7 @@ LispObject * _get_obj(LispType type) {
 // ----------------------------------------------------------------------------
 
 LispObject * get_nil() {
-    LispObject * obj = _get_obj(LISP_NILTYPE);
+    LispObject * obj = get_obj(LISP_NILTYPE);
     obj->car = obj;
     obj->cdr = obj;
     return obj;
@@ -41,7 +41,7 @@ LispObject * get_nil() {
 
 
 LispObject * get_int(int value) {
-    LispObject * obj = _get_obj(LISP_INT);
+    LispObject * obj = get_obj(LISP_INT);
     obj->value = value;
 }
 
@@ -51,7 +51,7 @@ LispObject * get_int(int value) {
 // ----------------------------------------------------------------------------
 
 LispObject * b_cons(LispObject * car, LispObject * cdr) {
-    LispObject * obj = _get_obj(LISP_CONS);
+    LispObject * obj = get_obj(LISP_CONS);
     obj->car = car;
     obj->cdr = cdr;
     return obj;
