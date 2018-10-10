@@ -1,5 +1,9 @@
 // builtins.h
 // Header for Lisp builtins.
+//
+// Function names are prefixed with b_ if they implement Lisp functions of the
+// same name (without the prefix). For example, b_cons, b_car, and b_cdr
+// implement cons, car, and cdr.
 
 
 #ifndef BUILTINS_H
@@ -81,33 +85,37 @@ struct LispObjectStruct {
 // Internal constructors
 // ----------------------------------------------------------------------------
 
-LispObject * lisp_nil();
+// get_nil
+// Construct the empty list object.
+LispObject * get_nil();
 
-LispObject * lisp_int(int value);
+// get_int
+// Construct a Lisp int.
+LispObject * get_int(int value);
 
 
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
 
-LispObject * lisp_cons(LispObject * car, LispObject * cdr);
+LispObject * b_cons(LispObject * car, LispObject * cdr);
 
-LispObject * lisp_car(LispObject * obj);
+LispObject * b_car(LispObject * obj);
 
-LispObject * lisp_cdr(LispObject * obj);
+LispObject * b_cdr(LispObject * obj);
 
 
 // ============================================================================
 // Type predicates
 // ============================================================================
 
-bool lisp_null(LispObject * object);
+bool b_null(LispObject * object);
 
-bool lisp_numberp(LispObject * object);
+bool b_numberp(LispObject * object);
 
-bool lisp_consp(LispObject * object);
+bool b_consp(LispObject * object);
 
-bool lisp_listp(LispObject * object);
+bool b_listp(LispObject * object);
 
 
 #endif

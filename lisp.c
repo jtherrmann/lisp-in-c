@@ -120,7 +120,7 @@ LispObject * parseint() {
     input_index = end;
     skipspace();
 
-    return lisp_int(total);
+    return get_int(total);
 }
 
 
@@ -218,7 +218,7 @@ LispObject * parselist() {
 
     LispObject * car = parse(input);  // parselist's pre meets parse's pre.
     LispObject * cdr = parselist(input);
-    return lisp_cons(car, cdr);
+    return b_cons(car, cdr);
 }
 
 
@@ -235,19 +235,19 @@ void skipspace() {
 void print_list(LispObject * obj);
 
 void print_obj(LispObject * obj) {
-    if (lisp_null(obj))
+    if (b_null(obj))
 	printf("NIL");
 
-    else if (lisp_numberp(obj))
+    else if (b_numberp(obj))
 	printf("%d", obj->value);
 
-    else if (lisp_consp(obj))
+    else if (b_consp(obj))
 	// TODO: print lists properly but maybe leave this version in as a
 	// debug option
 	/* printf("(cons "); */
-	/* print_obj(lisp_car(obj)); */
+	/* print_obj(b_car(obj)); */
 	/* printf(" "); */
-	/* print_obj(lisp_cdr(obj)); */
+	/* print_obj(b_cdr(obj)); */
 	/* printf(")"); */
 	print_list(obj);
 
@@ -262,17 +262,17 @@ void print_obj(LispObject * obj) {
 // Print a non-empty Lisp list.
 //
 // Pre:
-// - lisp_consp(obj)
+// - b_consp(obj)
 void print_list(LispObject * obj) {
     printf("(");
     while (true) {
-	print_obj(lisp_car(obj));
-	obj = lisp_cdr(obj);
-	if (!lisp_consp(obj))
+	print_obj(b_car(obj));
+	obj = b_cdr(obj);
+	if (!b_consp(obj))
 	    break;
 	printf(" ");
     }
-    if (!lisp_null(obj)) {
+    if (!b_null(obj)) {
 	printf(" . ");
 	print_obj(obj);
     }
@@ -316,7 +316,7 @@ void test_objs_equal() {
     LispObject * obj1;
     LispObject * obj2;
 
-    obj1 = lisp_int(1);
+    obj1 = get_int(1);
     obj2 = LISP_NIL;
     assert(!objs_equal(obj1, obj2));
 
@@ -324,44 +324,44 @@ void test_objs_equal() {
     obj2 = LISP_NIL;
     assert(objs_equal(obj1, obj2));
 
-    obj1 = lisp_int(3);
-    obj2 = lisp_int(5);
+    obj1 = get_int(3);
+    obj2 = get_int(5);
     assert(!objs_equal(obj1, obj2));
 
-    obj1 = lisp_int(3);
-    obj2 = lisp_int(3);
+    obj1 = get_int(3);
+    obj2 = get_int(3);
     assert(objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(1), LISP_NIL);
-    obj2 = lisp_cons(lisp_int(2), LISP_NIL);
+    obj1 = b_cons(get_int(1), LISP_NIL);
+    obj2 = b_cons(get_int(2), LISP_NIL);
     assert(!objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(1), LISP_NIL);
-    obj2 = lisp_cons(lisp_int(1), LISP_NIL);
+    obj1 = b_cons(get_int(1), LISP_NIL);
+    obj2 = b_cons(get_int(1), LISP_NIL);
     assert(objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(5), lisp_int(10));
-    obj2 = lisp_cons(lisp_int(3), lisp_int(10));
+    obj1 = b_cons(get_int(5), get_int(10));
+    obj2 = b_cons(get_int(3), get_int(10));
     assert(!objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(5), lisp_int(10));
-    obj2 = lisp_cons(lisp_int(5), lisp_int(10));
+    obj1 = b_cons(get_int(5), get_int(10));
+    obj2 = b_cons(get_int(5), get_int(10));
     assert(objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(1),
-		     lisp_cons(lisp_int(2),
-			       lisp_cons(lisp_int(3), lisp_int(3))));
-    obj2 = lisp_cons(lisp_int(1),
-		     lisp_cons(lisp_int(2),
-			       lisp_cons(lisp_int(3), LISP_NIL)));
+    obj1 = b_cons(get_int(1),
+		     b_cons(get_int(2),
+			       b_cons(get_int(3), get_int(3))));
+    obj2 = b_cons(get_int(1),
+		     b_cons(get_int(2),
+			       b_cons(get_int(3), LISP_NIL)));
     assert(!objs_equal(obj1, obj2));
 
-    obj1 = lisp_cons(lisp_int(1),
-		     lisp_cons(lisp_int(2),
-			       lisp_cons(lisp_int(3), LISP_NIL)));
-    obj2 = lisp_cons(lisp_int(1),
-		     lisp_cons(lisp_int(2),
-			       lisp_cons(lisp_int(3), LISP_NIL)));
+    obj1 = b_cons(get_int(1),
+		     b_cons(get_int(2),
+			       b_cons(get_int(3), LISP_NIL)));
+    obj2 = b_cons(get_int(1),
+		     b_cons(get_int(2),
+			       b_cons(get_int(3), LISP_NIL)));
     assert(objs_equal(obj1, obj2));
 
     obj2 = LISP_NIL;
@@ -378,7 +378,7 @@ void test_parse() {
     char input_int[] = "123\n";
     strcpy(input, input_int);
     input_index = 0;
-    assert(objs_equal(parse(), lisp_int(123)));
+    assert(objs_equal(parse(), get_int(123)));
 
     char input_nil[] = "()\n";
     strcpy(input, input_nil);
@@ -395,9 +395,9 @@ void test_parse() {
 
     // (cons 1 (cons 2 (cons 3 NIL)))
     LispObject * list1 =
-	lisp_cons(lisp_int(1),
-		  lisp_cons(lisp_int(2),
-			    lisp_cons(lisp_int(3), LISP_NIL)));
+	b_cons(get_int(1),
+		  b_cons(get_int(2),
+			    b_cons(get_int(3), LISP_NIL)));
 
     assert(objs_equal(parse(), list1));
 
@@ -411,13 +411,13 @@ void test_parse() {
 
     // (cons 1 (cons 2 (cons 3 (cons (cons 20 (cons 30 (cons NIL NIL))) (cons 500 NIL)))))
     LispObject * list2 =
-	lisp_cons(lisp_int(1),
-		  lisp_cons(lisp_int(2),
-			    lisp_cons(lisp_int(3),
-				      lisp_cons(lisp_cons(lisp_int(20),
-							  lisp_cons(lisp_int(30),
-								    lisp_cons(LISP_NIL, LISP_NIL))),
-						lisp_cons(lisp_int(500), LISP_NIL)))));
+	b_cons(get_int(1),
+		  b_cons(get_int(2),
+			    b_cons(get_int(3),
+				      b_cons(b_cons(get_int(20),
+							  b_cons(get_int(30),
+								    b_cons(LISP_NIL, LISP_NIL))),
+						b_cons(get_int(500), LISP_NIL)))));
 
     assert(objs_equal(parse(), list2));
 }
@@ -445,12 +445,12 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
     if (obj1->type != obj2->type)
 	return false;
 
-    if (lisp_numberp(obj1))
+    if (b_numberp(obj1))
 	return obj1->value == obj2->value;
 
-    if (lisp_consp(obj1))
-	return objs_equal(lisp_car(obj1), lisp_car(obj2))
-	    && objs_equal(lisp_cdr(obj1), lisp_cdr(obj2));
+    if (b_consp(obj1))
+	return objs_equal(b_car(obj1), b_car(obj2))
+	    && objs_equal(b_cdr(obj1), b_cdr(obj2));
 
     printf("COMPARISON ERROR: unrecognized type\n");
     exit(1);
@@ -463,30 +463,30 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
 
 int main() {
 
-    /* LispObject * x = lisp_int(1); */
+    /* LispObject * x = get_int(1); */
     /* print_obj(x); */
     /* printf("\n"); */
     /* printf("%d\n", x->value); */
 
-    /* LispObject * y = lisp_int(2); */
+    /* LispObject * y = get_int(2); */
     /* print_obj(y); */
     /* printf("\n"); */
     /* printf("%d\n", y->value); */
 
-    /* LispObject * c = lisp_cons(x, y); */
+    /* LispObject * c = b_cons(x, y); */
     /* print_obj(c); */
     /* printf("\n"); */
     /* printf("%d\n", x); */
-    /* printf("%d\n", lisp_car(c)); */
-    /* printf("%d\n", lisp_car(c)->value); */
-    /* printf("%d\n", lisp_cdr(c)->value); */
+    /* printf("%d\n", b_car(c)); */
+    /* printf("%d\n", b_car(c)->value); */
+    /* printf("%d\n", b_cdr(c)->value); */
 
-    /* LispObject * c2 = lisp_cons(x, c); */
+    /* LispObject * c2 = b_cons(x, c); */
     /* print_obj(c2); */
     /* printf("\n"); */
 
-    /* LispObject * z = lisp_int(3); */
-    /* LispObject * c3 = lisp_cons(x, lisp_cons(y, lisp_cons(z, LISP_NIL))); */
+    /* LispObject * z = get_int(3); */
+    /* LispObject * c3 = b_cons(x, b_cons(y, b_cons(z, LISP_NIL))); */
     /* print_obj(c3); */
     /* printf("\n"); */
 
@@ -515,17 +515,17 @@ int main() {
     /* } */
 
 
-    /* LispObject * x = lisp_int(1); */
-    /* LispObject * y = lisp_int(2); */
-    /* LispObject * c = lisp_cons(x, lisp_cons(x, y)); */
-    /* LispObject * c = lisp_cons(x, lisp_cons(lisp_cons(x, y), lisp_cons(x, LISP_NIL))); */
+    /* LispObject * x = get_int(1); */
+    /* LispObject * y = get_int(2); */
+    /* LispObject * c = b_cons(x, b_cons(x, y)); */
+    /* LispObject * c = b_cons(x, b_cons(b_cons(x, y), b_cons(x, LISP_NIL))); */
     /* print_obj(c); */
     /* printf("\n"); */
 
-    LISP_NIL = lisp_nil();
+    LISP_NIL = get_nil();
 
     // TODO: add to tests
-    assert(lisp_car(LISP_NIL) == LISP_NIL && lisp_cdr(LISP_NIL) == LISP_NIL);
+    assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
 
     run_tests();
 
