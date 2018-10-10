@@ -5,6 +5,8 @@
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
 // - add tests
+// - remove unneeded #include lines
+// - comment all func prototypes (name, summary, pre & post)
 
 #include <assert.h>
 #include <stdbool.h>
@@ -29,58 +31,6 @@
 
 char input[INPUT_LEN];
 int input_index;
-
-LispObject * weakrefs_head = NULL;
-
-
-// ============================================================================
-// Lisp
-// ============================================================================
-
-LispObject * lisp_obj(LispType type) {
-    LispObject * obj = malloc(sizeof(LispObject));
-    // TODO: check for malloc error code?
-    obj->type = type;
-    obj->weakref = weakrefs_head;
-    weakrefs_head = obj;
-    return obj;
-}
-
-
-LispObject * lisp_nil() {
-    LispObject * obj = lisp_obj(LISP_NILTYPE);
-    obj->car = obj;
-    obj->cdr = obj;
-    return obj;
-}
-
-
-LispObject * lisp_int(int value) {
-    LispObject * obj = lisp_obj(LISP_INT);
-    obj->value = value;
-}
-
-
-LispObject * lisp_cons(LispObject * car, LispObject * cdr) {
-    LispObject * obj = lisp_obj(LISP_CONS);
-    obj->car = car;
-    obj->cdr = cdr;
-    return obj;
-}
-
-
-LispObject * lisp_car(LispObject * obj) {
-    // TODO: proper typecheck
-    assert(lisp_listp(obj));
-    return obj->car;
-}
-
-
-LispObject * lisp_cdr(LispObject * obj) {
-    // TODO: proper typecheck
-    assert(lisp_listp(obj));
-    return obj->cdr;
-}
 
 
 // ============================================================================
@@ -327,33 +277,6 @@ void print_list(LispObject * obj) {
 	print_obj(obj);
     }
     printf(")");
-}
-
-
-// ============================================================================
-// Debugging
-// ============================================================================
-
-// TODO: remove these when they're no longer needed or make them available as
-// special interpreter commands
-
-void print_weakrefs() {
-    LispObject * current = weakrefs_head;
-    while (current != NULL) {
-	print_obj(current);
-	printf(" -> ");
-	current = current->weakref;
-    }
-    printf("NULL\n");
-}
-
-
-void free_all() {
-    while (weakrefs_head != NULL) {
-	LispObject * next = weakrefs_head->weakref;
-	free(weakrefs_head);
-	weakrefs_head = next;
-    }
 }
 
 

@@ -1,8 +1,20 @@
-#include <stdbool.h>
+// builtins.h
+// Header for Lisp builtins.
 
 
 #ifndef BUILTINS_H
 #define BUILTINS_H
+
+
+#include <stdbool.h>
+#include <stdlib.h>
+
+
+// ============================================================================
+// typedefs
+// ============================================================================
+
+typedef struct LispObjectStruct LispObject;
 
 // TODO: weird indentation
 typedef enum {
@@ -12,8 +24,16 @@ typedef enum {
 } LispType;
 
 
-typedef struct LispObjectStruct LispObject;
+// ============================================================================
+// Global variables
+// ============================================================================
 
+LispObject * LISP_NIL;
+
+
+// ============================================================================
+// LispObject
+// ============================================================================
 
 struct LispObjectStruct {
     LispType type;
@@ -56,7 +76,26 @@ struct LispObjectStruct {
 
 };
 
-LispObject * LISP_NIL;
+
+// ----------------------------------------------------------------------------
+// Internal constructors
+// ----------------------------------------------------------------------------
+
+LispObject * lisp_nil();
+
+LispObject * lisp_int(int value);
+
+
+// ----------------------------------------------------------------------------
+// cons, car, and cdr
+// ----------------------------------------------------------------------------
+
+LispObject * lisp_cons(LispObject * car, LispObject * cdr);
+
+LispObject * lisp_car(LispObject * obj);
+
+LispObject * lisp_cdr(LispObject * obj);
+
 
 // ============================================================================
 // Type predicates
@@ -69,5 +108,6 @@ bool lisp_numberp(LispObject * object);
 bool lisp_consp(LispObject * object);
 
 bool lisp_listp(LispObject * object);
+
 
 #endif
