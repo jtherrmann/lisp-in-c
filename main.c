@@ -461,6 +461,8 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
 // Main
 // ============================================================================
 
+// TODO: use the library used in build your own lisp to allow arrow keys and
+// history; also allow Ctrl-h as backspace
 int main() {
 
     /* LispObject * x = get_int(1); */
