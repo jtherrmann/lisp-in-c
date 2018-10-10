@@ -1,6 +1,8 @@
-#ifndef LISP_H
-#define LISP_H
+#include <stdbool.h>
 
+
+#ifndef BUILTINS_H
+#define BUILTINS_H
 
 // TODO: weird indentation
 typedef enum {
@@ -10,7 +12,10 @@ typedef enum {
 } LispType;
 
 
-typedef struct LispObject {
+typedef struct LispObjectStruct LispObject;
+
+
+struct LispObjectStruct {
     LispType type;
 
     // TODO: temp notes:
@@ -42,14 +47,27 @@ typedef struct LispObject {
 
 	// LISP_CONS and LISP_NILTYPE
 	struct {
-	    struct LispObject * car;
-	    struct LispObject * cdr;
+	    LispObject * car;
+	    LispObject * cdr;
 	};
     };
 
-    struct LispObject * weakref;
+    LispObject * weakref;
 
-} LispObject;
+};
 
+LispObject * LISP_NIL;
+
+// ============================================================================
+// Type predicates
+// ============================================================================
+
+bool lisp_null(LispObject * object);
+
+bool lisp_numberp(LispObject * object);
+
+bool lisp_consp(LispObject * object);
+
+bool lisp_listp(LispObject * object);
 
 #endif

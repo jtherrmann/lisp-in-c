@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lisp.h"
+#include "builtins.h"
 
 
 // ============================================================================
@@ -30,33 +30,12 @@
 char input[INPUT_LEN];
 int input_index;
 
-struct LispObject * weakrefs_head = NULL;
-struct LispObject * LISP_NIL;
+LispObject * weakrefs_head = NULL;
 
 
 // ============================================================================
 // Lisp
 // ============================================================================
-
-bool lisp_null(LispObject * object) {
-    return object == LISP_NIL;
-}
-
-
-bool lisp_numberp(LispObject * object) {
-    return object->type == LISP_INT;
-}
-
-
-bool lisp_consp(LispObject * object) {
-    return object->type == LISP_CONS;
-}
-
-
-bool lisp_listp(LispObject * object) {
-    return lisp_consp(object) || lisp_null(object);
-}
-
 
 LispObject * lisp_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
