@@ -1,10 +1,10 @@
-// builtins.c
-// Source for Lisp builtins.
+// obj.c
+// Source for functions related to Lisp objects.
 
 
 #include <assert.h>
 
-#include "builtins.h"
+#include "obj.h"
 #include "gc.h"
 
 

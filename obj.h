@@ -1,13 +1,9 @@
-// builtins.h
-// Header for Lisp builtins.
-//
-// Function names are prefixed with b_ if they implement Lisp functions of the
-// same name (without the prefix). For example, b_cons, b_car, and b_cdr
-// implement cons, car, and cdr.
+// obj.h
+// Header for Lisp objects and related functions.
 
 
-#ifndef BUILTINS_H
-#define BUILTINS_H
+#ifndef OBJ_H
+#define OBJ_H
 
 
 #include <stdbool.h>

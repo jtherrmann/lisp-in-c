@@ -7,6 +7,10 @@
 // - add tests
 // - remove unneeded #include lines
 // - comment all func prototypes (name, summary, pre & post)
+// - document (b_ for builtin):
+// Function names are prefixed with b_ if they implement Lisp functions of the
+// same name (without the prefix). For example, b_cons, b_car, and b_cdr
+// implement cons, car, and cdr.
 
 #include <assert.h>
 #include <stdbool.h>
@@ -14,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "builtins.h"
+#include "obj.h"
 #include "gc.h"
 
 
