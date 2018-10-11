@@ -241,9 +241,16 @@ void test_parse_func();
 // ----------------------------------------------------------------------------
 
 // Public test function.
-void test_parse() {
+int test_parse() {
+    int total = 0;
+
     test_power();
+    ++total;
+
     test_parse_func();
+    ++total;
+
+    return total;
 }
 
 

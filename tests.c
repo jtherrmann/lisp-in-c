@@ -11,7 +11,7 @@
 
 
 // Main internal test function.
-void test_tests();
+int test_tests();
 
 
 // ============================================================================
@@ -21,9 +21,12 @@ void test_tests();
 void run_tests() {
     printf("Running tests.\n");
 
-    test_tests();
-    test_parse();
+    int total = 0;
 
+    total += test_tests();
+    total += test_parse();
+
+    printf("Ran %d tests.\n", total);
     printf("All tests pass.\n\n");
 }
 
@@ -63,8 +66,13 @@ void test_objs_equal();
 // ----------------------------------------------------------------------------
 
 // Main internal test function.
-void test_tests() {
+int test_tests() {
+    int total = 0;
+
     test_objs_equal();
+    ++total;
+
+    return total;
 }
 
 

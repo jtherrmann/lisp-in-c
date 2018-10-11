@@ -29,7 +29,7 @@ int input_index;
 // Public functions
 // ============================================================================
 
-void test_parse();
+int test_parse();
 
 LispObject * parse();
 
