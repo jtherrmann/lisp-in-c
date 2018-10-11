@@ -20,6 +20,7 @@
 
 #include "obj.h"
 #include "gc.h"
+#include "print.h"
 
 
 // ============================================================================
@@ -230,60 +231,6 @@ LispObject * parselist() {
 void skipspace() {
     while (input[input_index] == ' ')
 	++input_index;
-}
-
-
-// ============================================================================
-// Print
-// ============================================================================
-
-// FIXME: move to separate header/source so can be shared with gc.c
-
-void print_list(LispObject * obj);
-
-void print_obj(LispObject * obj) {
-    if (b_null(obj))
-	printf("NIL");
-
-    else if (b_numberp(obj))
-	printf("%d", obj->value);
-
-    else if (b_consp(obj))
-	// TODO: print lists properly but maybe leave this version in as a
-	// debug option
-	/* printf("(cons "); */
-	/* print_obj(b_car(obj)); */
-	/* printf(" "); */
-	/* print_obj(b_cdr(obj)); */
-	/* printf(")"); */
-	print_list(obj);
-
-    else {
-	printf("PRINT ERROR: unrecognized type\n");
-	exit(1);
-    }
-}
-
-
-// print_list
-// Print a non-empty Lisp list.
-//
-// Pre:
-// - b_consp(obj)
-void print_list(LispObject * obj) {
-    printf("(");
-    while (true) {
-	print_obj(b_car(obj));
-	obj = b_cdr(obj);
-	if (!b_consp(obj))
-	    break;
-	printf(" ");
-    }
-    if (!b_null(obj)) {
-	printf(" . ");
-	print_obj(obj);
-    }
-    printf(")");
 }
 
 
