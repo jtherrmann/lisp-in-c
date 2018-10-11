@@ -19,6 +19,7 @@ typedef struct LispObjectStruct LispObject;
 // TODO: weird indentation
 typedef enum {
 	      LISP_INT,
+	      LISP_SYM,
 	      LISP_CONS,
 	      LISP_NILTYPE
 } LispType;
@@ -105,13 +106,15 @@ LispObject * b_cdr(LispObject * obj);
 // Type predicates
 // ============================================================================
 
-bool b_null(LispObject * object);
+bool b_null(LispObject * obj);
 
-bool b_numberp(LispObject * object);
+bool b_numberp(LispObject * obj);
 
-bool b_consp(LispObject * object);
+bool b_symbolp(LispObject * obj);
 
-bool b_listp(LispObject * object);
+bool b_consp(LispObject * obj);
+
+bool b_listp(LispObject * obj);
 
 
 #endif

@@ -76,22 +76,27 @@ LispObject * b_cdr(LispObject * obj) {
 // Type predicates
 // ============================================================================
 
-bool b_null(LispObject * object) {
-    return object == LISP_NIL;
+bool b_null(LispObject * obj) {
+    return obj == LISP_NIL;
 }
 
 
-bool b_numberp(LispObject * object) {
-    return object->type == LISP_INT;
+bool b_numberp(LispObject * obj) {
+    return obj->type == LISP_INT;
 }
 
 
-bool b_consp(LispObject * object) {
-    return object->type == LISP_CONS;
+bool b_symbolp(LispObject * obj) {
+    return obj->type == LISP_SYM;
 }
 
 
-bool b_listp(LispObject * object) {
-    return b_consp(object) || b_null(object);
+bool b_consp(LispObject * obj) {
+    return obj->type == LISP_CONS;
+}
+
+
+bool b_listp(LispObject * obj) {
+    return b_consp(obj) || b_null(obj);
 }
 
