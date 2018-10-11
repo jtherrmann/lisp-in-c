@@ -161,6 +161,10 @@ LispObject * parsesym() {
     // - in lisp_obj, if the type is LISP_SYM, add the obj to the symbol
     //   interns list rather than the weakrefs list; then sweep the interns
     //   list for unmarked symbols during GC
+    // - alternatively could store interns in a hash table to find out more
+    //   quickly if one already exists; then sweep each list in the hash
+    //   table during GC
+    //   - K&R C p. 143
 
     printf("PARSE ERROR: parsesym not implemented\n");
     exit(1);
