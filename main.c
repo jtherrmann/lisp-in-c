@@ -12,6 +12,8 @@
 // Function names are prefixed with b_ if they implement Lisp functions of the
 // same name (without the prefix). For example, b_cons, b_car, and b_cdr
 // implement cons, car, and cdr.
+// - check for malloc failure wherever it's used; look for other funcs that
+//   need checked for errors
 
 #include <assert.h>
 #include <stdbool.h>
