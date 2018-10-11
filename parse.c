@@ -89,7 +89,7 @@ void skipspace() {
 LispObject * parseint() {
 
     // Go to the end of the substr that represents the int.
-    int start = input_index;
+    int begin = input_index;
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
@@ -108,7 +108,7 @@ LispObject * parseint() {
     int total = 0;
     int place = 0;
     int digit;
-    while (input_index >= start) {
+    while (input_index >= begin) {
 	digit = input[input_index] - 0x30;
 	total += digit * power(10, place);
 	++place;
