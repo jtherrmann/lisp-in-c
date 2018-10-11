@@ -123,6 +123,8 @@ LispObject * parseint() {
 }
 
 
+// TODO: tests in test_parse_func
+//
 // parsesym
 // Convert part of the input str to a Lisp symbol.
 //
@@ -134,9 +136,8 @@ LispObject * parseint() {
 // - input[input_index] is the first non-space char after the parsed substr.
 LispObject * parsesym() {
 
-    // Go to the end of the substr that represents the symbol, in order to
-    // validate it and get its length.
-    int start = input_index;
+    // Go to the end of the substr that represents the symbol.
+    int begin = input_index;
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
@@ -148,11 +149,11 @@ LispObject * parsesym() {
 	++input_index;
     }
     int end = input_index;
-    input_index = start;
-    // TODO: may change how start, end, and input_index are used here
+    skipspace();  // Fulfill post.
+    return get_sym(input, begin, end);
 
     // TODO: a LispObject of type LISP_SYM stores its print name and the length
-    // of its print name; here, check if the substr denoted by start
+    // of its print name; here, check if the substr denoted by begin
     // (inclusive) and end (exclusive) is equal to the print name of any symbol
     // in the symbol interns list (by first comparing lens and then comparing
     // chars if lens are equal) and if it is, return the interned symbol; if
@@ -165,9 +166,6 @@ LispObject * parsesym() {
     //   quickly if one already exists; then sweep each list in the hash
     //   table during GC
     //   - K&R C p. 143
-
-    printf("PARSE ERROR: parsesym not implemented\n");
-    exit(1);
 }
 
 

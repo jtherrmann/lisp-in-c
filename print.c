@@ -30,6 +30,9 @@ void print_obj(LispObject * obj) {
     else if (b_numberp(obj))
 	printf("%d", obj->value);
 
+    else if (b_symbolp(obj))
+	printf("%s", obj->print_name);
+
     else if (b_consp(obj))
 	// TODO: print lists properly but maybe leave this version in as a
 	// debug option

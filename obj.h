@@ -66,6 +66,9 @@ struct LispObjectStruct {
 	// LISP_INT
 	int value;
 
+	// LISP_SYM
+	char * print_name;
+
 	// LISP_CONS and LISP_NILTYPE
 	struct {
 	    LispObject * car;
@@ -89,6 +92,10 @@ LispObject * get_nil();
 // get_int
 // Construct a Lisp int.
 LispObject * get_int(int value);
+
+// get_sym
+// Construct a Lisp symbol.
+LispObject * get_sym(char * str, int begin, int end);
 
 
 // ----------------------------------------------------------------------------

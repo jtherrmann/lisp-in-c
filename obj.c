@@ -46,6 +46,20 @@ LispObject * get_int(int value) {
 }
 
 
+LispObject * get_sym(char * str, int begin, int end) {
+    int len = end - begin;
+
+    LispObject * obj = get_obj(LISP_SYM);
+    obj->print_name = malloc((len + 1) * sizeof(char));
+
+    for (int i = 0; i < len; ++i)
+	obj->print_name[i] = str[begin + i];
+    obj->print_name[len] = '\0';
+
+    return obj;
+}
+
+
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
