@@ -227,6 +227,26 @@ bool is_digit(char ch) {
 // Tests
 // ============================================================================
 
+// ----------------------------------------------------------------------------
+// Prototypes
+// ----------------------------------------------------------------------------
+
+void test_power();
+
+void test_parse_func();
+
+
+// ----------------------------------------------------------------------------
+// Definitions
+// ----------------------------------------------------------------------------
+
+// Public test function.
+void test_parse() {
+    test_power();
+    test_parse_func();
+}
+
+
 void test_power() {
     assert(power(10, 0) == 1);
     assert(power(10, 1) == 10);
@@ -254,7 +274,7 @@ void test_power() {
 
 // TODO: how to append the value of INPUT_END, instead of '\n', to the test
 // input strs?
-void test_parse() {
+void test_parse_func() {
     char input_int[] = "123\n";
     strcpy(input, input_int);
     input_index = 0;
