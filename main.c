@@ -56,7 +56,14 @@ int main() {
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
+    int i = 0;  // TODO: remove when no longer needed
     while (true) {
+	if (i == 10) {
+	    print_weakrefs();
+	    i = 0;
+	}
+	++i;
+
     	fputs("> ", stdout);
     	fgets(input, INPUT_LEN, stdin);
 
