@@ -419,64 +419,16 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
 // history; also allow Ctrl-h as backspace
 int main() {
 
-    /* LispObject * x = get_int(1); */
-    /* print_obj(x); */
-    /* printf("\n"); */
-    /* printf("%d\n", x->value); */
-
-    /* LispObject * y = get_int(2); */
-    /* print_obj(y); */
-    /* printf("\n"); */
-    /* printf("%d\n", y->value); */
-
-    /* LispObject * c = b_cons(x, y); */
-    /* print_obj(c); */
-    /* printf("\n"); */
-    /* printf("%d\n", x); */
-    /* printf("%d\n", b_car(c)); */
-    /* printf("%d\n", b_car(c)->value); */
-    /* printf("%d\n", b_cdr(c)->value); */
-
-    /* LispObject * c2 = b_cons(x, c); */
-    /* print_obj(c2); */
-    /* printf("\n"); */
-
-    /* LispObject * z = get_int(3); */
-    /* LispObject * c3 = b_cons(x, b_cons(y, b_cons(z, LISP_NIL))); */
-    /* print_obj(c3); */
-    /* printf("\n"); */
-
-    // creating c3 adds to weakrefs:
-    // (cons 1 (cons 2 (cons 3 NIL))) -> (cons 2 (cons 3 NIL)) -> (cons 3 NIL)
-
-    /* LispObject * head = weakrefs_head; */
-    /* LispObject * next = weakrefs_head->weakref; */
-    /* free(weakrefs_head); */
-    /* weakrefs_head = next; */
-    /* print_weakrefs(); */
-    /* print_obj(head); */
-
-    /* free_all(); */
-
-    /* print_weakrefs(); */
-
+    // TODO: remove when no longer needed
     /* long i = 1; */
     /* while (true) { */
-    /* 	lisp_obj(LISP_INT); */
+    /* 	get_int(0); */
     /* 	if (i % 100000000 == 0) { */
     /* 	    free_all(); // without this line we get memory leak */
     /* 	    i = 1; */
     /* 	} */
     /* 	++i; */
     /* } */
-
-
-    /* LispObject * x = get_int(1); */
-    /* LispObject * y = get_int(2); */
-    /* LispObject * c = b_cons(x, b_cons(x, y)); */
-    /* LispObject * c = b_cons(x, b_cons(b_cons(x, y), b_cons(x, LISP_NIL))); */
-    /* print_obj(c); */
-    /* printf("\n"); */
 
     LISP_NIL = get_nil();
     weakrefs_head = NULL;
