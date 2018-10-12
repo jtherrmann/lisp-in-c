@@ -18,9 +18,9 @@ LispObject * eval(LispObject * expr) {
 
     assert(b_consp(expr));
 
-    if (objs_equal(b_car(expr), LISP_QUOTE)) {
+    if (b_equal(b_car(expr), LISP_QUOTE)) {
 	// TODO: proper error
-	assert(!objs_equal(b_cdr(expr), LISP_NIL));
+	assert(!b_equal(b_cdr(expr), LISP_NIL));
     	return b_car(b_cdr(expr));
     }
 

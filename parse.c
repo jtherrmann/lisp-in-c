@@ -287,12 +287,12 @@ void test_parse_func() {
     char input_int[] = "123\n";
     strcpy(input, input_int);
     input_index = 0;
-    assert(objs_equal(parse(), get_int(123)));
+    assert(b_equal(parse(), get_int(123)));
 
     char input_nil[] = "()\n";
     strcpy(input, input_nil);
     input_index = 0;
-    assert(objs_equal(parse(), LISP_NIL));
+    assert(b_equal(parse(), LISP_NIL));
 
 
     // ------------------------------------------------------------------------
@@ -308,7 +308,7 @@ void test_parse_func() {
 		  b_cons(get_int(2),
 			    b_cons(get_int(3), LISP_NIL)));
 
-    assert(objs_equal(parse(), list1));
+    assert(b_equal(parse(), list1));
 
 
     // ------------------------------------------------------------------------
@@ -328,5 +328,5 @@ void test_parse_func() {
 								    b_cons(LISP_NIL, LISP_NIL))),
 						b_cons(get_int(500), LISP_NIL)))));
 
-    assert(objs_equal(parse(), list2));
+    assert(b_equal(parse(), list2));
 }

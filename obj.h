@@ -131,7 +131,7 @@ bool b_listp(LispObject * obj);
 // Comparison functions
 // ============================================================================
 
-bool objs_equal(LispObject * obj1, LispObject * obj2);
+bool b_equal(LispObject * obj1, LispObject * obj2);
 
 
 // ============================================================================
