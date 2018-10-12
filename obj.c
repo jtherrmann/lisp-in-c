@@ -23,15 +23,6 @@ LispObject * get_obj(LispType type) {
     return obj;
 }
 
-
-// ============================================================================
-// LispObject
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Internal constructors
-// ----------------------------------------------------------------------------
-
 LispObject * get_nil() {
     LispObject * obj = get_obj(LISP_NILTYPE);
     obj->car = obj;
@@ -40,13 +31,50 @@ LispObject * get_nil() {
 }
 
 
+// ============================================================================
+// LispObject
+// ============================================================================
+
+// TODO: these objs need to be marked during GC--or maybe just don't add them
+// to weakrefs list so they can't be swept; easy way to do this would be to set
+// weakrefs_head to NULL in main AFTER calling this func
+//
+// or maybe just don't even bother with any of these except for LISP_NIL
+LispObject * make_initial_objs() {
+    LISP_NIL = get_nil();
+
+    char str[] = "quote";
+    LISP_QUOTE = get_sym(str);
+}
+
+
+// ----------------------------------------------------------------------------
+// Internal constructors
+// ----------------------------------------------------------------------------
+
 LispObject * get_int(int value) {
     LispObject * obj = get_obj(LISP_INT);
     obj->value = value;
 }
 
 
-LispObject * get_sym(char * str, int begin, int end) {
+LispObject * get_sym(char * str) {
+    int len = 0;
+    while (str[len] != '\0')
+	++len;
+
+    LispObject * obj = get_obj(LISP_SYM);
+    obj->print_name = malloc((len + 1) * sizeof(char));
+
+    for (int i = 0; i < len; ++i)
+	obj->print_name[i] = str[i];
+    obj->print_name[len] = '\0';
+    
+    return obj;
+}
+
+
+LispObject * get_sym_by_substr(char * str, int begin, int end) {
     int len = end - begin;
 
     LispObject * obj = get_obj(LISP_SYM);

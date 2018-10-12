@@ -21,8 +21,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "obj.h"
+#include "eval.h"
 #include "gc.h"
+#include "obj.h"
 #include "parse.h"
 #include "print.h"
 #include "tests.h"
@@ -47,8 +48,8 @@ int main() {
     /* 	++i; */
     /* } */
 
-    LISP_NIL = get_nil();
     weakrefs_head = NULL;
+    make_initial_objs();
 
     // TODO: add to tests
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
@@ -80,7 +81,7 @@ int main() {
 		exit(1);
 	    }
 
-	    print_obj(obj);
+	    print_obj(eval(obj));
 	    printf("\n");
 	}
     }

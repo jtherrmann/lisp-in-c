@@ -30,6 +30,7 @@ typedef enum {
 // ============================================================================
 
 LispObject * LISP_NIL;
+LispObject * LISP_QUOTE;
 
 
 // ============================================================================
@@ -81,22 +82,24 @@ struct LispObjectStruct {
 };
 
 
+LispObject * make_initial_objs();
+
+
 // ----------------------------------------------------------------------------
 // Internal constructors
 // ----------------------------------------------------------------------------
-
-// get_nil
-// Construct the empty list object.
-LispObject * get_nil();
 
 // get_int
 // Construct a Lisp int.
 LispObject * get_int(int value);
 
 // get_sym
-// Construct a Lisp symbol.
-LispObject * get_sym(char * str, int begin, int end);
+// Construct a Lisp symbol from str.
+LispObject * get_sym(char * str);
 
+// get_sym_by_substr
+// Construct a Lisp symbol from a substr of str.
+LispObject * get_sym_by_substr(char * str, int begin, int end);
 
 // ----------------------------------------------------------------------------
 // cons, car, and cdr

@@ -41,6 +41,18 @@ bool objs_equal(LispObject * obj1, LispObject * obj2) {
     if (b_numberp(obj1))
 	return obj1->value == obj2->value;
 
+    if (b_symbolp(obj1)) {
+	// TODO: tests
+	// TODO: once string interning implemented, just compare str ptrs
+	int i = 0;
+	while (obj1->print_name[i] != '\0' && obj2->print_name[i] != '\0') {
+	    if (obj1->print_name[i] != obj2->print_name[i])
+		return false;
+	    ++i;
+	}
+	return obj1->print_name[i] == obj2->print_name[i];
+    }
+
     if (b_consp(obj1))
 	return objs_equal(b_car(obj1), b_car(obj2))
 	    && objs_equal(b_cdr(obj1), b_cdr(obj2));

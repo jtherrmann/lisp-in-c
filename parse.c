@@ -150,7 +150,7 @@ LispObject * parsesym() {
     }
     int end = input_index;
     skipspace();  // Fulfill post.
-    return get_sym(input, begin, end);
+    return get_sym_by_substr(input, begin, end);
 
     // TODO: a LispObject of type LISP_SYM stores its print name and the length
     // of its print name; here, check if the substr denoted by begin
