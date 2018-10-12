@@ -6,7 +6,6 @@
 
 #include "eval.h"
 #include "obj.h"
-#include "tests.h"  // TODO: objs_equal should be a builtin from obj.h
 
 
 LispObject * eval(LispObject * expr) {
