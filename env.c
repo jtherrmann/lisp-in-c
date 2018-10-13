@@ -8,22 +8,8 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include "env.h"
 #include "print.h"
-
-
-// ============================================================================
-// env
-// ============================================================================
-
-#define HASHSIZE 101
-
-struct binding {
-    LispObject * name;
-    LispObject * def;
-    struct binding * next;
-};
-
-static struct binding * env[HASHSIZE];
 
 
 // ============================================================================

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "env.h"
 #include "eval.h"
 #include "gc.h"
 #include "obj.h"
@@ -48,20 +49,30 @@ int main() {
     /* 	++i; */
     /* } */
 
-    weakrefs_head = NULL;
     make_initial_objs();
 
-    // TODO: add to tests
+    // TODO: comment explaining why set these after make_initial_objs()
+    weakrefs_head = NULL;
+    weakrefs_count = 0;
+
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
 
-    run_tests();
+    // TODO: temp
+    /* run_tests(); */
 
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
     int i = 0;  // TODO: remove when no longer needed
     while (true) {
-	if (i == 10) {
+	// TODO: it would be more correct to collect garbage from get_obj when
+	// weakrefs_count > some number, because otherwise you could go over
+	// your weakrefs_count just in parsing and evaling the next input, and
+	// you wouldn't GC until the next loop
+	if (weakrefs_count > 10)  // TODO: more reasonable number (but use a low one for demo)
+	    collect_garbage();
+
+	if (i == 5) {
 	    print_weakrefs();
 	    i = 0;
 	}

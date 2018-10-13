@@ -19,8 +19,10 @@ LispObject * get_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
     // TODO: check for malloc error code?
     obj->type = type;
+    obj->marked = false;
     obj->weakref = weakrefs_head;
     weakrefs_head = obj;
+    ++weakrefs_count;
     return obj;
 }
 

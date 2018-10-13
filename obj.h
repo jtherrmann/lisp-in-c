@@ -78,8 +78,8 @@ struct LispObjectStruct {
 	};
     };
 
+    bool marked;
     LispObject * weakref;
-
 };
 
 
