@@ -47,20 +47,19 @@ void mark() {
 // mark_obj
 // Mark an object as reachable.
 void mark_obj(LispObject * obj) {
-    if (!b_null(obj)) {
-
-	// If obj is a cons and is already marked then we don't mark its car
-	// and cdr because they must already have been marked when obj was
-	// marked. Without this check, marking recurses infinitely if there are
-	// any circular references reachable from the root set; for example, if
-	// the cdr of obj is obj.
-	if (b_consp(obj) && !obj->marked) {
-	    obj->marked = true;
+    // Don't mark obj if it's already marked. Without this check, marking
+    // recurses infinitely if there are any circular references reachable from
+    // obj; for example, if obj is a cons and the cdr of obj is obj.
+    if (!b_null(obj) && !obj->marked) {
+	obj->marked = true;
+	if (b_consp(obj)) {
 	    mark_obj(b_car(obj));
 	    mark_obj(b_cdr(obj));
 	}
-	else
-	    obj->marked = true;
+	else if (b_funcp(obj)) {
+	    mark_obj(obj->args);
+	    mark_obj(obj->body);
+	}
     }
 }
 

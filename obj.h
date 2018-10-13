@@ -17,10 +17,12 @@
 typedef struct LispObjectStruct LispObject;
 
 // TODO: weird indentation
+// TODO: use a clearer prefix, like TYPE_
 typedef enum {
 	      LISP_INT,
 	      LISP_SYM,
 	      LISP_CONS,
+	      LISP_FUNC,
 	      LISP_NILTYPE
 } LispType;
 
@@ -30,8 +32,10 @@ typedef enum {
 // ============================================================================
 
 LispObject * LISP_NIL;
-LispObject * LISP_DEF;
+
 LispObject * LISP_QUOTE;
+LispObject * LISP_DEF;
+LispObject * LISP_LAMBDA;
 
 
 // ============================================================================
@@ -76,6 +80,12 @@ struct LispObjectStruct {
 	    LispObject * car;
 	    LispObject * cdr;
 	};
+
+	// LISP_FUNC
+	struct {
+	    LispObject * args;
+	    LispObject * body;
+	};
     };
 
     bool marked;
@@ -102,6 +112,10 @@ LispObject * get_sym(char * str);
 // Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, int begin, int end);
 
+// get_func
+// Construct a Lisp function.
+LispObject * get_func(LispObject * args, LispObject * body);
+
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
@@ -126,6 +140,8 @@ bool b_symbolp(LispObject * obj);
 bool b_consp(LispObject * obj);
 
 bool b_listp(LispObject * obj);
+
+bool b_funcp(LispObject * obj);
 
 
 // ============================================================================

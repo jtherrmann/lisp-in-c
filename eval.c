@@ -44,6 +44,16 @@ LispObject * eval(LispObject * expr) {
 	return(eval(sym));
     }
 
+    if(b_equal(b_car(expr), LISP_LAMBDA)) {
+	// TODO: proper errors
+
+	// Check that there are two operands.
+	assert(!b_null(b_cdr(b_cdr(expr))));
+	assert(b_null(b_cdr(b_cdr(b_cdr(expr)))));
+
+	return get_func(b_car(b_cdr(expr)), b_car(b_cdr(b_cdr(expr))));
+    }
+
     printf("Error: function application not implemented.\n");
     exit(1);
 

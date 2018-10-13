@@ -69,7 +69,7 @@ int main() {
 	// weakrefs_count > some number, because otherwise you could go over
 	// your weakrefs_count just in parsing and evaling the next input, and
 	// you wouldn't GC until the next loop
-	if (weakrefs_count > 10)  // TODO: more reasonable number (but use a low one for demo)
+	if (weakrefs_count > 50)  // TODO: more reasonable number (but use a low one for demo)
 	    collect_garbage();
 
 	if (i == 5) {

@@ -43,6 +43,12 @@ void print_obj(LispObject * obj) {
 	/* printf(")"); */
 	print_list(obj);
 
+    else if (b_funcp(obj)) {
+	printf("<function>");
+	print_obj(obj->args);
+	print_obj(obj->body);
+    }
+
     else {
 	printf("PRINT ERROR: unrecognized type\n");
 	exit(1);

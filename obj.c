@@ -51,6 +51,9 @@ LispObject * make_initial_objs() {
 
     char def[] = "def";
     LISP_DEF = get_sym(def);
+
+    char lambda[] = "lambda";
+    LISP_LAMBDA = get_sym(lambda);
 }
 
 
@@ -91,6 +94,17 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
     obj->print_name[len] = '\0';
 
     return obj;
+}
+
+
+LispObject * get_func(LispObject * args, LispObject * body) {
+    // TODO: proper errors
+    assert(b_listp(args));
+    assert(b_listp(body));
+
+    LispObject * obj = get_obj(LISP_FUNC);
+    obj->args = args;
+    obj->body = body;
 }
 
 
@@ -146,6 +160,11 @@ bool b_consp(LispObject * obj) {
 
 bool b_listp(LispObject * obj) {
     return b_consp(obj) || b_null(obj);
+}
+
+
+bool b_funcp(LispObject * obj) {
+    return obj->type == LISP_FUNC;
 }
 
 
