@@ -57,6 +57,18 @@ int main() {
 
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
 
+    // create a self-referential object and bind it to a name so it will be
+    // marked during GC; w/o proper handling of circular references by the GC
+    // (see mark_obj in gc.c), you'll get infinite marking (and eventually a
+    // segfault for some reason--stack overflow?); to make this happen, create
+    // > 10 objects to trigger GC (before printing all weakrefs is triggered at
+    // loop number 20--see below--because then it will print infinitely)
+    LispObject * x = b_cons(get_int(1), LISP_NIL);
+    x->cdr = x;
+    char foo[] = "self";
+    LispObject * self = get_sym(foo);
+    bind(self, x);
+
     // TODO: temp
     /* run_tests(); */
 
@@ -72,7 +84,7 @@ int main() {
 	if (weakrefs_count > 10)  // TODO: more reasonable number (but use a low one for demo)
 	    collect_garbage();
 
-	if (i == 5) {
+	if (i == 20) {
 	    print_weakrefs();
 	    i = 0;
 	}

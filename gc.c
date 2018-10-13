@@ -48,8 +48,13 @@ void mark() {
 // Mark an object as reachable.
 void mark_obj(LispObject * obj) {
     if (!b_null(obj)) {
-	if (b_consp(obj) && !obj->marked) {
-	    // TODO: test w/ circular references; document
+
+	// comment out the next line and then uncomment the line after that in
+	// order to handle circular refs properly and avoid the segfault during
+	// GC
+	if (b_consp(obj)) {
+	/* if (b_consp(obj) && !obj->marked) { */
+	    /* TODO: test w/ circular references; document */
 	    obj->marked = true;
 	    mark_obj(b_car(obj));
 	    mark_obj(b_cdr(obj));
