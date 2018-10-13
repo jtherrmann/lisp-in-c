@@ -37,10 +37,11 @@ LispObject * eval(LispObject * expr) {
 	LispObject * sym = b_car(b_cdr(expr));
 	assert(b_symbolp(sym));
 
-	LispObject * def = eval(b_car(b_cdr(b_cdr(expr))));
-	bind(sym, def);
+	bind(sym, eval(b_car(b_cdr(b_cdr(expr)))));
 
-	return def;
+	// We could just return the second argument, but this acts a built-in
+	// check that sym was bound successfully.
+	return(eval(sym));
     }
 
     printf("Error: function application not implemented.\n");
