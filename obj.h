@@ -30,6 +30,7 @@ typedef enum {
 // ============================================================================
 
 LispObject * LISP_NIL;
+LispObject * LISP_DEF;
 LispObject * LISP_QUOTE;
 
 

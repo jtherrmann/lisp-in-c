@@ -44,8 +44,11 @@ LispObject * get_nil() {
 LispObject * make_initial_objs() {
     LISP_NIL = get_nil();
 
-    char str[] = "quote";
-    LISP_QUOTE = get_sym(str);
+    char quote[] = "quote";
+    LISP_QUOTE = get_sym(quote);
+
+    char def[] = "def";
+    LISP_DEF = get_sym(def);
 }
 
 
