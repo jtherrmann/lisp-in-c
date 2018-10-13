@@ -3,6 +3,7 @@
 
 
 #include <assert.h>
+#include <stdio.h>
 
 #include "env.h"
 #include "eval.h"
@@ -22,7 +23,7 @@ LispObject * eval(LispObject * expr) {
 
     if (b_equal(b_car(expr), LISP_QUOTE)) {
 	// TODO: proper error
-	assert(!b_equal(b_cdr(expr), LISP_NIL));
+	assert(!b_null(b_cdr(expr)));
     	return b_car(b_cdr(expr));
     }
 
@@ -30,8 +31,8 @@ LispObject * eval(LispObject * expr) {
 	// TODO: proper errors
 
 	// Check that there are two operands.
-	assert(!b_equal(b_cdr(b_cdr(expr)), LISP_NIL));
-	assert(b_equal(b_cdr(b_cdr(b_cdr(expr))), LISP_NIL));
+	assert(!b_null(b_cdr(b_cdr(expr))));
+	assert(b_null(b_cdr(b_cdr(b_cdr(expr)))));
 
 	LispObject * sym = b_car(b_cdr(expr));
 	assert(b_symbolp(sym));
@@ -42,6 +43,8 @@ LispObject * eval(LispObject * expr) {
 	return def;
     }
 
+    printf("Error: function application not implemented.\n");
+    exit(1);
+
     // TODO: special forms, eval-apply, etc.
-    return expr;
 }
