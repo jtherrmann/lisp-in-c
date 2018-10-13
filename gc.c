@@ -117,8 +117,13 @@ void free_obj(LispObject * obj) {
 // collect_garbage
 // Mark reachable objects and then free unmarked objects.
 void collect_garbage() {
-    mark();
-    sweep();
+    // TODO: determine good number for demo (could demo a low number, then a
+    // high number to actually show memory usage rise, then fall after GC)
+    if (weakrefs_count > 20) {
+	printf("GC\n");  // TODO: remove when no longer needed
+	mark();
+	sweep();
+    }
 }
 
 

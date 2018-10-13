@@ -65,12 +65,8 @@ int main() {
 
     int i = 0;  // TODO: remove when no longer needed
     while (true) {
-	// TODO: it would be more correct to collect garbage from get_obj when
-	// weakrefs_count > some number, because otherwise you could go over
-	// your weakrefs_count just in parsing and evaling the next input, and
-	// you wouldn't GC until the next loop
-	if (weakrefs_count > 50)  // TODO: more reasonable number (but use a low one for demo)
-	    collect_garbage();
+	// TODO: must be called in get_obj, but first need to implement stack
+	collect_garbage();
 
 	if (i == 5) {
 	    print_weakrefs();
