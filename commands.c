@@ -8,6 +8,7 @@
 #include "env.h"
 #include "gc.h"
 #include "print.h"
+#include "stack.h"
 
 
 // ============================================================================
@@ -36,8 +37,13 @@ void exec_command(char cmd) {
 	print_env(false);
 	break;
 
-    case 'h':
+    case 'E':
 	print_env(true);
+	break;
+
+    case 's':
+	stack_output = !stack_output;
+	printf("stack output: %s\n", stack_output ? "on" : "off");
 	break;
 
     default:

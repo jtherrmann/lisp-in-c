@@ -37,9 +37,11 @@ void push(LispObject * obj) {
     ++sp;
     stack[sp] = obj;
 
-    printf("push  ");
-    print_stack();
-    printf("\n");
+    if (stack_output) {
+	printf("push  ");
+	print_stack();
+	printf("\n");
+    }
 }
 
 
@@ -50,7 +52,9 @@ void pop() {
 
     --sp;
 
-    printf("pop   ");
-    print_stack();
-    printf("\n");
+    if (stack_output) {
+	printf("pop   ");
+	print_stack();
+	printf("\n");
+    }
 }

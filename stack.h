@@ -13,8 +13,11 @@ LispObject * stack[STACK_SIZE];
 
 int sp;
 
+bool stack_output;
+
 
 void push(LispObject * obj);
+
 void pop();
 
 

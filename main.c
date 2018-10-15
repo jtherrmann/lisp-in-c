@@ -54,6 +54,8 @@ int main() {
     // Initialize the stack pointer.
     sp = 0;
 
+    stack_output = false;
+
     weakrefs_head = NULL;
     weakrefs_count = 0;
 
