@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "commands.h"
 #include "env.h"
 #include "eval.h"
 #include "gc.h"
@@ -69,22 +70,16 @@ int main() {
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
-    int i = 0;  // TODO: remove when no longer needed
     while (true) {
-
-	if (i == 5) {
-	    print_weakrefs();
-	    i = 0;
-	}
-	++i;
-
     	fputs("> ", stdout);
     	fgets(input, INPUT_LEN, stdin);
 
 	input_index = 0;
 	skipspace();  // Meet parse's pre.
 
-	if (input[input_index] != INPUT_END) {
+	if (input[input_index] == ':')
+	    exec_command(input[input_index + 1]);
+	else if (input[input_index] != INPUT_END) {
 	    obj = parse();
 
 	    if (input[input_index] != INPUT_END) {

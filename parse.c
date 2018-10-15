@@ -57,7 +57,8 @@ LispObject * parse() {
     // TODO: support ' (syntax for quote) and "" (syntax for str)
     if (input[input_index] != ')'
 	&& input[input_index] != '\''
-	&& input[input_index] != '"')
+	&& input[input_index] != '"'
+	&& input[input_index] != ':')
 	return parsesym();  // parsesym fulfills parse's post.
     
     printf("PARSE ERROR: unrecognized char\n");
@@ -130,7 +131,7 @@ LispObject * parseint() {
 // Convert part of the input str to a Lisp symbol.
 //
 // Pre:
-// - input[input_index] is not a space, (, ), ', or "
+// - input[input_index] is not a space, (, ), ', ", or :
 // - !is_digit(input[input_index])
 //
 // Post:

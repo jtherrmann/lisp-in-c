@@ -151,18 +151,7 @@ void collect_garbage() {
 // Debugging
 // ----------------------------------------------------------------------------
 
-void print_weakrefs() {
-    LispObject * current = weakrefs_head;
-    while (current != NULL) {
-	print_obj(current);
-	printf(" -> ");
-	current = current->weakref;
-    }
-    printf("NULL\n\n");
-    printf("weakrefs count: %lu\n", weakrefs_count);
-}
-
-
+// TODO: remove when unneeded
 void free_all() {
     while (weakrefs_head != NULL) {
 	LispObject * next = weakrefs_head->weakref;

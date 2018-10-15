@@ -28,11 +28,7 @@ void collect_garbage();
 // Debugging
 // ----------------------------------------------------------------------------
 
-// TODO: remove these when they're no longer needed or make them available as
-// special interpreter commands
-
-void print_weakrefs();
-
+// TODO: remove when unneeded
 void free_all();
 
 
