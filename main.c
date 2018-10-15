@@ -53,15 +53,14 @@ int main() {
     // Initialize the stack pointer.
     sp = 0;
 
-    make_initial_objs();
-
-    // TODO: comment explaining why set these after make_initial_objs()
     weakrefs_head = NULL;
     weakrefs_count = 0;
 
+    make_initial_objs();
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
 
-    // TODO: temp
+    // TODO: maybe remove all tests entirely; then grep for uses of b_cons and
+    // make sure car and cdr are protected beforehand
     /* run_tests(); */
 
     // Stores the return values of parse and eval.

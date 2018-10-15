@@ -28,11 +28,13 @@ typedef enum {
 
 
 // ============================================================================
-// Global variables
+// Initial objects
 // ============================================================================
 
+// The empty list object NIL.
 LispObject * LISP_NIL;
 
+// Symbols representing special forms.
 LispObject * LISP_QUOTE;
 LispObject * LISP_DEF;
 LispObject * LISP_LAMBDA;

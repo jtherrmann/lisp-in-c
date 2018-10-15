@@ -5,6 +5,7 @@
 // TODO: sources
 
 
+#include <assert.h>
 #include <stdio.h>
 
 #include "env.h"
@@ -31,9 +32,19 @@ void free_obj(LispObject * obj);
 // ============================================================================
 
 // mark
-// Mark objects that are reachable from the root set (the global environment
-// and the stack).
+// Mark NIL, symbols representing special forms, and objects reachable from the
+// global environment or the stack.
 void mark() {
+
+    // NIL
+    mark_obj(LISP_NIL);
+
+    // Special forms.
+    mark_obj(LISP_QUOTE);
+    mark_obj(LISP_DEF);
+    mark_obj(LISP_LAMBDA);
+
+    // Global env.
     struct binding * b;
     for (int i = 0; i < HASHSIZE; ++i) {
 	for (b = env[i]; b != NULL; b = b->next) {
@@ -41,6 +52,8 @@ void mark() {
 	    mark_obj(b->def);
 	}
     }
+
+    // Stack.
     for (int i = sp; i > 0; --i)
 	mark_obj(stack[i]);
 }
@@ -52,7 +65,7 @@ void mark_obj(LispObject * obj) {
     // Don't mark obj if it's already marked. Without this check, marking
     // recurses infinitely if there are any circular references reachable from
     // obj; for example, if obj is a cons and the cdr of obj is obj.
-    if (!b_null(obj) && !obj->marked) {
+    if (!obj->marked) {
 	printf("mark: ");  // TODO: make optional
 	print_obj(obj);
 	printf("\n");
@@ -107,6 +120,7 @@ void sweep() {
 // free_obj
 // Free a Lisp object.
 void free_obj(LispObject * obj) {
+    assert(weakrefs_count > 0);
     printf("free: ");  // TODO: make optional
     print_obj(obj);
     printf("\n");
@@ -145,7 +159,7 @@ void print_weakrefs() {
 	current = current->weakref;
     }
     printf("NULL\n\n");
-    printf("weakrefs count: %d\n", weakrefs_count);
+    printf("weakrefs count: %lu\n", weakrefs_count);
 }
 
 

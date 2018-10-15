@@ -45,11 +45,8 @@ LispObject * get_nil() {
 // LispObject
 // ============================================================================
 
-// TODO: these objs need to be marked during GC--or maybe just don't add them
-// to weakrefs list so they can't be swept; easy way to do this would be to set
-// weakrefs_head to NULL in main AFTER calling this func
-//
-// or maybe just don't even bother with any of these except for LISP_NIL
+// make_initial_objs
+// Construct an initial set of Lisp objects.
 void make_initial_objs() {
     LISP_NIL = get_nil();
 
