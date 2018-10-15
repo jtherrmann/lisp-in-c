@@ -16,13 +16,20 @@
 // Functions not declared in header.
 
 LispObject * get_obj(LispType type) {
-    LispObject * obj = malloc(sizeof(LispObject));
+    // TODO: determine good number for demo; define it in gc.h
+    if (weakrefs_count > 20)
+	collect_garbage();
+
     // TODO: check for malloc error code?
+    LispObject * obj = malloc(sizeof(LispObject));
+
     obj->type = type;
     obj->marked = false;
+
     obj->weakref = weakrefs_head;
     weakrefs_head = obj;
     ++weakrefs_count;
+
     return obj;
 }
 
@@ -43,7 +50,7 @@ LispObject * get_nil() {
 // weakrefs_head to NULL in main AFTER calling this func
 //
 // or maybe just don't even bother with any of these except for LISP_NIL
-LispObject * make_initial_objs() {
+void make_initial_objs() {
     LISP_NIL = get_nil();
 
     char quote[] = "quote";
@@ -64,6 +71,7 @@ LispObject * make_initial_objs() {
 LispObject * get_int(int value) {
     LispObject * obj = get_obj(LISP_INT);
     obj->value = value;
+    return obj;
 }
 
 
@@ -97,6 +105,10 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 }
 
 
+// get_func
+// Construct a Lisp function.
+//
+// Pre: args and body are protected from garbage collection.
 LispObject * get_func(LispObject * args, LispObject * body) {
     // TODO: proper errors
     assert(b_listp(args));
@@ -105,6 +117,8 @@ LispObject * get_func(LispObject * args, LispObject * body) {
     LispObject * obj = get_obj(LISP_FUNC);
     obj->args = args;
     obj->body = body;
+
+    return obj;
 }
 
 
@@ -112,6 +126,10 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
 
+// b_cons
+// Builtin Lisp function cons.
+//
+// Pre: car and cdr are protected from garbage collection.
 LispObject * b_cons(LispObject * car, LispObject * cdr) {
     LispObject * obj = get_obj(LISP_CONS);
     obj->car = car;
@@ -184,7 +202,9 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 
     if (b_symbolp(obj1)) {
 	// TODO: tests
-	// TODO: once string interning implemented, just compare str ptrs
+	// TODO: once string interning implemented, just compare str ptrs (or
+	// intern entire symbols, in which case remove this if block because
+	// the first if (obj1 == obj2) will execute)
 	int i = 0;
 	while (obj1->print_name[i] != '\0' && obj2->print_name[i] != '\0') {
 	    if (obj1->print_name[i] != obj2->print_name[i])

@@ -93,7 +93,7 @@ struct LispObjectStruct {
 };
 
 
-LispObject * make_initial_objs();
+void make_initial_objs();
 
 
 // ----------------------------------------------------------------------------
@@ -112,8 +112,6 @@ LispObject * get_sym(char * str);
 // Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, int begin, int end);
 
-// get_func
-// Construct a Lisp function.
 LispObject * get_func(LispObject * args, LispObject * body);
 
 // ----------------------------------------------------------------------------

@@ -12,6 +12,8 @@
 
 // eval
 // Evaluate an expression.
+//
+// Pre: expr is protected from garbage collection.
 LispObject * eval(LispObject * expr) {
     if (b_numberp(expr) || b_null(expr))
 	return expr;
@@ -51,6 +53,7 @@ LispObject * eval(LispObject * expr) {
 	assert(!b_null(b_cdr(b_cdr(expr))));
 	assert(b_null(b_cdr(b_cdr(b_cdr(expr)))));
 
+	// eval's pre meets get_func's pre.
 	return get_func(b_car(b_cdr(expr)), b_car(b_cdr(b_cdr(expr))));
     }
 

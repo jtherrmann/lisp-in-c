@@ -10,6 +10,7 @@
 #include "env.h"
 #include "gc.h"
 #include "print.h"
+#include "stack.h"
 
 
 // ============================================================================
@@ -29,10 +30,9 @@ void free_obj(LispObject * obj);
 // Private functions
 // ============================================================================
 
-// TODO: include stack in root set, update doc
-//
 // mark
-// Mark objects reachable from the root set (the global environment).
+// Mark objects that are reachable from the root set (the global environment
+// and the stack).
 void mark() {
     struct binding * b;
     for (int i = 0; i < HASHSIZE; ++i) {
@@ -41,6 +41,8 @@ void mark() {
 	    mark_obj(b->def);
 	}
     }
+    for (int i = sp; i > 0; --i)
+	mark_obj(stack[i]);
 }
 
 
@@ -51,6 +53,9 @@ void mark_obj(LispObject * obj) {
     // recurses infinitely if there are any circular references reachable from
     // obj; for example, if obj is a cons and the cdr of obj is obj.
     if (!b_null(obj) && !obj->marked) {
+	printf("mark: ");  // TODO: make optional
+	print_obj(obj);
+	printf("\n");
 	obj->marked = true;
 	if (b_consp(obj)) {
 	    mark_obj(b_car(obj));
@@ -102,6 +107,9 @@ void sweep() {
 // free_obj
 // Free a Lisp object.
 void free_obj(LispObject * obj) {
+    printf("free: ");  // TODO: make optional
+    print_obj(obj);
+    printf("\n");
     if (b_symbolp(obj))
 	free(obj->print_name);
     free(obj);
@@ -117,9 +125,11 @@ void free_obj(LispObject * obj) {
 // collect_garbage
 // Mark reachable objects and then free unmarked objects.
 void collect_garbage() {
-    printf("GC\n");  // TODO: remove when no longer needed
+    printf("GC\n");  // TODO: make optional
     mark();
+    printf("\n");
     sweep();
+    printf("\n");
 }
 
 

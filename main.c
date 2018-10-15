@@ -27,6 +27,7 @@
 #include "obj.h"
 #include "parse.h"
 #include "print.h"
+#include "stack.h"
 #include "tests.h"
 
 
@@ -49,6 +50,9 @@ int main() {
     /* 	++i; */
     /* } */
 
+    // Initialize the stack pointer.
+    sp = 0;
+
     make_initial_objs();
 
     // TODO: comment explaining why set these after make_initial_objs()
@@ -60,39 +64,14 @@ int main() {
     // TODO: temp
     /* run_tests(); */
 
+    // Stores the return values of parse and eval.
+    LispObject * obj;
+
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
     int i = 0;  // TODO: remove when no longer needed
     while (true) {
-
-	// TODO: I think a weakness of only collecting garbage here is that
-	// objects generated during parsing/evaling (particularly during
-	// evaling) could make the count go over the max, so the solution would
-	// be to always do this check at the beginning of get_obj, but the
-	// problem there is that then you need a way to add the local scope to
-	// the root set, so you can mark the objs that are in use by the
-	// current function but are not part of env; so you could add them to a
-	// stack, but that seems wasteful because the stack would only be used
-	// for marking objs and not for actually passing params or storing
-	// local objs because the C call stack already does that, so then you
-	// could never pass params or store local vars (where params and local
-	// vars are Lisp objects) on the C call stack and instead do everything
-	// manually on the virtual stack just for the sake of consistency, but
-	// that seems silly...then you could also just not even do mark and
-	// sweep and instead do reference counting, but then you have to handle
-	// circular refs somehow...and the problem here is that none of this is
-	// really being driven by an actual problem to solve because I'm just
-	// trying to do it the "right" way, for the sake of learning what the
-	// right way is, but there is no right way except the one that solves
-	// an actual problem, which I don't have....So for now just GC here and
-	// come up with a different solution if one is ever needed.
-	//
-	// TODO: determine good number for demo (could demo a low number, then
-	// a high number to actually show memory usage rise, then fall after
-	// GC)
-	if (weakrefs_count > 20)
-	    collect_garbage();
 
 	if (i == 5) {
 	    print_weakrefs();
@@ -107,14 +86,21 @@ int main() {
 	skipspace();  // Meet parse's pre.
 
 	if (input[input_index] != INPUT_END) {
-	    LispObject * obj = parse();
+	    obj = parse();
 
 	    if (input[input_index] != INPUT_END) {
 		printf("PARSE ERROR: multiple expressions\n");
 		exit(1);
 	    }
 
-	    print_obj(eval(obj));
+	    // Protect obj from GC that could be triggered by eval.
+	    push(obj);
+
+	    obj = eval(obj);
+
+	    pop();
+
+	    print_obj(obj);
 	    printf("\n");
 	}
     }
