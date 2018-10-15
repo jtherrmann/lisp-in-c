@@ -56,29 +56,6 @@ LispObject * get_def(LispObject * sym) {
 }
 
 
-// print_env
-// Print the environment.
-void print_env() {
-    struct binding * b;
-    for (int i = 0; i < HASHSIZE; ++i) {
-	if (env[i] != NULL) {
-	    printf("===\n");
-	    printf("%d\n", i);
-	    printf("===\n\n");
-	}
-	for (b = env[i]; b != NULL; b = b->next) {
-	    print_obj(b->name);
-	    printf("\n");
-	    print_obj(b->def);
-	    printf("\n");
-	    printf("\n");
-	}
-	if (env[i] != NULL)
-	    printf("\n");
-    }
-}
-
-
 // ============================================================================
 // Private functions
 // ============================================================================

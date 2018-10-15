@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "commands.h"
+#include "env.h"
 #include "gc.h"
 #include "print.h"
 
@@ -14,6 +15,8 @@
 // ============================================================================
 
 void print_weakrefs();
+
+void print_env(bool print_hash);
 
 
 // ============================================================================
@@ -27,6 +30,14 @@ void exec_command(char cmd) {
 
     case 'w':
 	print_weakrefs();
+	break;
+
+    case 'e':
+	print_env(false);
+	break;
+
+    case 'h':
+	print_env(true);
 	break;
 
     default:
@@ -51,4 +62,25 @@ void print_weakrefs() {
     }
     printf("NULL\n\n");
     printf("weakrefs count: %lu\n", weakrefs_count);
+}
+
+
+// print_env
+// Print the global environment.
+void print_env(bool print_hash) {
+    struct binding * b;
+    for (int i = 0; i < HASHSIZE; ++i) {
+	if (print_hash && env[i] != NULL) {
+	    printf("---\n");
+	    printf("%d\n", i);
+	    printf("---\n");
+	}
+	for (b = env[i]; b != NULL; b = b->next) {
+	    print_obj(b->name);
+	    printf("\n");
+	    print_obj(b->def);
+	    printf("\n");
+	    printf("\n");
+	}
+    }
 }

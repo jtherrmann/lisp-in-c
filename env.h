@@ -29,8 +29,8 @@ struct binding * env[HASHSIZE];
 // ============================================================================
 
 void bind(LispObject * sym, LispObject * def);
+
 LispObject * get_def(LispObject * name);
-void print_env();
 
 
 #endif
