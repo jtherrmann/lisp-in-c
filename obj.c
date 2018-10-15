@@ -34,7 +34,7 @@ LispObject * get_obj(LispType type) {
 }
 
 LispObject * get_nil() {
-    LispObject * obj = get_obj(LISP_NILTYPE);
+    LispObject * obj = get_obj(TYPE_NIL);
     obj->car = obj;
     obj->cdr = obj;
     return obj;
@@ -66,7 +66,7 @@ void make_initial_objs() {
 // ----------------------------------------------------------------------------
 
 LispObject * get_int(int value) {
-    LispObject * obj = get_obj(LISP_INT);
+    LispObject * obj = get_obj(TYPE_INT);
     obj->value = value;
     return obj;
 }
@@ -77,7 +77,7 @@ LispObject * get_sym(char * str) {
     while (str[len] != '\0')
 	++len;
 
-    LispObject * obj = get_obj(LISP_SYM);
+    LispObject * obj = get_obj(TYPE_SYM);
     obj->print_name = malloc((len + 1) * sizeof(char));
 
     for (int i = 0; i < len; ++i)
@@ -91,7 +91,7 @@ LispObject * get_sym(char * str) {
 LispObject * get_sym_by_substr(char * str, int begin, int end) {
     int len = end - begin;
 
-    LispObject * obj = get_obj(LISP_SYM);
+    LispObject * obj = get_obj(TYPE_SYM);
     obj->print_name = malloc((len + 1) * sizeof(char));
 
     for (int i = 0; i < len; ++i)
@@ -111,7 +111,7 @@ LispObject * get_func(LispObject * args, LispObject * body) {
     assert(b_listp(args));
     assert(b_listp(body));
 
-    LispObject * obj = get_obj(LISP_FUNC);
+    LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;
     obj->body = body;
 
@@ -128,7 +128,7 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 //
 // Pre: car and cdr are protected from garbage collection.
 LispObject * b_cons(LispObject * car, LispObject * cdr) {
-    LispObject * obj = get_obj(LISP_CONS);
+    LispObject * obj = get_obj(TYPE_CONS);
     obj->car = car;
     obj->cdr = cdr;
     return obj;
@@ -159,17 +159,17 @@ bool b_null(LispObject * obj) {
 
 
 bool b_numberp(LispObject * obj) {
-    return obj->type == LISP_INT;
+    return obj->type == TYPE_INT;
 }
 
 
 bool b_symbolp(LispObject * obj) {
-    return obj->type == LISP_SYM;
+    return obj->type == TYPE_SYM;
 }
 
 
 bool b_consp(LispObject * obj) {
-    return obj->type == LISP_CONS;
+    return obj->type == TYPE_CONS;
 }
 
 
@@ -179,7 +179,7 @@ bool b_listp(LispObject * obj) {
 
 
 bool b_funcp(LispObject * obj) {
-    return obj->type == LISP_FUNC;
+    return obj->type == TYPE_FUNC;
 }
 
 

@@ -17,13 +17,12 @@
 typedef struct LispObjectStruct LispObject;
 
 // TODO: weird indentation
-// TODO: use a clearer prefix, like TYPE_
 typedef enum {
-	      LISP_INT,
-	      LISP_SYM,
-	      LISP_CONS,
-	      LISP_FUNC,
-	      LISP_NILTYPE
+	      TYPE_INT,
+	      TYPE_SYM,
+	      TYPE_CONS,
+	      TYPE_FUNC,
+	      TYPE_NIL
 } LispType;
 
 
@@ -71,19 +70,19 @@ struct LispObjectStruct {
     //     accessing the anonymous union's anonymous struct member and then
     //     accessing the anonymous struct's car member
     union {
-	// LISP_INT
+	// TYPE_INT
 	int value;
 
-	// LISP_SYM
+	// TYPE_SYM
 	char * print_name;
 
-	// LISP_CONS and LISP_NILTYPE
+	// TYPE_CONS and TYPE_NIL
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;
 	};
 
-	// LISP_FUNC
+	// TYPE_FUNC
 	struct {
 	    LispObject * args;
 	    LispObject * body;
