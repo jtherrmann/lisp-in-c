@@ -41,6 +41,11 @@ void exec_command(char cmd) {
 	print_env(true);
 	break;
 
+    case 'g':
+	gc_output = !gc_output;
+	printf("GC output: %s\n", gc_output ? "on" : "off");
+	break;
+
     case 's':
 	stack_output = !stack_output;
 	printf("stack output: %s\n", stack_output ? "on" : "off");

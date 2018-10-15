@@ -66,10 +66,15 @@ void mark_obj(LispObject * obj) {
     // recurses infinitely if there are any circular references reachable from
     // obj; for example, if obj is a cons and the cdr of obj is obj.
     if (!obj->marked) {
-	printf("mark: ");  // TODO: make optional
-	print_obj(obj);
-	printf("\n");
+
+	if (gc_output) {
+	    printf("mark: ");
+	    print_obj(obj);
+	    printf("\n");
+	}
+
 	obj->marked = true;
+
 	if (b_consp(obj)) {
 	    mark_obj(b_car(obj));
 	    mark_obj(b_cdr(obj));
@@ -121,11 +126,16 @@ void sweep() {
 // Free a Lisp object.
 void free_obj(LispObject * obj) {
     assert(weakrefs_count > 0);
-    printf("free: ");  // TODO: make optional
-    print_obj(obj);
-    printf("\n");
+
+    if (gc_output) {
+	printf("free: ");
+	print_obj(obj);
+	printf("\n");
+    }
+
     if (b_symbolp(obj))
 	free(obj->print_name);
+
     free(obj);
     --weakrefs_count;
 }
@@ -139,11 +149,15 @@ void free_obj(LispObject * obj) {
 // collect_garbage
 // Mark reachable objects and then free unmarked objects.
 void collect_garbage() {
-    printf("GC\n");  // TODO: make optional
     mark();
-    printf("\n");
+
+    if (gc_output)
+	printf("\n");
+
     sweep();
-    printf("\n");
+
+    if (gc_output)
+	printf("\n");
 }
 
 
