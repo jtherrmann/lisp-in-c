@@ -49,6 +49,11 @@ void print_obj(LispObject * obj) {
 	print_obj(obj->body);
     }
 
+    else if (b_builtinp(obj)) {
+	printf("<builtin function>");
+	// TODO: store print names with builtins and print them here
+    }
+
     else {
 	printf("PRINT ERROR: unrecognized type\n");
 	exit(1);

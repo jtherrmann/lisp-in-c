@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "obj.h"
+#include "env.h"
 #include "gc.h"
 
 
@@ -58,6 +59,11 @@ void make_initial_objs() {
 
     char lambda[] = "lambda";
     LISP_LAMBDA = get_sym(lambda);
+
+    char cons_str[] = "cons";
+    LispObject * cons_name = get_sym(cons_str);
+    LispObject * cons_def = get_builtin_2(&b_cons);
+    bind(cons_name, cons_def);
 }
 
 
@@ -115,6 +121,15 @@ LispObject * get_func(LispObject * args, LispObject * body) {
     obj->args = args;
     obj->body = body;
 
+    return obj;
+}
+
+
+// get_builtin_2
+// Construct a builtin function that takes two operands.
+LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *)) {
+    LispObject * obj = get_obj(TYPE_BUILTIN_2);
+    obj->c_func = c_func;
     return obj;
 }
 
@@ -180,6 +195,11 @@ bool b_listp(LispObject * obj) {
 
 bool b_funcp(LispObject * obj) {
     return obj->type == TYPE_FUNC;
+}
+
+
+bool b_builtinp(LispObject * obj) {
+    return obj->type == TYPE_BUILTIN_2;
 }
 
 
