@@ -8,6 +8,7 @@
 #include "obj.h"
 #include "env.h"
 #include "gc.h"
+#include "stack.h"
 
 
 // ============================================================================
@@ -140,12 +141,19 @@ LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *)) 
 
 // b_cons
 // Builtin Lisp function cons.
-//
-// Pre: car and cdr are protected from garbage collection.
 LispObject * b_cons(LispObject * car, LispObject * cdr) {
+    // Protect car and cdr from GC that could be triggered by get_obj.
+    push(car);
+    push(cdr);
+
     LispObject * obj = get_obj(TYPE_CONS);
+
+    pop();
+    pop();
+
     obj->car = car;
     obj->cdr = cdr;
+
     return obj;
 }
 

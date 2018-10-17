@@ -198,19 +198,15 @@ LispObject * parselist() {
 
     LispObject * car = parse(input);  // parselist's pre meets parse's pre.
 
-    // Protect car from GC that could be triggered by parselist or b_cons.
+    // Protect car from GC that could be triggered by parselist (when it calls
+    // parse, above).
     push(car);
 
     LispObject * cdr = parselist(input);
 
-    // Protect cdr from GC that could be triggered by b_cons.
-    push(cdr);
+    pop();
 
     LispObject * cons = b_cons(car, cdr);
-
-    pop();
-    pop();
-
     return cons;
 }
 
