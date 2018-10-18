@@ -116,7 +116,6 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 LispObject * get_func(LispObject * args, LispObject * body) {
     // TODO: proper errors
     assert(b_listp(args));
-    assert(b_listp(body));
 
     LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;
