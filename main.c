@@ -32,10 +32,6 @@
 #include "tests.h"
 
 
-// ============================================================================
-// Main
-// ============================================================================
-
 // TODO: use the library used in build your own lisp to allow arrow keys and
 // history; also allow Ctrl-h as backspace
 int main() {
