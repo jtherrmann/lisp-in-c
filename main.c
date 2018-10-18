@@ -86,10 +86,13 @@ int main() {
 		exit(1);
 	    }
 
-	    // Protect obj from GC that could be triggered by eval.
+	    // Meet eval's pre by protecting its first arg from GC.
 	    push(obj);
 
-	    obj = eval(obj);
+	    // LISP_NIL is part of the initial set of objects protected from
+	    // GC, so it meets eval's pre that its second arg is protected from
+	    // GC.
+	    obj = eval(obj, LISP_NIL);
 
 	    pop();
 
