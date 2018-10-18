@@ -81,12 +81,12 @@ void print_weakrefs() {
 void print_env(bool print_hash) {
     struct binding * b;
     for (int i = 0; i < HASHSIZE; ++i) {
-	if (print_hash && env[i] != NULL) {
+	if (print_hash && global_env[i] != NULL) {
 	    printf("---\n");
 	    printf("%d\n", i);
 	    printf("---\n");
 	}
-	for (b = env[i]; b != NULL; b = b->next) {
+	for (b = global_env[i]; b != NULL; b = b->next) {
 	    print_obj(b->name);
 	    printf("\n");
 	    print_obj(b->def);

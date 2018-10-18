@@ -1,5 +1,5 @@
 // env.h
-// Header for the Lisp environment.
+// Header for the global Lisp environment.
 
 
 #ifndef ENV_H
@@ -21,7 +21,7 @@ struct binding {
     struct binding * next;
 };
 
-struct binding * env[HASHSIZE];
+struct binding * global_env[HASHSIZE];
 
 
 // ============================================================================

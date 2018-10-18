@@ -51,7 +51,7 @@ void mark() {
     // Global env.
     struct binding * b;
     for (int i = 0; i < HASHSIZE; ++i) {
-	for (b = env[i]; b != NULL; b = b->next) {
+	for (b = global_env[i]; b != NULL; b = b->next) {
 	    mark_obj(b->name);
 	    mark_obj(b->def);
 	}

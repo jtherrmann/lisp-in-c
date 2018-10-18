@@ -1,5 +1,5 @@
 // env.c
-// Source for the Lisp environment.
+// Source for the global Lisp environment.
 
 
 // The hash table implementation is adapted from K&R C, 2nd ed., pp. 143-45.
@@ -34,8 +34,8 @@ void bind(LispObject * sym, LispObject * def) {
     struct binding * b = lookup(sym, hashval);
     if (b == NULL) {
 	b = malloc(sizeof(struct binding));
-	b->next = env[hashval];
-	env[hashval] = b;
+	b->next = global_env[hashval];
+	global_env[hashval] = b;
     }
     b->name = sym;
     b->def = def;
@@ -84,7 +84,7 @@ unsigned hash(LispObject * sym) {
 // - b_symbolp(sym)
 // - hashval == hash(sym)
 struct binding * lookup(LispObject * sym, unsigned hashval) {
-    for (struct binding * b = env[hashval]; b != NULL; b = b->next)
+    for (struct binding * b = global_env[hashval]; b != NULL; b = b->next)
 	if (b_equal(sym, b->name))
 	    return b;
     return NULL;
