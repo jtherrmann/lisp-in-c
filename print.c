@@ -65,18 +65,32 @@ void print_obj(LispObject * obj) {
 // Private functions
 // ============================================================================
 
+// print_list
+// Print up to the first 100 items of a Lisp list.
 void print_list(LispObject * obj) {
     printf("(");
+
+    int i = 0;
     while (true) {
 	print_obj(b_car(obj));
 	obj = b_cdr(obj);
+
 	if (!b_consp(obj))
 	    break;
+
 	printf(" ");
+
+	++i;
+	if (i == 100) {
+	    printf("...");
+	    return;
+	}
     }
+
     if (!b_null(obj)) {
 	printf(" . ");
 	print_obj(obj);
     }
+
     printf(")");
 }
