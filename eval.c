@@ -57,8 +57,22 @@ LispObject * eval(LispObject * expr) {
 	return get_func(b_car(b_cdr(expr)), b_car(b_cdr(b_cdr(expr))));
     }
 
-    printf("Error: function application not implemented.\n");
-    exit(1);
+    // expr represents a function application.
 
-    // TODO: special forms, eval-apply, etc.
+    LispObject * func = eval(b_car(expr));
+
+    switch(func->type) {
+
+    case TYPE_BUILTIN_2:
+	// TODO: check number of args
+	return func->c_func(eval(b_car(b_cdr(expr))),
+			    eval(b_car(b_cdr(b_cdr(expr)))));
+	break;
+
+    default:
+	break;
+    }
+
+    // TODO: proper error
+    assert(false);
 }
