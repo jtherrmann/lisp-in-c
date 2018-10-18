@@ -2,7 +2,11 @@
 // Source for garbage collector.
 
 
-// TODO: sources
+// Sources:
+// - https://github.com/marcpaq/arpilisp
+// - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
+// - https://courses.cs.washington.edu/courses/csep521/07wi/prj/rick.pdf
+// - https://stackoverflow.com/a/30081106
 
 
 #include <assert.h>
