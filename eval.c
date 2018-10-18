@@ -105,14 +105,20 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     // expr represents a function application.
 
     LispObject * func = eval(b_car(expr), env);
+    LispObject * result;
+
+    // Protect func from GC that could be triggered by calls to eval and/or
+    // get_env, below.
+    push(func);
 
     switch(func->type) {
 
     case TYPE_BUILTIN_2:
 	// TODO: check number of args
-	return func->c_func(eval(b_car(b_cdr(expr)), env),
-			    eval(b_car(b_cdr(b_cdr(expr))), env));
-	break;
+	result = func->c_func(eval(b_car(b_cdr(expr)), env),
+			      eval(b_car(b_cdr(b_cdr(expr))), env));
+	pop();  // pop func
+	return result;
 
     default:
 	break;
@@ -122,18 +128,21 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     // TODO: check args names and args exprs same length (get_env's pre)
 
-    // eval's pre that expr is protected from GC meets get_env's pre that its
-    // first two args are protected from GC, because func->args and b_cdr(expr)
-    // are both reachable from expr; and eval's pre that env is protected from
-    // GC meets get_env's pre that its third arg is protected from GC.
+    // func is protected from GC, so it meets get_env's pre that its first arg
+    // is protected from GC, because func->args is reachable from func; eval's
+    // pre that expr is protected from GC meets get_env's pre that its second
+    // arg is protected from GC, because b_cdr(expr) is reachable from expr;
+    // and eval's pre that env is protected from GC meets get_env's pre that
+    // its third arg is protected from GC.
     LispObject * new_env = get_env(func->args, b_cdr(expr), env);
 
     // Meet eval's pre that env is protected from GC.
     push(new_env);
 
-    LispObject * result = eval(func->body, new_env);
+    result = eval(func->body, new_env);
 
-    pop();
+    pop();  // pop new_env
+    pop();  // pop func
 
     return result;
 
