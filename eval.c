@@ -116,6 +116,9 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     // get_env, below.
     push(func);
 
+    LispObject * arg1;
+    LispObject * arg2;
+    bool bool_result;
     switch(func->type) {
 
     case TYPE_BUILTIN_1:
@@ -132,27 +135,22 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// TODO: proper error
 	assert(len(b_cdr(expr)) == 1);
 
-	bool bool_result = func->b_bool_func_1(eval(b_car(b_cdr(expr)), env));
+	bool_result = func->b_bool_func_1(eval(b_car(b_cdr(expr)), env));
 	pop();  // pop func
 	return (bool_result ? LISP_T : LISP_F);
 
     case TYPE_BUILTIN_2:
 
-	// Use an empty statement after our label to work around a quirk where
-	// declarations cannot follow labels. See:
-	// https://stackoverflow.com/a/18496437
-	;
-
 	// TODO: proper error
 	assert(len(b_cdr(expr)) == 2);
 
-	LispObject * arg1 = eval(b_car(b_cdr(expr)), env);
+	arg1 = eval(b_car(b_cdr(expr)), env);
 
 	// Protect arg1 from GC that could be triggered by eval'ing the second
 	// argument.
 	push(arg1);
 
-	LispObject * arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
+	arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
 
 	pop(); // pop arg1
 
@@ -161,6 +159,27 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	pop();  // pop func
 
 	return result;
+
+    case TYPE_BOOL_BUILTIN_2:
+
+	// TODO: proper error
+	assert(len(b_cdr(expr)) == 2);
+
+	arg1 = eval(b_car(b_cdr(expr)), env);
+
+	// Protect arg1 from GC that could be triggered by eval'ing the second
+	// argument.
+	push(arg1);
+
+	arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
+
+	pop(); // pop arg1
+
+	bool_result = func->b_bool_func_2(arg1, arg2);
+
+	pop();  // pop func
+
+	return (bool_result ? LISP_T : LISP_F);
 
     default:
 	break;

@@ -19,7 +19,7 @@
 
 LispObject * get_obj(LispType type) {
     // TODO: determine good number for demo; define it in gc.h
-    if (weakrefs_count > 30)
+    if (weakrefs_count > 50)
 	collect_garbage();
 
     // TODO: check for malloc error code?
@@ -84,6 +84,11 @@ void make_initial_objs() {
     LispObject * cdr_name = get_sym(cdr_str);
     LispObject * cdr_def = get_builtin_1(&b_cdr);
     bind(cdr_name, cdr_def);
+
+    char equal_str[] = "eq";
+    LispObject * equal_name = get_sym(equal_str);
+    LispObject * equal_def = get_bool_builtin_2(&b_equal);
+    bind(equal_name, equal_def);
 
     char null_pred_str[] = "null?";
     LispObject * null_pred_name = get_sym(null_pred_str);
@@ -206,6 +211,14 @@ LispObject * get_bool_builtin_1(bool (* b_bool_func_1)(LispObject *)) {
 }
 
 
+// get_bool_builtin_2
+LispObject * get_bool_builtin_2(bool (* b_bool_func_2)(LispObject *, LispObject *)) {
+    LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
+    obj->b_bool_func_2 = b_bool_func_2;
+    return obj;
+}
+
+
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
@@ -280,7 +293,8 @@ bool b_func_pred(LispObject * obj) {
 bool b_builtin_pred(LispObject * obj) {
     return obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
-	|| obj->type == TYPE_BOOL_BUILTIN_1;
+	|| obj->type == TYPE_BOOL_BUILTIN_1
+	|| obj->type == TYPE_BOOL_BUILTIN_2;
 }
 
 
@@ -294,6 +308,9 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 
     if (obj1->type != obj2->type)
 	return false;
+
+    if (obj1->type == TYPE_UNIQUE)
+	return obj1 == obj2;
 
     if (b_number_pred(obj1))
 	return obj1->value == obj2->value;
