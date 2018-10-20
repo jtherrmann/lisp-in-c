@@ -157,6 +157,8 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     // Meet eval's pre that env is protected from GC.
     push(new_env);
 
+    // func is protected from GC, so it meets eval's pre that expr is protected
+    // from GC, because func->body is reachable from func.
     result = eval(func->body, new_env);
 
     pop();  // pop new_env
