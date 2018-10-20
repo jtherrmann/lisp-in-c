@@ -114,10 +114,28 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     switch(func->type) {
 
     case TYPE_BUILTIN_2:
+
+	// Use an empty statement after our label to work around a quirk where
+	// declarations cannot follow labels. See:
+	// https://stackoverflow.com/a/18496437
+	;
+
 	// TODO: check number of args
-	result = func->c_func(eval(b_car(b_cdr(expr)), env),
-			      eval(b_car(b_cdr(b_cdr(expr))), env));
+
+	LispObject * arg1 = eval(b_car(b_cdr(expr)), env);
+
+	// Protect arg1 from GC that could be triggered by eval'ing the second
+	// argument.
+	push(arg1);
+
+	LispObject * arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
+
+	pop(); // pop arg1
+
+	result = func->c_func(arg1, arg2);
+
 	pop();  // pop func
+
 	return result;
 
     default:
