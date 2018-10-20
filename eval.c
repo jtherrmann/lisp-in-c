@@ -2,16 +2,25 @@
 // Source for eval functions.
 
 
-#include <assert.h>
 #include <stdio.h>
 
 #include "env.h"
 #include "eval.h"
 #include "obj.h"
+#include "print.h"
 #include "stack.h"
 
 
-#define EVAL_ERR "Eval error: "
+// ============================================================================
+// Macros
+// ============================================================================
+
+#define EVAL_ERR "Invalid expression:\n\n  "
+
+#define INVALID_EXPR printf(EVAL_ERR); print_obj(expr); printf("\n\n");
+
+// TODO: instructions for reporting
+#define FOUND_BUG printf("It looks like you have found a bug.\n"); exit(1);
 
 
 // ============================================================================
@@ -73,11 +82,15 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	return get_def(expr);
     }
 
-    assert(b_cons_pred(expr));
+    if (!b_cons_pred(expr)) {
+	FOUND_BUG;
+    }
 
     if (b_equal(b_car(expr), LISP_QUOTE)) {
 	if (len(b_cdr(expr)) != 1) {
-	    printf("%sTODO: quote args err\n", EVAL_ERR);
+	    INVALID_EXPR;
+	    print_obj(LISP_QUOTE);
+	    printf(" takes 1 argument\n");
 	    return NULL;
 	}
     	return b_car(b_cdr(expr));
@@ -85,20 +98,23 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     if (b_equal(b_car(expr), LISP_COND)) {
 
-	// The new value of expr is still protected from GC because b_cdr(expr)
-	// is reachable from the old value of expr, which is protected from GC
-	// as per eval's pre.
-	expr = b_cdr(expr);
+	// clauses is protected from GC because b_cdr(expr) is reachable from
+	// expr, which is protected from GC as per eval's pre.
+	LispObject * clauses = b_cdr(expr);
 
 	LispObject * clause;
 	LispObject * bool_val;
-	while (!b_null_pred(expr)) {
-	    // expr being protected from GC means that clause is protected from
-	    // GC because b_car(expr) is reachable from expr.
-	    clause = b_car(expr);
+	while (!b_null_pred(clauses)) {
+	    // clauses' protection from GC protects clause from GC because
+	    // b_car(clauses) is reachable from clauses.
+	    clause = b_car(clauses);
 
-	    // TODO: proper error
-	    assert(len(clause) == 2);
+	    if (len(clause) != 2) {
+		INVALID_EXPR;
+		print_obj(LISP_COND);
+		printf(" takes lists of length 2\n");
+		return NULL;
+	    }
 
 	    // clause being protected from GC meets eval's pre that expr is
 	    // protected from GC because b_car(clause) is reachable from
@@ -116,12 +132,19 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 		// still true here.
 		return eval(b_car(b_cdr(clause)), env);
 
-	    // TODO: proper error
-	    assert(bool_val == LISP_F);
+	    if (bool_val != LISP_F) {
+		INVALID_EXPR;
+		printf("Predicate ");
+		print_obj(b_car(clause));
+		printf(" evaluates to non-boolean value ");
+		print_obj(bool_val);
+		printf("\n");
+		return NULL;
+	    }
 
-	    // The new value of expr is still protected from GC because
-	    // b_cdr(expr) is reachable from the old value of expr.
-	    expr = b_cdr(expr);
+	    // The new value of clauses is still protected from GC because
+	    // b_cdr(clauses) is reachable from the old value of clauses.
+	    clauses = b_cdr(clauses);
 	}
 	return LISP_NIL;
     }
@@ -129,12 +152,21 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     if(b_equal(b_car(expr), LISP_DEF)) {
 	// TODO: proper errors
 
-	// Check that there are two operands.
-	assert(!b_null_pred(b_cdr(b_cdr(expr))));
-	assert(b_null_pred(b_cdr(b_cdr(b_cdr(expr)))));
+	if (len(b_cdr(expr)) != 2) {
+	    INVALID_EXPR;
+	    print_obj(LISP_DEF);
+	    printf(" takes 2 arguments\n");
+	    return NULL;
+	}
 
 	LispObject * sym = b_car(b_cdr(expr));
-	assert(b_symbol_pred(sym));
+
+	if (!b_symbol_pred(sym)) {
+	    INVALID_EXPR;
+	    print_obj(sym);
+	    printf(" is not a symbol\n");
+	    return NULL;
+	}
 
 	LispObject * def = eval(b_car(b_cdr(b_cdr(expr))), env);
 
@@ -152,9 +184,12 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// TODO: ensure args are all symbols (probably check in get_func);
 	// get_env's pre
 
-	// Check that there are two operands.
-	assert(!b_null_pred(b_cdr(b_cdr(expr))));
-	assert(b_null_pred(b_cdr(b_cdr(b_cdr(expr)))));
+	if (len(b_cdr(expr)) != 2) {
+	    INVALID_EXPR;
+	    print_obj(LISP_LAMBDA);
+	    printf(" takes 2 arguments\n");
+	    return NULL;
+	}
 
 	// eval's pre that expr is protected from GC meets get_func's pre that
 	// its args are protected from GC, because b_car(b_cdr(expr)) and
@@ -182,8 +217,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     case TYPE_BUILTIN_1:
 
-	// TODO: proper error
-	assert(len(b_cdr(expr)) == 1);
+	if (len(b_cdr(expr)) != 1) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes 1 argument\n");
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
@@ -200,8 +240,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     case TYPE_BOOL_BUILTIN_1:
 
-	// TODO: proper error
-	assert(len(b_cdr(expr)) == 1);
+	if (len(b_cdr(expr)) != 1) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes 1 argument\n");
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
@@ -218,8 +263,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     case TYPE_BUILTIN_2:
 
-	// TODO: proper error
-	assert(len(b_cdr(expr)) == 2);
+	if (len(b_cdr(expr)) != 2) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes 2 arguments\n");
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
@@ -249,8 +299,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     case TYPE_BOOL_BUILTIN_2:
 
-	// TODO: proper error
-	assert(len(b_cdr(expr)) == 2);
+	if (len(b_cdr(expr)) != 2) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes 2 arguments\n");
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
@@ -282,7 +337,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	break;
     }
 
-    assert(b_func_pred(func));
+    if (!b_func_pred(func)) {
+	INVALID_EXPR;
+	print_obj(func);
+	printf(" is not a function\n");
+	pop();  // pop func
+	return NULL;
+    }
 
     // func is protected from GC, so it meets get_env's pre that arg_names is
     // protected from GC, because func->args is reachable from func; and eval's
@@ -291,10 +352,15 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     LispObject * arg_names = func->args;
     LispObject * arg_exprs = b_cdr(expr);
 
-    // TODO: proper error
-    //
-    // Meet get_env's pre that arg_exprs is the same length as arg_names.
-    assert(len(arg_exprs) == len(arg_names));
+    int len_arg_names = len(arg_names);
+    if (len(arg_exprs) != len_arg_names) {
+	INVALID_EXPR;
+	print_obj(func);
+	printf(" takes %d argument%s",
+	       len_arg_names, (len_arg_names == 1 ? "\n" : "s\n"));
+	pop();  // pop func
+	return NULL;
+    }
 
     // eval's pre that env is protected from GC meets get_env's pre that env is
     // protected from GC.
@@ -312,8 +378,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     return result;
 
-    // TODO: proper error
-    assert(false);
+    FOUND_BUG;
 }
 
 
