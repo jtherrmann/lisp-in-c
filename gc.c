@@ -88,6 +88,8 @@ void mark_obj(LispObject * obj) {
 	    mark_obj(obj->args);
 	    mark_obj(obj->body);
 	}
+	else if (b_builtin_pred(obj))
+	    mark_obj(obj->builtin_name);
     }
 }
 
