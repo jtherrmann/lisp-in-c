@@ -22,6 +22,7 @@ typedef enum {
 	      TYPE_SYM,
 	      TYPE_CONS,
 	      TYPE_FUNC,
+	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
 	      TYPE_NIL
 } LispType;
@@ -68,8 +69,11 @@ struct LispObjectStruct {
 	    LispObject * body;
 	};
 
+	// TYPE_BUILTIN_1
+	LispObject * (* b_func_1)(LispObject *);
+
 	// TYPE_BUILTIN_2
-	LispObject * (* c_func)(LispObject *, LispObject *);
+	LispObject * (* b_func_2)(LispObject *, LispObject *);
     };
 
     bool marked;
@@ -97,6 +101,8 @@ LispObject * get_sym(char * str);
 LispObject * get_sym_by_substr(char * str, int begin, int end);
 
 LispObject * get_func(LispObject * args, LispObject * body);
+
+LispObject * get_builtin_1(LispObject * (* b_func_1)(LispObject *));
 
 LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *));
 

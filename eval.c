@@ -115,6 +115,15 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     switch(func->type) {
 
+    case TYPE_BUILTIN_1:
+
+	// TODO: proper error
+	assert(len(b_cdr(expr)) == 1);
+
+	result = func->b_func_1(eval(b_car(b_cdr(expr)), env));
+	pop();  // pop func
+	return result;
+
     case TYPE_BUILTIN_2:
 
 	// Use an empty statement after our label to work around a quirk where
@@ -135,7 +144,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
 	pop(); // pop arg1
 
-	result = func->c_func(arg1, arg2);
+	result = func->b_func_2(arg1, arg2);
 
 	pop();  // pop func
 

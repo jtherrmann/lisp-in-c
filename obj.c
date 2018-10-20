@@ -65,6 +65,11 @@ void make_initial_objs() {
     LispObject * cons_name = get_sym(cons_str);
     LispObject * cons_def = get_builtin_2(&b_cons);
     bind(cons_name, cons_def);
+
+    char car_str[] = "car";
+    LispObject * car_name = get_sym(car_str);
+    LispObject * car_def = get_builtin_1(&b_car);
+    bind(car_name, car_def);
 }
 
 
@@ -125,11 +130,20 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 }
 
 
+// get_builtin_1
+// Construct a builtin function that takes one argument.
+LispObject * get_builtin_1(LispObject * (* b_func_1)(LispObject *)) {
+    LispObject * obj = get_obj(TYPE_BUILTIN_1);
+    obj->b_func_1 = b_func_1;
+    return obj;
+}
+
+
 // get_builtin_2
-// Construct a builtin function that takes two operands.
-LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *)) {
+// Construct a builtin function that takes two arguments.
+LispObject * get_builtin_2(LispObject * (* b_func_2)(LispObject *, LispObject *)) {
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
-    obj->c_func = c_func;
+    obj->b_func_2 = b_func_2;
     return obj;
 }
 
@@ -206,7 +220,7 @@ bool b_funcp(LispObject * obj) {
 
 
 bool b_builtinp(LispObject * obj) {
-    return obj->type == TYPE_BUILTIN_2;
+    return obj->type == TYPE_BUILTIN_1 || obj->type == TYPE_BUILTIN_2;
 }
 
 
