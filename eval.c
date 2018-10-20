@@ -122,7 +122,8 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// https://stackoverflow.com/a/18496437
 	;
 
-	// TODO: check number of args
+	// TODO: proper error
+	assert(len(b_cdr(expr)) == 2);
 
 	LispObject * arg1 = eval(b_car(b_cdr(expr)), env);
 
