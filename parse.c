@@ -2,7 +2,6 @@
 // Source for parse functions.
 
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +28,10 @@ LispObject * parselist();
 int power(int b, int n);
 
 bool is_digit(char ch);
+
+bool is_sym_char(char ch);
+
+bool is_sym_start_char(char ch);
 
 
 // ============================================================================
@@ -57,12 +60,7 @@ LispObject * parse() {
 	return parselist();  // parselist fulfills parse's post.
     }
 
-    // TODO: support ' (syntax for quote) and "" (syntax for str)
-    if (input[input_index] != ')'
-	&& input[input_index] != '\''
-	&& input[input_index] != '"'
-	&& input[input_index] != '.'
-	&& input[input_index] != ':') {
+    if (is_sym_start_char(input[input_index]) || input[input_index] == '#') {
 
 	int start = input_index;
 	LispObject * sym = parsesym();  // parsesym fulfills parse's post.
@@ -171,15 +169,11 @@ LispObject * parseint() {
 }
 
 
-// TODO: only allow sym to start with a-z, A-Z, or -, and only allow chars
-// after the first char to be in that same set of chars or 0-9
-//
 // parsesym
 // Convert part of the input str to a Lisp symbol.
 //
 // Pre:
-// - input[input_index] is not a space, (, ), ', ", ., or :
-// - !is_digit(input[input_index])
+// - is_sym_start_char(input[input_index]) || input[input_index] == '#'
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
@@ -190,11 +184,12 @@ LispObject * parsesym() {
 
     // Go to the end of the substr that represents the symbol.
     int begin = input_index;
+    ++input_index;  // Skip validation of the first char in case it's '#'.
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
 	   && input[input_index] != INPUT_END) {
-	if (input[input_index] == '\'' || input[input_index] == '"') {
+	if (!is_sym_char(input[input_index])) {
 	    show_input_char();
 	    printf("%ssymbol contains invalid char '%c'\n",
 		   PARSE_ERR, input[input_index]);
@@ -295,4 +290,24 @@ int power(int b, int n) {
 // Return whether the char is in the range '0'-'9'.
 bool is_digit(char ch) {
     return ch >= '0' && ch <= '9';
+}
+
+
+// TODO: convert to macro
+//
+// is_sym_char
+// Return whether a symbol can contain the char.
+bool is_sym_char(char ch) {
+    return ch == '?' || (ch >= '0' && ch <= '9') || is_sym_start_char(ch);
+}
+
+
+// TODO: convert to macro
+//
+// is_sym_start_char
+// Return whether a symbol can start with the char.
+bool is_sym_start_char(char ch) {
+    return (ch >= 'a' && ch <= 'z')
+	|| (ch >= 'A' && ch <= 'Z')
+	|| ch == '-';
 }
