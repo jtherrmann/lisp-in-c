@@ -75,6 +75,9 @@ int main() {
 	else if (input[input_index] != INPUT_END) {
 	    obj = parse();
 
+	    // TODO: proper error
+	    assert(sp == 0);
+
 	    if (obj != NULL && input[input_index] != INPUT_END) {
 		show_input_char();
 		printf("%sexpected end of input but got '%c'\n",
@@ -93,8 +96,13 @@ int main() {
 
 		pop();
 
-		print_obj(obj);
-		printf("\n");
+		// TODO: proper error
+		assert(sp == 0);
+
+		if (obj != NULL) {
+		    print_obj(obj);
+		    printf("\n");
+		}
 	    }
 	}
     }

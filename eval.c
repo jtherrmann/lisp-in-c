@@ -11,6 +11,9 @@
 #include "stack.h"
 
 
+#define EVAL_ERR "Eval error: "
+
+
 // ============================================================================
 // Private function prototypes
 // ============================================================================
@@ -36,6 +39,9 @@ int len(LispObject * list);
 //   the value bound to that symbol. For example, a local env in which x is
 //   bound to 1 and y to 2 could be represented as ((y . 2) (x . 1)). The order
 //   in which the (name . value) pairs are listed does not matter.
+//
+// On error:
+// - Return NULL.
 LispObject * eval(LispObject * expr, LispObject * env) {
     if (b_number_pred(expr)
 	|| b_null_pred(expr)
@@ -70,8 +76,10 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     assert(b_cons_pred(expr));
 
     if (b_equal(b_car(expr), LISP_QUOTE)) {
-	// TODO: proper error
-	assert(!b_null_pred(b_cdr(expr)));
+	if (len(b_cdr(expr)) != 1) {
+	    printf("%sTODO: quote args err\n", EVAL_ERR);
+	    return NULL;
+	}
     	return b_car(b_cdr(expr));
     }
 
@@ -97,6 +105,9 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	    // clause; and eval's pre that env is protected from GC is still
 	    // true here.
 	    bool_val = eval(b_car(clause), env);
+
+	    if (bool_val == NULL)
+		return NULL;
 
 	    if (bool_val == LISP_T)
 		// clause being protected from GC meets eval's pre that expr is
@@ -126,6 +137,10 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	assert(b_symbol_pred(sym));
 
 	LispObject * def = eval(b_car(b_cdr(b_cdr(expr))), env);
+
+	if (def == NULL)
+	    return NULL;
+
 	bind(sym, def);
 
 	return def;
@@ -150,6 +165,10 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     // expr represents a function application.
 
     LispObject * func = eval(b_car(expr), env);
+
+    if (func == NULL)
+	return NULL;
+
     LispObject * result;
 
     // Protect func from GC that could be triggered by calls to eval and/or
@@ -166,8 +185,17 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// TODO: proper error
 	assert(len(b_cdr(expr)) == 1);
 
-	result = func->b_func_1(eval(b_car(b_cdr(expr)), env));
+	arg1 = eval(b_car(b_cdr(expr)), env);
+
+	if (arg1 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
+
+	result = func->b_func_1(arg1);
+
 	pop();  // pop func
+
 	return result;
 
     case TYPE_BOOL_BUILTIN_1:
@@ -175,8 +203,17 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// TODO: proper error
 	assert(len(b_cdr(expr)) == 1);
 
-	bool_result = func->b_bool_func_1(eval(b_car(b_cdr(expr)), env));
+	arg1 = eval(b_car(b_cdr(expr)), env);
+
+	if (arg1 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
+
+	bool_result = func->b_bool_func_1(arg1);
+
 	pop();  // pop func
+
 	return (bool_result ? LISP_T : LISP_F);
 
     case TYPE_BUILTIN_2:
@@ -186,6 +223,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
+	if (arg1 == NULL) {
+	    pop();  // pop func;
+	    return NULL;
+	}
+
 	// Protect arg1 from GC that could be triggered by eval'ing the second
 	// argument.
 	push(arg1);
@@ -193,6 +235,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
 
 	pop(); // pop arg1
+
+	if (arg2 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	result = func->b_func_2(arg1, arg2);
 
@@ -207,6 +254,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
 	arg1 = eval(b_car(b_cdr(expr)), env);
 
+	if (arg1 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
+
 	// Protect arg1 from GC that could be triggered by eval'ing the second
 	// argument.
 	push(arg1);
@@ -214,6 +266,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	arg2 = eval(b_car(b_cdr(b_cdr(expr))), env);
 
 	pop(); // pop arg1
+
+	if (arg2 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
 
 	bool_result = func->b_bool_func_2(arg1, arg2);
 
@@ -277,6 +334,9 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 // - arg_exprs is a list of the same length as arg_names.
 // - env is the current local environment, of the same form as described by
 //   eval's pre.
+//
+// On error:
+// - Return NULL.
 LispObject * get_env(LispObject * arg_names,
 		     LispObject * arg_exprs,
 		     LispObject * env)
@@ -296,10 +356,15 @@ LispObject * get_env(LispObject * arg_names,
 	// from GC meets eval's pre that its second arg is protected from GC.
 	arg_val = eval(b_car(arg_exprs), env);
 
+	if (arg_val == NULL) {
+	    pop();  // pop new_env
+	    return NULL;
+	}
+
 	// Construct a (name . value) pair.
 	binding = b_cons(b_car(arg_names), arg_val);
 
-	pop();
+	pop();  // pop new_env
 
 	new_env = b_cons(binding, new_env);
 
