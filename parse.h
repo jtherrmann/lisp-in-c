@@ -29,8 +29,6 @@ int input_index;
 // Public functions
 // ============================================================================
 
-int test_parse();
-
 LispObject * parse();
 
 void skipspace();

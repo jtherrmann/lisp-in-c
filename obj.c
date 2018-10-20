@@ -244,7 +244,6 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	return obj1->value == obj2->value;
 
     if (b_symbolp(obj1)) {
-	// TODO: tests
 	// TODO: once string interning implemented, just compare str ptrs (or
 	// intern entire symbols, in which case remove this if block because
 	// the first if (obj1 == obj2) will execute)
@@ -263,90 +262,4 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 
     printf("COMPARISON ERROR: unrecognized type\n");
     exit(1);
-}
-
-
-// ============================================================================
-// Tests
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Prototypes
-// ----------------------------------------------------------------------------
-
-void test_b_equal();
-
-
-// ----------------------------------------------------------------------------
-// Definitions
-// ----------------------------------------------------------------------------
-
-// Public test function.
-int test_obj() {
-    int total = 0;
-
-    test_b_equal();
-    ++total;
-
-    return total;
-}
-
-
-void test_b_equal() {
-    LispObject * obj1;
-    LispObject * obj2;
-
-    obj1 = get_int(1);
-    obj2 = LISP_NIL;
-    assert(!b_equal(obj1, obj2));
-
-    obj1 = LISP_NIL;
-    obj2 = LISP_NIL;
-    assert(b_equal(obj1, obj2));
-
-    obj1 = get_int(3);
-    obj2 = get_int(5);
-    assert(!b_equal(obj1, obj2));
-
-    obj1 = get_int(3);
-    obj2 = get_int(3);
-    assert(b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(1), LISP_NIL);
-    obj2 = b_cons(get_int(2), LISP_NIL);
-    assert(!b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(1), LISP_NIL);
-    obj2 = b_cons(get_int(1), LISP_NIL);
-    assert(b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(5), get_int(10));
-    obj2 = b_cons(get_int(3), get_int(10));
-    assert(!b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(5), get_int(10));
-    obj2 = b_cons(get_int(5), get_int(10));
-    assert(b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(1),
-		     b_cons(get_int(2),
-			       b_cons(get_int(3), get_int(3))));
-    obj2 = b_cons(get_int(1),
-		     b_cons(get_int(2),
-			       b_cons(get_int(3), LISP_NIL)));
-    assert(!b_equal(obj1, obj2));
-
-    obj1 = b_cons(get_int(1),
-		     b_cons(get_int(2),
-			       b_cons(get_int(3), LISP_NIL)));
-    obj2 = b_cons(get_int(1),
-		     b_cons(get_int(2),
-			       b_cons(get_int(3), LISP_NIL)));
-    assert(b_equal(obj1, obj2));
-
-    obj2 = LISP_NIL;
-    assert(!b_equal(obj1, obj2));
-
-    obj2 = obj1;
-    assert(b_equal(obj1, obj2));
 }

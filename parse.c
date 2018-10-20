@@ -10,7 +10,6 @@
 #include "obj.h"
 #include "parse.h"
 #include "stack.h"
-#include "tests.h"
 
 
 // TODO: parse negative ints
@@ -126,8 +125,6 @@ LispObject * parseint() {
 }
 
 
-// TODO: tests in test_parse_func
-//
 // parsesym
 // Convert part of the input str to a Lisp symbol.
 //
@@ -234,111 +231,4 @@ int power(int b, int n) {
 // Return whether the char is in the range '0'-'9'.
 bool is_digit(char ch) {
     return ch >= '0' && ch <= '9';
-}
-
-
-// ============================================================================
-// Tests
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// Prototypes
-// ----------------------------------------------------------------------------
-
-void test_power();
-
-void test_parse_func();
-
-
-// ----------------------------------------------------------------------------
-// Definitions
-// ----------------------------------------------------------------------------
-
-// Public test function.
-int test_parse() {
-    int total = 0;
-
-    test_power();
-    ++total;
-
-    test_parse_func();
-    ++total;
-
-    return total;
-}
-
-
-void test_power() {
-    assert(power(10, 0) == 1);
-    assert(power(10, 1) == 10);
-    assert(power(10, 2) == 100);
-    assert(power(10, 3) == 1000);
-
-    assert(power(-10, 0) == 1);
-    assert(power(-10, 1) == -10);
-    assert(power(-10, 2) == 100);
-    assert(power(-10, 3) == -1000);
-
-    assert(power(-15, 3) == -3375);
-    assert(power(-12, 4) == 20736);
-    assert(power(-6, 6) == 46656);
-    assert(power(-4, 7) == -16384);
-
-    assert(power(2, 12) == 4096);
-    assert(power(3, 3) == 27);
-    assert(power(5, 3) == 125);
-    assert(power(6, 5) == 7776);
-    assert(power(12, 4) == 20736);
-    assert(power(15, 3) == 3375);
-}
-
-
-// TODO: how to append the value of INPUT_END, instead of '\n', to the test
-// input strs?
-void test_parse_func() {
-    char input_int[] = "123\n";
-    strcpy(input, input_int);
-    input_index = 0;
-    assert(b_equal(parse(), get_int(123)));
-
-    char input_nil[] = "()\n";
-    strcpy(input, input_nil);
-    input_index = 0;
-    assert(b_equal(parse(), LISP_NIL));
-
-
-    // ------------------------------------------------------------------------
-    // input_list1
-
-    char input_list1[] = "(1 2 3)\n";
-    strcpy(input, input_list1);
-    input_index = 0;
-
-    // (cons 1 (cons 2 (cons 3 NIL)))
-    LispObject * list1 =
-	b_cons(get_int(1),
-		  b_cons(get_int(2),
-			    b_cons(get_int(3), LISP_NIL)));
-
-    assert(b_equal(parse(), list1));
-
-
-    // ------------------------------------------------------------------------
-    // input_list2
-
-    char input_list2[] = "(1 2 3 (20 30 ()) 500)\n";
-    strcpy(input, input_list2);
-    input_index = 0;
-
-    // (cons 1 (cons 2 (cons 3 (cons (cons 20 (cons 30 (cons NIL NIL))) (cons 500 NIL)))))
-    LispObject * list2 =
-	b_cons(get_int(1),
-		  b_cons(get_int(2),
-			    b_cons(get_int(3),
-				      b_cons(b_cons(get_int(20),
-							  b_cons(get_int(30),
-								    b_cons(LISP_NIL, LISP_NIL))),
-						b_cons(get_int(500), LISP_NIL)))));
-
-    assert(b_equal(parse(), list2));
 }

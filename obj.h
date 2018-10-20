@@ -143,12 +143,4 @@ bool b_builtinp(LispObject * obj);
 bool b_equal(LispObject * obj1, LispObject * obj2);
 
 
-// ============================================================================
-// Other public functions
-// ============================================================================
-
-int test_obj();
-
-
-
 #endif

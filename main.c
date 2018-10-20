@@ -4,7 +4,6 @@
 // - temp sources list:
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
-// - add tests
 // - remove unneeded #include lines
 // - comment all func definitions (name, summary, pre & post); don't comment
 //   prototypes (change where this has already been done)
@@ -29,7 +28,6 @@
 #include "parse.h"
 #include "print.h"
 #include "stack.h"
-#include "tests.h"
 
 
 // TODO: use the library used in build your own lisp to allow arrow keys and
@@ -58,10 +56,6 @@ int main() {
 
     make_initial_objs();
     assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
-
-    // TODO: maybe remove all tests entirely; then grep for uses of b_cons and
-    // make sure car and cdr are protected beforehand
-    /* run_tests(); */
 
     // Stores the return values of parse and eval.
     LispObject * obj;
