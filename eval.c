@@ -19,6 +19,8 @@ LispObject * get_env(LispObject * arg_names,
 		     LispObject * arg_exprs,
 		     LispObject * env);
 
+int len(LispObject * list);
+
 
 // ============================================================================
 // Public functions
@@ -144,15 +146,21 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
     assert(b_funcp(func));
 
-    // TODO: check args names and args exprs same length (get_env's pre)
+    // func is protected from GC, so it meets get_env's pre that arg_names is
+    // protected from GC, because func->args is reachable from func; and eval's
+    // pre that expr is protected from GC meets get_env's pre that arg_exprs is
+    // protected from GC, because b_cdr(expr) is reachable from expr.
+    LispObject * arg_names = func->args;
+    LispObject * arg_exprs = b_cdr(expr);
 
-    // func is protected from GC, so it meets get_env's pre that its first arg
-    // is protected from GC, because func->args is reachable from func; eval's
-    // pre that expr is protected from GC meets get_env's pre that its second
-    // arg is protected from GC, because b_cdr(expr) is reachable from expr;
-    // and eval's pre that env is protected from GC meets get_env's pre that
-    // its third arg is protected from GC.
-    LispObject * new_env = get_env(func->args, b_cdr(expr), env);
+    // TODO: proper error
+    //
+    // Meet get_env's pre that arg_exprs is the same length as arg_names.
+    assert(len(arg_exprs) == len(arg_names));
+
+    // eval's pre that env is protected from GC meets get_env's pre that env is
+    // protected from GC.
+    LispObject * new_env = get_env(arg_names, arg_exprs, env);
 
     // Meet eval's pre that env is protected from GC.
     push(new_env);
@@ -219,4 +227,20 @@ LispObject * get_env(LispObject * arg_names,
     }
 
     return new_env;
+}
+
+
+// len
+// Return the length of a Lisp list.
+//
+// Pre:
+// - b_listp(list)
+// - The last element of list is the empty list.
+int len(LispObject * list) {
+    int count = 0;
+    while (!b_null(list)) {
+	++count;
+	list = b_cdr(list);
+    }
+    return count;
 }
