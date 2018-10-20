@@ -75,6 +75,46 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     	return b_car(b_cdr(expr));
     }
 
+    if (b_equal(b_car(expr), LISP_COND)) {
+
+	// The new value of expr is still protected from GC because b_cdr(expr)
+	// is reachable from the old value of expr, which is protected from GC
+	// as per eval's pre.
+	expr = b_cdr(expr);
+
+	LispObject * clause;
+	LispObject * bool_val;
+	while (!b_null_pred(expr)) {
+	    // expr being protected from GC means that clause is protected from
+	    // GC because b_car(expr) is reachable from expr.
+	    clause = b_car(expr);
+
+	    // TODO: proper error
+	    assert(len(clause) == 2);
+
+	    // clause being protected from GC meets eval's pre that expr is
+	    // protected from GC because b_car(clause) is reachable from
+	    // clause; and eval's pre that env is protected from GC is still
+	    // true here.
+	    bool_val = eval(b_car(clause), env);
+
+	    if (bool_val == LISP_T)
+		// clause being protected from GC meets eval's pre that expr is
+		// protected from GC because b_car(b_cdr(clause)) is reachable
+		// from clause; and eval's pre that env is protected from GC is
+		// still true here.
+		return eval(b_car(b_cdr(clause)), env);
+
+	    // TODO: proper error
+	    assert(bool_val == LISP_F);
+
+	    // The new value of expr is still protected from GC because
+	    // b_cdr(expr) is reachable from the old value of expr.
+	    expr = b_cdr(expr);
+	}
+	return LISP_NIL;
+    }
+
     if(b_equal(b_car(expr), LISP_DEF)) {
 	// TODO: proper errors
 

@@ -64,6 +64,9 @@ void make_initial_objs() {
     char quote[] = "quote";
     LISP_QUOTE = get_sym(quote);
 
+    char cond[] = "cond";
+    LISP_COND = get_sym(cond);
+
     char def[] = "def";
     LISP_DEF = get_sym(def);
 

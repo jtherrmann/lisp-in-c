@@ -47,6 +47,7 @@ LispObject * LISP_F_SYM;
 
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;
+LispObject * LISP_COND;
 LispObject * LISP_DEF;
 LispObject * LISP_LAMBDA;
 
