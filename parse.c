@@ -13,6 +13,7 @@
 
 
 // TODO: parse negative ints
+// TODO: ignore comments (; and anything after)
 
 
 // ============================================================================
@@ -42,6 +43,9 @@ bool is_digit(char ch);
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
+//
+// On error:
+// - Return NULL.
 LispObject * parse() {
     if (is_digit(input[input_index]))
 	return parseint();  // parseint fulfills parse's post.
@@ -62,6 +66,9 @@ LispObject * parse() {
 
 	LispObject * sym = parsesym();  // parsesym fulfills parse's post.
 
+	if (sym == NULL)
+	    return NULL;
+
 	if (b_equal(sym, LISP_T_SYM))
 	    return LISP_T;
 
@@ -70,9 +77,11 @@ LispObject * parse() {
 
 	return sym;
     }
-    
-    printf("PARSE ERROR: unrecognized char\n");
-    exit(1);
+
+    show_input_char();
+    printf("%s'%c' unrecognized in this context\n",
+	   PARSE_ERR, input[input_index]);
+    return NULL;
 }
 
 
@@ -80,6 +89,20 @@ LispObject * parse() {
 void skipspace() {
     while (input[input_index] == ' ')
 	++input_index;
+}
+
+
+// show_input_char
+// Print a '^' char below the current input char.
+//
+// Pre:
+// - input[input_index] is the current input char.
+// - The REPL prompt is two chars wide.
+void show_input_char() {
+    printf("  ");
+    for (int i = 0; i < input_index; ++i)
+	printf(" ");
+    printf("^\n");
 }
 
 
@@ -98,6 +121,9 @@ void skipspace() {
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
+//
+// On error:
+// - Return NULL.
 LispObject * parseint() {
 
     // Go to the end of the substr that represents the int.
@@ -107,8 +133,10 @@ LispObject * parseint() {
 	   && input[input_index] != ' '
 	   && input[input_index] != INPUT_END) {
     	if (!is_digit(input[input_index])) {
-    	    printf("PARSE ERROR: non-digit char in number\n");
-	    exit(1);
+	    show_input_char();
+	    printf("%snumber contains non-numeral '%c'\n",
+		   PARSE_ERR, input[input_index]);
+	    return NULL;
 	}
     	++input_index;
     }
@@ -147,6 +175,9 @@ LispObject * parseint() {
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
+//
+// On error:
+// - Return NULL.
 LispObject * parsesym() {
 
     // Go to the end of the substr that represents the symbol.
@@ -156,8 +187,10 @@ LispObject * parsesym() {
 	   && input[input_index] != ' '
 	   && input[input_index] != INPUT_END) {
 	if (input[input_index] == '\'' || input[input_index] == '"') {
-	    printf("PARSE ERROR: invalid char in symbol\n");
-	    exit(1);
+	    show_input_char();
+	    printf("%ssymbol contains invalid char '%c'\n",
+		   PARSE_ERR, input[input_index]);
+	    return NULL;
 	}
 	++input_index;
     }
@@ -190,6 +223,9 @@ LispObject * parsesym() {
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
+//
+// On error:
+// - Return NULL.
 LispObject * parselist() {
     if (input[input_index] == ')') {
 	// Fulfill post.
@@ -201,13 +237,17 @@ LispObject * parselist() {
     }
 
     if (input[input_index] == INPUT_END) {
-	printf("PARSE ERROR: incomplete list\n");
-	exit(1);
+	show_input_char();
+	printf("%sincomplete list\n", PARSE_ERR);
+	return NULL;
     }
 
     // Invariant: pre still true.
 
     LispObject * car = parse(input);  // parselist's pre meets parse's pre.
+
+    if (car == NULL)
+	return NULL;
 
     // Protect car from GC that could be triggered by parselist (when it calls
     // parse, above).
@@ -216,6 +256,9 @@ LispObject * parselist() {
     LispObject * cdr = parselist(input);
 
     pop();
+
+    if (cdr == NULL)
+	return NULL;
 
     LispObject * cons = b_cons(car, cdr);
     return cons;

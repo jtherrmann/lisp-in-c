@@ -14,7 +14,10 @@
 // ============================================================================
 
 #define INPUT_LEN 2048
+
 #define INPUT_END '\n'
+
+#define PARSE_ERR "Parse error: "
 
 
 // ============================================================================
@@ -22,6 +25,7 @@
 // ============================================================================
 
 char input[INPUT_LEN];
+
 int input_index;
 
 
@@ -32,6 +36,8 @@ int input_index;
 LispObject * parse();
 
 void skipspace();
+
+void show_input_char();
 
 
 #endif

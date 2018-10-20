@@ -75,23 +75,27 @@ int main() {
 	else if (input[input_index] != INPUT_END) {
 	    obj = parse();
 
-	    if (input[input_index] != INPUT_END) {
-		printf("PARSE ERROR: multiple expressions\n");
-		exit(1);
+	    if (obj != NULL && input[input_index] != INPUT_END) {
+		show_input_char();
+		printf("%sexpected end of input but got '%c'\n",
+		       PARSE_ERR, input[input_index]);
+		obj = NULL;
 	    }
 
-	    // Meet eval's pre by protecting its first arg from GC.
-	    push(obj);
+	    if (obj != NULL) {
+		// Meet eval's pre by protecting its first arg from GC.
+		push(obj);
 
-	    // LISP_NIL is part of the initial set of objects protected from
-	    // GC, so it meets eval's pre that its second arg is protected from
-	    // GC.
-	    obj = eval(obj, LISP_NIL);
+		// LISP_NIL is part of the initial set of objects protected from
+		// GC, so it meets eval's pre that its second arg is protected from
+		// GC.
+		obj = eval(obj, LISP_NIL);
 
-	    pop();
+		pop();
 
-	    print_obj(obj);
-	    printf("\n");
+		print_obj(obj);
+		printf("\n");
+	    }
 	}
     }
 
