@@ -72,57 +72,57 @@ void make_initial_objs() {
 
     char cons_str[] = "cons";
     LispObject * cons_name = get_sym(cons_str);
-    LispObject * cons_def = get_builtin_2(&b_cons);
+    LispObject * cons_def = get_builtin_2(cons_name, &b_cons);
     bind(cons_name, cons_def);
 
     char car_str[] = "car";
     LispObject * car_name = get_sym(car_str);
-    LispObject * car_def = get_builtin_1(&b_car);
+    LispObject * car_def = get_builtin_1(car_name, &b_car);
     bind(car_name, car_def);
 
     char cdr_str[] = "cdr";
     LispObject * cdr_name = get_sym(cdr_str);
-    LispObject * cdr_def = get_builtin_1(&b_cdr);
+    LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr);
     bind(cdr_name, cdr_def);
 
     char equal_str[] = "eq";
     LispObject * equal_name = get_sym(equal_str);
-    LispObject * equal_def = get_bool_builtin_2(&b_equal);
+    LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal);
     bind(equal_name, equal_def);
 
     char null_pred_str[] = "null?";
     LispObject * null_pred_name = get_sym(null_pred_str);
-    LispObject * null_pred_def = get_bool_builtin_1(&b_null_pred);
+    LispObject * null_pred_def = get_bool_builtin_1(null_pred_name, &b_null_pred);
     bind(null_pred_name, null_pred_def);
 
     char number_pred_str[] = "number?";
     LispObject * number_pred_name = get_sym(number_pred_str);
-    LispObject * number_pred_def = get_bool_builtin_1(&b_number_pred);
+    LispObject * number_pred_def = get_bool_builtin_1(number_pred_name, &b_number_pred);
     bind(number_pred_name, number_pred_def);
 
     char symbol_pred_str[] = "symbol?";
     LispObject * symbol_pred_name = get_sym(symbol_pred_str);
-    LispObject * symbol_pred_def = get_bool_builtin_1(&b_symbol_pred);
+    LispObject * symbol_pred_def = get_bool_builtin_1(symbol_pred_name, &b_symbol_pred);
     bind(symbol_pred_name, symbol_pred_def);
 
     char cons_pred_str[] = "cons?";
     LispObject * cons_pred_name = get_sym(cons_pred_str);
-    LispObject * cons_pred_def = get_bool_builtin_1(&b_cons_pred);
+    LispObject * cons_pred_def = get_bool_builtin_1(cons_pred_name, &b_cons_pred);
     bind(cons_pred_name, cons_pred_def);
 
     char list_pred_str[] = "list?";
     LispObject * list_pred_name = get_sym(list_pred_str);
-    LispObject * list_pred_def = get_bool_builtin_1(&b_list_pred);
+    LispObject * list_pred_def = get_bool_builtin_1(list_pred_name, &b_list_pred);
     bind(list_pred_name, list_pred_def);
 
     char func_pred_str[] = "func?";
     LispObject * func_pred_name = get_sym(func_pred_str);
-    LispObject * func_pred_def = get_bool_builtin_1(&b_func_pred);
+    LispObject * func_pred_def = get_bool_builtin_1(func_pred_name, &b_func_pred);
     bind(func_pred_name, func_pred_def);
 
     char builtin_pred_str[] = "builtin?";
     LispObject * builtin_pred_name = get_sym(builtin_pred_str);
-    LispObject * builtin_pred_def = get_bool_builtin_1(&b_builtin_pred);
+    LispObject * builtin_pred_def = get_bool_builtin_1(builtin_pred_name, &b_builtin_pred);
     bind(builtin_pred_name, builtin_pred_def);
 }
 
@@ -186,35 +186,43 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 
 // get_builtin_1
 // Construct a builtin function that takes one argument.
-LispObject * get_builtin_1(LispObject * (* b_func_1)(LispObject *)) {
+LispObject * get_builtin_1(LispObject * builtin_name, LispObject * (* b_func_1)(LispObject *)) {
+    assert(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BUILTIN_1);
     obj->b_func_1 = b_func_1;
+    obj->builtin_name = builtin_name;
     return obj;
 }
 
 
 // get_builtin_2
 // Construct a builtin function that takes two arguments.
-LispObject * get_builtin_2(LispObject * (* b_func_2)(LispObject *, LispObject *)) {
+LispObject * get_builtin_2(LispObject * builtin_name, LispObject * (* b_func_2)(LispObject *, LispObject *)) {
+    assert(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
     obj->b_func_2 = b_func_2;
+    obj->builtin_name = builtin_name;
     return obj;
 }
 
 
 // get_bool_builtin_1
 // Construct a builtin function that takes one argument and returns a bool.
-LispObject * get_bool_builtin_1(bool (* b_bool_func_1)(LispObject *)) {
+LispObject * get_bool_builtin_1(LispObject * builtin_name, bool (* b_bool_func_1)(LispObject *)) {
+    assert(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
     obj->b_bool_func_1 = b_bool_func_1;
+    obj->builtin_name = builtin_name;
     return obj;
 }
 
 
 // get_bool_builtin_2
-LispObject * get_bool_builtin_2(bool (* b_bool_func_2)(LispObject *, LispObject *)) {
+LispObject * get_bool_builtin_2(LispObject * builtin_name, bool (* b_bool_func_2)(LispObject *, LispObject *)) {
+    assert(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
+    obj->builtin_name = builtin_name;
     return obj;
 }
 

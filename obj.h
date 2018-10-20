@@ -79,17 +79,22 @@ struct LispObjectStruct {
 	    LispObject * body;
 	};
 
-	// TYPE_BUILTIN_1
-	LispObject * (* b_func_1)(LispObject *);
+	struct {
+	    LispObject * builtin_name;
+	    union{
+		// TYPE_BUILTIN_1
+		LispObject * (* b_func_1)(LispObject *);
 
-	// TYPE_BUILTIN_2
-	LispObject * (* b_func_2)(LispObject *, LispObject *);
+		// TYPE_BUILTIN_2
+		LispObject * (* b_func_2)(LispObject *, LispObject *);
 
-	// TYPE_BOOL_BUILTIN_1
-	bool (* b_bool_func_1)(LispObject *);
+		// TYPE_BOOL_BUILTIN_1
+		bool (* b_bool_func_1)(LispObject *);
 
-	// TYPE_BOOL_BUILTIN_2
-	bool (* b_bool_func_2)(LispObject *, LispObject *);
+		// TYPE_BOOL_BUILTIN_2
+		bool (* b_bool_func_2)(LispObject *, LispObject *);
+	    };
+	};
     };
 
     bool marked;
@@ -118,13 +123,17 @@ LispObject * get_sym_by_substr(char * str, int begin, int end);
 
 LispObject * get_func(LispObject * args, LispObject * body);
 
-LispObject * get_builtin_1(LispObject * (* b_func_1)(LispObject *));
+LispObject * get_builtin_1(LispObject * builtin_name,
+			   LispObject * (* b_func_1)(LispObject *));
 
-LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *));
+LispObject * get_builtin_2(LispObject * builtin_name,
+			   LispObject * (* b_func_2)(LispObject *, LispObject *));
 
-LispObject * get_bool_builtin_1(bool (* b_bool_func_1)(LispObject *));
+LispObject * get_bool_builtin_1(LispObject * builtin_name,
+				bool (* b_bool_func_1)(LispObject *));
 
-LispObject * get_bool_builtin_2(bool (* b_bool_func_2)(LispObject *, LispObject *));
+LispObject * get_bool_builtin_2(LispObject * builtin_name,
+				bool (* b_bool_func_2)(LispObject *, LispObject *));
 
 
 // ----------------------------------------------------------------------------

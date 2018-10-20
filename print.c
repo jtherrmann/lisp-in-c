@@ -56,8 +56,9 @@ void print_obj(LispObject * obj) {
     }
 
     else if (b_builtin_pred(obj)) {
-	printf("<builtin function>");
-	// TODO: store print names with builtins and print them here
+	printf("<builtin function: ");
+	print_obj(obj->builtin_name);
+	printf(">");
     }
 
     else {
