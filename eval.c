@@ -37,10 +37,13 @@ int len(LispObject * list);
 //   bound to 1 and y to 2 could be represented as ((y . 2) (x . 1)). The order
 //   in which the (name . value) pairs are listed does not matter.
 LispObject * eval(LispObject * expr, LispObject * env) {
-    if (b_numberp(expr) || b_null(expr) || expr == LISP_T || expr == LISP_F)
+    if (b_number_pred(expr)
+	|| b_null_pred(expr)
+	|| expr == LISP_T
+	|| expr == LISP_F)
 	return expr;
 
-    if (b_symbolp(expr)) {
+    if (b_symbol_pred(expr)) {
 	// expr is a symbol, so find the value to which it's bound.
 
 	// Search the local env for expr's binding.
@@ -64,11 +67,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	return get_def(expr);
     }
 
-    assert(b_consp(expr));
+    assert(b_cons_pred(expr));
 
     if (b_equal(b_car(expr), LISP_QUOTE)) {
 	// TODO: proper error
-	assert(!b_null(b_cdr(expr)));
+	assert(!b_null_pred(b_cdr(expr)));
     	return b_car(b_cdr(expr));
     }
 
@@ -76,11 +79,11 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// TODO: proper errors
 
 	// Check that there are two operands.
-	assert(!b_null(b_cdr(b_cdr(expr))));
-	assert(b_null(b_cdr(b_cdr(b_cdr(expr)))));
+	assert(!b_null_pred(b_cdr(b_cdr(expr))));
+	assert(b_null_pred(b_cdr(b_cdr(b_cdr(expr)))));
 
 	LispObject * sym = b_car(b_cdr(expr));
-	assert(b_symbolp(sym));
+	assert(b_symbol_pred(sym));
 
 	LispObject * def = eval(b_car(b_cdr(b_cdr(expr))), env);
 	bind(sym, def);
@@ -95,8 +98,8 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	// get_env's pre
 
 	// Check that there are two operands.
-	assert(!b_null(b_cdr(b_cdr(expr))));
-	assert(b_null(b_cdr(b_cdr(b_cdr(expr)))));
+	assert(!b_null_pred(b_cdr(b_cdr(expr))));
+	assert(b_null_pred(b_cdr(b_cdr(b_cdr(expr)))));
 
 	// eval's pre that expr is protected from GC meets get_func's pre that
 	// its args are protected from GC, because b_car(b_cdr(expr)) and
@@ -163,7 +166,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	break;
     }
 
-    assert(b_funcp(func));
+    assert(b_func_pred(func));
 
     // func is protected from GC, so it meets get_env's pre that arg_names is
     // protected from GC, because func->args is reachable from func; and eval's
@@ -253,11 +256,11 @@ LispObject * get_env(LispObject * arg_names,
 // Return the length of a Lisp list.
 //
 // Pre:
-// - b_listp(list)
+// - b_list_pred(list)
 // - The last element of list is the empty list.
 int len(LispObject * list) {
     int count = 0;
-    while (!b_null(list)) {
+    while (!b_null_pred(list)) {
 	++count;
 	list = b_cdr(list);
     }

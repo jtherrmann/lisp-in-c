@@ -80,11 +80,11 @@ void mark_obj(LispObject * obj) {
 
 	obj->marked = true;
 
-	if (b_consp(obj)) {
+	if (b_cons_pred(obj)) {
 	    mark_obj(b_car(obj));
 	    mark_obj(b_cdr(obj));
 	}
-	else if (b_funcp(obj)) {
+	else if (b_func_pred(obj)) {
 	    mark_obj(obj->args);
 	    mark_obj(obj->body);
 	}
@@ -138,7 +138,7 @@ void free_obj(LispObject * obj) {
 	printf("\n");
     }
 
-    if (b_symbolp(obj))
+    if (b_symbol_pred(obj))
 	free(obj->print_name);
 
     free(obj);

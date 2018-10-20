@@ -136,19 +136,19 @@ LispObject * b_cdr(LispObject * obj);
 // Type predicates
 // ============================================================================
 
-bool b_null(LispObject * obj);
+bool b_null_pred(LispObject * obj);
 
-bool b_numberp(LispObject * obj);
+bool b_number_pred(LispObject * obj);
 
-bool b_symbolp(LispObject * obj);
+bool b_symbol_pred(LispObject * obj);
 
-bool b_consp(LispObject * obj);
+bool b_cons_pred(LispObject * obj);
 
-bool b_listp(LispObject * obj);
+bool b_list_pred(LispObject * obj);
 
-bool b_funcp(LispObject * obj);
+bool b_func_pred(LispObject * obj);
 
-bool b_builtinp(LispObject * obj);
+bool b_builtin_pred(LispObject * obj);
 
 
 // ============================================================================

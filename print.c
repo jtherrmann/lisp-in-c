@@ -15,7 +15,7 @@
 // Print a non-empty Lisp list.
 //
 // Pre:
-// - b_consp(obj)
+// - b_cons_pred(obj)
 void print_list(LispObject * obj);
 
 
@@ -24,7 +24,7 @@ void print_list(LispObject * obj);
 // ============================================================================
 
 void print_obj(LispObject * obj) {
-    if (b_null(obj))
+    if (b_null_pred(obj))
 	printf("NIL");
 
     else if (obj == LISP_T)
@@ -33,13 +33,13 @@ void print_obj(LispObject * obj) {
     else if (obj == LISP_F)
 	print_obj(LISP_F_SYM);
 
-    else if (b_numberp(obj))
+    else if (b_number_pred(obj))
 	printf("%d", obj->value);
 
-    else if (b_symbolp(obj))
+    else if (b_symbol_pred(obj))
 	printf("%s", obj->print_name);
 
-    else if (b_consp(obj))
+    else if (b_cons_pred(obj))
 	// TODO: print lists properly but maybe leave this version in as a
 	// debug option
 	/* printf("(cons "); */
@@ -49,13 +49,13 @@ void print_obj(LispObject * obj) {
 	/* printf(")"); */
 	print_list(obj);
 
-    else if (b_funcp(obj)) {
+    else if (b_func_pred(obj)) {
 	printf("<function>");
 	print_obj(obj->args);
 	print_obj(obj->body);
     }
 
-    else if (b_builtinp(obj)) {
+    else if (b_builtin_pred(obj)) {
 	printf("<builtin function>");
 	// TODO: store print names with builtins and print them here
     }
@@ -81,7 +81,7 @@ void print_list(LispObject * obj) {
 	print_obj(b_car(obj));
 	obj = b_cdr(obj);
 
-	if (!b_consp(obj))
+	if (!b_cons_pred(obj))
 	    break;
 
 	printf(" ");
@@ -93,7 +93,7 @@ void print_list(LispObject * obj) {
 	}
     }
 
-    if (!b_null(obj)) {
+    if (!b_null_pred(obj)) {
 	printf(" . ");
 	print_obj(obj);
     }

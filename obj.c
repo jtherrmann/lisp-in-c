@@ -85,10 +85,10 @@ void make_initial_objs() {
     LispObject * cdr_def = get_builtin_1(&b_cdr);
     bind(cdr_name, cdr_def);
 
-    char null_str[] = "null";
-    LispObject * null_name = get_sym(null_str);
-    LispObject * null_def = get_bool_builtin_1(&b_null);
-    bind(null_name, null_def);
+    char null_pred_str[] = "null?";
+    LispObject * null_pred_name = get_sym(null_pred_str);
+    LispObject * null_pred_def = get_bool_builtin_1(&b_null_pred);
+    bind(null_pred_name, null_pred_def);
 }
 
 
@@ -139,7 +139,7 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 // Pre: args and body are protected from garbage collection.
 LispObject * get_func(LispObject * args, LispObject * body) {
     // TODO: proper errors
-    assert(b_listp(args));
+    assert(b_list_pred(args));
 
     LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;
@@ -201,14 +201,14 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 
 LispObject * b_car(LispObject * obj) {
     // TODO: proper typecheck
-    assert(b_listp(obj));
+    assert(b_list_pred(obj));
     return obj->car;
 }
 
 
 LispObject * b_cdr(LispObject * obj) {
     // TODO: proper typecheck
-    assert(b_listp(obj));
+    assert(b_list_pred(obj));
     return obj->cdr;
 }
 
@@ -217,37 +217,37 @@ LispObject * b_cdr(LispObject * obj) {
 // Type predicates
 // ============================================================================
 
-bool b_null(LispObject * obj) {
+bool b_null_pred(LispObject * obj) {
     return obj == LISP_NIL;
 }
 
 
-bool b_numberp(LispObject * obj) {
+bool b_number_pred(LispObject * obj) {
     return obj->type == TYPE_INT;
 }
 
 
-bool b_symbolp(LispObject * obj) {
+bool b_symbol_pred(LispObject * obj) {
     return obj->type == TYPE_SYM;
 }
 
 
-bool b_consp(LispObject * obj) {
+bool b_cons_pred(LispObject * obj) {
     return obj->type == TYPE_CONS;
 }
 
 
-bool b_listp(LispObject * obj) {
-    return b_consp(obj) || b_null(obj);
+bool b_list_pred(LispObject * obj) {
+    return b_cons_pred(obj) || b_null_pred(obj);
 }
 
 
-bool b_funcp(LispObject * obj) {
+bool b_func_pred(LispObject * obj) {
     return obj->type == TYPE_FUNC;
 }
 
 
-bool b_builtinp(LispObject * obj) {
+bool b_builtin_pred(LispObject * obj) {
     return obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1;
@@ -265,10 +265,10 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
     if (obj1->type != obj2->type)
 	return false;
 
-    if (b_numberp(obj1))
+    if (b_number_pred(obj1))
 	return obj1->value == obj2->value;
 
-    if (b_symbolp(obj1)) {
+    if (b_symbol_pred(obj1)) {
 	// TODO: once string interning implemented, just compare str ptrs (or
 	// intern entire symbols, in which case remove this if block because
 	// the first if (obj1 == obj2) will execute)
@@ -281,7 +281,7 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	return obj1->print_name[i] == obj2->print_name[i];
     }
 
-    if (b_consp(obj1))
+    if (b_cons_pred(obj1))
 	return b_equal(b_car(obj1), b_car(obj2))
 	    && b_equal(b_cdr(obj1), b_cdr(obj2));
 

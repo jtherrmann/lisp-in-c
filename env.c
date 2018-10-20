@@ -28,7 +28,7 @@ struct binding * lookup(LispObject * sym, unsigned hashval);
 // Bind a name to a definition.
 //
 // Pre:
-// - b_symbolp(sym)
+// - b_symbol_pred(sym)
 void bind(LispObject * sym, LispObject * def) {
     unsigned hashval = hash(sym);
     struct binding * b = lookup(sym, hashval);
@@ -46,7 +46,7 @@ void bind(LispObject * sym, LispObject * def) {
 // Return the definition bound to the given name.
 //
 // Pre:
-// - b_symbolp(sym)
+// - b_symbol_pred(sym)
 LispObject * get_def(LispObject * sym) {
     unsigned hashval = hash(sym);
     struct binding * b = lookup(sym, hashval);
@@ -64,7 +64,7 @@ LispObject * get_def(LispObject * sym) {
 // Hash a symbol.
 //
 // Pre:
-// - b_symbolp(sym)
+// - b_symbol_pred(sym)
 unsigned hash(LispObject * sym) {
     unsigned hashval = 0;
     int i = 0;
@@ -81,7 +81,7 @@ unsigned hash(LispObject * sym) {
 // binding does not exist.
 //
 // Pre:
-// - b_symbolp(sym)
+// - b_symbol_pred(sym)
 // - hashval == hash(sym)
 struct binding * lookup(LispObject * sym, unsigned hashval) {
     for (struct binding * b = global_env[hashval]; b != NULL; b = b->next)
