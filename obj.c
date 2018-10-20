@@ -89,6 +89,36 @@ void make_initial_objs() {
     LispObject * null_pred_name = get_sym(null_pred_str);
     LispObject * null_pred_def = get_bool_builtin_1(&b_null_pred);
     bind(null_pred_name, null_pred_def);
+
+    char number_pred_str[] = "number?";
+    LispObject * number_pred_name = get_sym(number_pred_str);
+    LispObject * number_pred_def = get_bool_builtin_1(&b_number_pred);
+    bind(number_pred_name, number_pred_def);
+
+    char symbol_pred_str[] = "symbol?";
+    LispObject * symbol_pred_name = get_sym(symbol_pred_str);
+    LispObject * symbol_pred_def = get_bool_builtin_1(&b_symbol_pred);
+    bind(symbol_pred_name, symbol_pred_def);
+
+    char cons_pred_str[] = "cons?";
+    LispObject * cons_pred_name = get_sym(cons_pred_str);
+    LispObject * cons_pred_def = get_bool_builtin_1(&b_cons_pred);
+    bind(cons_pred_name, cons_pred_def);
+
+    char list_pred_str[] = "list?";
+    LispObject * list_pred_name = get_sym(list_pred_str);
+    LispObject * list_pred_def = get_bool_builtin_1(&b_list_pred);
+    bind(list_pred_name, list_pred_def);
+
+    char func_pred_str[] = "func?";
+    LispObject * func_pred_name = get_sym(func_pred_str);
+    LispObject * func_pred_def = get_bool_builtin_1(&b_func_pred);
+    bind(func_pred_name, func_pred_def);
+
+    char builtin_pred_str[] = "builtin?";
+    LispObject * builtin_pred_name = get_sym(builtin_pred_str);
+    LispObject * builtin_pred_def = get_bool_builtin_1(&b_builtin_pred);
+    bind(builtin_pred_name, builtin_pred_def);
 }
 
 
