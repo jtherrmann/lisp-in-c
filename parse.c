@@ -125,6 +125,9 @@ LispObject * parseint() {
 }
 
 
+// TODO: only allow sym to start with a-z, A-Z, or -, and only allow chars
+// after the first char to be in that same set of chars or 0-9
+//
 // parsesym
 // Convert part of the input str to a Lisp symbol.
 //
