@@ -36,19 +36,21 @@ void free_obj(LispObject * obj);
 // ============================================================================
 
 // mark
-// Mark NIL, symbols representing special forms, and objects reachable from the
-// global environment or the stack.
+// Mark the initial set of objects and objects reachable from the global
+// environment or the stack.
 void mark() {
-
-    // NIL
     mark_obj(LISP_NIL);
 
-    // Special forms.
+    mark_obj(LISP_T);
+    mark_obj(LISP_F);
+
+    mark_obj(LISP_T_SYM);
+    mark_obj(LISP_F_SYM);
+
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_DEF);
     mark_obj(LISP_LAMBDA);
 
-    // Global env.
     struct binding * b;
     for (int i = 0; i < HASHSIZE; ++i) {
 	for (b = global_env[i]; b != NULL; b = b->next) {
@@ -57,7 +59,6 @@ void mark() {
 	}
     }
 
-    // Stack.
     for (int i = sp; i > 0; --i)
 	mark_obj(stack[i]);
 }

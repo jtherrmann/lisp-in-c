@@ -58,8 +58,24 @@ LispObject * parse() {
 	&& input[input_index] != '\''
 	&& input[input_index] != '"'
 	&& input[input_index] != '.'
-	&& input[input_index] != ':')
-	return parsesym();  // parsesym fulfills parse's post.
+	&& input[input_index] != ':') {
+
+	LispObject * sym = parsesym();  // parsesym fulfills parse's post.
+
+	if (b_equal(sym, LISP_T_SYM))
+	    return LISP_T;
+
+	if (b_equal(sym, LISP_F_SYM))
+	    return LISP_F;
+
+	if (sym->print_name[0] == '#')
+	    // TODO: remove this if decide not to use #t and #f for LISP_T_SYM
+	    // and LISP_F_SYM
+	    // TODO: proper error
+	    assert(false);
+
+	return sym;
+    }
     
     printf("PARSE ERROR: unrecognized char\n");
     exit(1);

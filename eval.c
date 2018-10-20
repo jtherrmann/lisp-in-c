@@ -37,7 +37,7 @@ int len(LispObject * list);
 //   bound to 1 and y to 2 could be represented as ((y . 2) (x . 1)). The order
 //   in which the (name . value) pairs are listed does not matter.
 LispObject * eval(LispObject * expr, LispObject * env) {
-    if (b_numberp(expr) || b_null(expr))
+    if (b_numberp(expr) || b_null(expr) || expr == LISP_T || expr == LISP_F)
 	return expr;
 
     if (b_symbolp(expr)) {

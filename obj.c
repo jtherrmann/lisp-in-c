@@ -19,7 +19,7 @@
 
 LispObject * get_obj(LispType type) {
     // TODO: determine good number for demo; define it in gc.h
-    if (weakrefs_count > 20)
+    if (weakrefs_count > 30)
 	collect_garbage();
 
     // TODO: check for malloc error code?
@@ -36,7 +36,7 @@ LispObject * get_obj(LispType type) {
 }
 
 LispObject * get_nil() {
-    LispObject * obj = get_obj(TYPE_NIL);
+    LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->car = obj;
     obj->cdr = obj;
     return obj;
@@ -51,6 +51,15 @@ LispObject * get_nil() {
 // Construct an initial set of Lisp objects.
 void make_initial_objs() {
     LISP_NIL = get_nil();
+
+    LISP_T = get_obj(TYPE_UNIQUE);
+    LISP_F = get_obj(TYPE_UNIQUE);
+
+    char T_str[] = "#t";
+    LISP_T_SYM = get_sym(T_str);
+
+    char F_str[] = "#f";
+    LISP_F_SYM = get_sym(F_str);
 
     char quote[] = "quote";
     LISP_QUOTE = get_sym(quote);

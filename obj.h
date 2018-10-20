@@ -20,11 +20,11 @@ typedef struct LispObjectStruct LispObject;
 typedef enum {
 	      TYPE_INT,
 	      TYPE_SYM,
+	      TYPE_UNIQUE,
 	      TYPE_CONS,
 	      TYPE_FUNC,
 	      TYPE_BUILTIN_1,
-	      TYPE_BUILTIN_2,
-	      TYPE_NIL
+	      TYPE_BUILTIN_2
 } LispType;
 
 
@@ -34,6 +34,14 @@ typedef enum {
 
 // The empty list object NIL.
 LispObject * LISP_NIL;
+
+// Boolean objects.
+LispObject * LISP_T;
+LispObject * LISP_F;
+
+// Boolean symbols.
+LispObject * LISP_T_SYM;
+LispObject * LISP_F_SYM;
 
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;
@@ -57,7 +65,7 @@ struct LispObjectStruct {
 	// TYPE_SYM
 	char * print_name;
 
-	// TYPE_CONS and TYPE_NIL
+	// TYPE_CONS and LISP_NIL
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;

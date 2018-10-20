@@ -27,6 +27,12 @@ void print_obj(LispObject * obj) {
     if (b_null(obj))
 	printf("NIL");
 
+    else if (obj == LISP_T)
+	print_obj(LISP_T_SYM);
+
+    else if (obj == LISP_F)
+	print_obj(LISP_F_SYM);
+
     else if (b_numberp(obj))
 	printf("%d", obj->value);
 
