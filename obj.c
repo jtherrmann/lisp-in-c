@@ -70,6 +70,11 @@ void make_initial_objs() {
     LispObject * car_name = get_sym(car_str);
     LispObject * car_def = get_builtin_1(&b_car);
     bind(car_name, car_def);
+
+    char cdr_str[] = "cdr";
+    LispObject * cdr_name = get_sym(cdr_str);
+    LispObject * cdr_def = get_builtin_1(&b_cdr);
+    bind(cdr_name, cdr_def);
 }
 
 
