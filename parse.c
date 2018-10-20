@@ -68,12 +68,6 @@ LispObject * parse() {
 	if (b_equal(sym, LISP_F_SYM))
 	    return LISP_F;
 
-	if (sym->print_name[0] == '#')
-	    // TODO: remove this if decide not to use #t and #f for LISP_T_SYM
-	    // and LISP_F_SYM
-	    // TODO: proper error
-	    assert(false);
-
 	return sym;
     }
     
