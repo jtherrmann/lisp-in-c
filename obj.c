@@ -174,11 +174,10 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 // get_func
 // Construct a Lisp function.
 //
-// Pre: args and body are protected from garbage collection.
+// Pre:
+// - args and body are protected from garbage collection.
+// - b_list_pred(args)
 LispObject * get_func(LispObject * args, LispObject * body) {
-    // TODO: proper errors
-    assert(b_list_pred(args));
-
     LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;
     obj->body = body;

@@ -191,6 +191,14 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	    return NULL;
 	}
 
+	LispObject * args_list = b_car(b_cdr(expr));
+	if (!b_list_pred(args_list)) {
+	    INVALID_EXPR;
+	    print_obj(args_list);
+	    printf(" is not a list\n");
+	    return NULL;
+	}
+
 	// eval's pre that expr is protected from GC meets get_func's pre that
 	// its args are protected from GC, because b_car(b_cdr(expr)) and
 	// b_car(b_cdr(b_cdr(expr))) are both reachable from expr.
