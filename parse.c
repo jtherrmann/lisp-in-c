@@ -64,6 +64,7 @@ LispObject * parse() {
 	&& input[input_index] != '.'
 	&& input[input_index] != ':') {
 
+	int start = input_index;
 	LispObject * sym = parsesym();  // parsesym fulfills parse's post.
 
 	if (sym == NULL)
@@ -74,6 +75,13 @@ LispObject * parse() {
 
 	if (b_equal(sym, LISP_F_SYM))
 	    return LISP_F;
+
+	if (sym->print_name[0] == '#') {
+	    input_index = start;
+	    show_input_char();
+	    printf("%s'#' unrecognized in this context\n", PARSE_ERR);
+	    return NULL;
+	}
 
 	return sym;
     }
