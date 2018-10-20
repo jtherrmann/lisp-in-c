@@ -25,7 +25,7 @@ void print_list(LispObject * obj);
 
 void print_obj(LispObject * obj) {
     if (b_null_pred(obj))
-	printf("NIL");
+	printf("()");
 
     else if (obj == LISP_T)
 	print_obj(LISP_T_SYM);
@@ -52,6 +52,7 @@ void print_obj(LispObject * obj) {
     else if (b_func_pred(obj)) {
 	printf("<function>");
 	print_obj(obj->args);
+	printf("->");
 	print_obj(obj->body);
     }
 
