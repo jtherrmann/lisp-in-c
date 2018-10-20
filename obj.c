@@ -84,6 +84,11 @@ void make_initial_objs() {
     LispObject * cdr_name = get_sym(cdr_str);
     LispObject * cdr_def = get_builtin_1(&b_cdr);
     bind(cdr_name, cdr_def);
+
+    char null_str[] = "null";
+    LispObject * null_name = get_sym(null_str);
+    LispObject * null_def = get_bool_builtin_1(&b_null);
+    bind(null_name, null_def);
 }
 
 
@@ -162,6 +167,15 @@ LispObject * get_builtin_2(LispObject * (* b_func_2)(LispObject *, LispObject *)
 }
 
 
+// get_bool_builtin_1
+// Construct a builtin function that takes one argument and returns a bool.
+LispObject * get_bool_builtin_1(bool (* b_bool_func_1)(LispObject *)) {
+    LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
+    obj->b_bool_func_1 = b_bool_func_1;
+    return obj;
+}
+
+
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
 // ----------------------------------------------------------------------------
@@ -234,7 +248,9 @@ bool b_funcp(LispObject * obj) {
 
 
 bool b_builtinp(LispObject * obj) {
-    return obj->type == TYPE_BUILTIN_1 || obj->type == TYPE_BUILTIN_2;
+    return obj->type == TYPE_BUILTIN_1
+	|| obj->type == TYPE_BUILTIN_2
+	|| obj->type == TYPE_BOOL_BUILTIN_1;
 }
 
 

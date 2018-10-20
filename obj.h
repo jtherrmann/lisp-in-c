@@ -24,7 +24,8 @@ typedef enum {
 	      TYPE_CONS,
 	      TYPE_FUNC,
 	      TYPE_BUILTIN_1,
-	      TYPE_BUILTIN_2
+	      TYPE_BUILTIN_2,
+	      TYPE_BOOL_BUILTIN_1
 } LispType;
 
 
@@ -82,6 +83,9 @@ struct LispObjectStruct {
 
 	// TYPE_BUILTIN_2
 	LispObject * (* b_func_2)(LispObject *, LispObject *);
+
+	// TYPE_BOOL_BUILTIN_1
+	bool (* b_bool_func_1)(LispObject *);
     };
 
     bool marked;
@@ -113,6 +117,9 @@ LispObject * get_func(LispObject * args, LispObject * body);
 LispObject * get_builtin_1(LispObject * (* b_func_1)(LispObject *));
 
 LispObject * get_builtin_2(LispObject * (* c_func)(LispObject *, LispObject *));
+
+LispObject * get_bool_builtin_1(bool (* b_bool_func_1)(LispObject *));
+
 
 // ----------------------------------------------------------------------------
 // cons, car, and cdr
