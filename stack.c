@@ -11,21 +11,6 @@
 
 
 // ============================================================================
-// Private functions
-// ============================================================================
-
-// print_stack
-// Print the stack.
-void print_stack() {
-    for (int i = 1; i <= sp; ++i) {
-	print_obj(stack[i]);
-	printf("  ");
-    }
-    printf("\n");
-}
-
-
-// ============================================================================
 // Public functions
 // ============================================================================
 
@@ -57,4 +42,15 @@ void pop() {
 	print_stack();
 	printf("\n");
     }
+}
+
+
+// print_stack
+// Print the stack.
+void print_stack() {
+    for (int i = 1; i <= sp; ++i) {
+	print_obj(stack[i]);
+	printf("  ");
+    }
+    printf("\n");
 }

@@ -24,5 +24,7 @@ void push(LispObject * obj);
 
 void pop();
 
+void print_stack();
+
 
 #endif

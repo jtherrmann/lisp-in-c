@@ -6,6 +6,7 @@
 
 #include "env.h"
 #include "eval.h"
+#include "misc.h"
 #include "obj.h"
 #include "print.h"
 #include "stack.h"
@@ -18,9 +19,6 @@
 #define EVAL_ERR "Invalid expression:\n\n  "
 
 #define INVALID_EXPR printf(EVAL_ERR); print_obj(expr); printf("\n\n");
-
-// TODO: instructions for reporting
-#define FOUND_BUG printf("It looks like you have found a bug.\n"); exit(1);
 
 
 // ============================================================================

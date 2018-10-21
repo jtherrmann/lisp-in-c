@@ -21,7 +21,6 @@
 //       Debian version and gcc version know to work
 //       - add -std=c99 option to alias?
 
-#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,10 +33,19 @@
 #include "env.h"
 #include "eval.h"
 #include "gc.h"
+#include "misc.h"
 #include "obj.h"
 #include "parse.h"
 #include "print.h"
 #include "stack.h"
+
+
+void bad_stack() {
+    printf("\nAbort! Stack pointer is %d but should be 0.\nStack contents: ", sp);
+    print_stack();
+    printf("\n");
+    FOUND_BUG;
+}
 
 
 // TODO: use the library used in build your own lisp to allow arrow keys and
@@ -65,7 +73,6 @@ int main() {
     weakrefs_count = 0;
 
     make_initial_objs();
-    assert(b_car(LISP_NIL) == LISP_NIL && b_cdr(LISP_NIL) == LISP_NIL);
 
     // Stores the return values of parse and eval.
     LispObject * obj;
@@ -85,8 +92,8 @@ int main() {
 	else if (input[input_index] != INPUT_END) {
 	    obj = parse();
 
-	    // TODO: proper error
-	    assert(sp == 0);
+	    if (sp != 0)
+		bad_stack();
 
 	    if (obj != NULL && input[input_index] != INPUT_END) {
 		show_input_char();
@@ -99,15 +106,15 @@ int main() {
 		// Meet eval's pre by protecting its first arg from GC.
 		push(obj);
 
-		// LISP_NIL is part of the initial set of objects protected from
-		// GC, so it meets eval's pre that its second arg is protected from
-		// GC.
+		// LISP_NIL is part of the initial set of objects protected
+		// from GC, so it meets eval's pre that its second arg is
+		// protected from GC.
 		obj = eval(obj, LISP_NIL);
 
 		pop();
 
-		// TODO: proper error
-		assert(sp == 0);
+		if (sp != 0)
+		    bad_stack();
 
 		if (obj != NULL) {
 		    print_obj(obj);
