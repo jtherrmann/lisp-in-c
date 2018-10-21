@@ -2,12 +2,12 @@
 // Source for functions related to Lisp objects.
 
 
-#include <assert.h>
 #include <stdio.h>
 
 #include "obj.h"
 #include "env.h"
 #include "gc.h"
+#include "misc.h"
 #include "print.h"
 #include "stack.h"
 
@@ -190,7 +190,8 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 // get_builtin_1
 // Construct a builtin function that takes one argument.
 LispObject * get_builtin_1(LispObject * builtin_name, LispObject * (* b_func_1)(LispObject *)) {
-    assert(b_symbol_pred(builtin_name));
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BUILTIN_1);
     obj->b_func_1 = b_func_1;
     obj->builtin_name = builtin_name;
@@ -201,7 +202,8 @@ LispObject * get_builtin_1(LispObject * builtin_name, LispObject * (* b_func_1)(
 // get_builtin_2
 // Construct a builtin function that takes two arguments.
 LispObject * get_builtin_2(LispObject * builtin_name, LispObject * (* b_func_2)(LispObject *, LispObject *)) {
-    assert(b_symbol_pred(builtin_name));
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
     obj->b_func_2 = b_func_2;
     obj->builtin_name = builtin_name;
@@ -212,7 +214,8 @@ LispObject * get_builtin_2(LispObject * builtin_name, LispObject * (* b_func_2)(
 // get_bool_builtin_1
 // Construct a builtin function that takes one argument and returns a bool.
 LispObject * get_bool_builtin_1(LispObject * builtin_name, bool (* b_bool_func_1)(LispObject *)) {
-    assert(b_symbol_pred(builtin_name));
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
     obj->b_bool_func_1 = b_bool_func_1;
     obj->builtin_name = builtin_name;
@@ -222,7 +225,8 @@ LispObject * get_bool_builtin_1(LispObject * builtin_name, bool (* b_bool_func_1
 
 // get_bool_builtin_2
 LispObject * get_bool_builtin_2(LispObject * builtin_name, bool (* b_bool_func_2)(LispObject *, LispObject *)) {
-    assert(b_symbol_pred(builtin_name));
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
     obj->builtin_name = builtin_name;
@@ -287,7 +291,8 @@ LispObject * b_cdr_2(LispObject * obj) {
 // internal use by the interpreter, while b_car_2 implements a builtin car
 // function with proper error handling.
 LispObject * b_car(LispObject * obj) {
-    assert(b_list_pred(obj));
+    if (!b_list_pred(obj))
+	FOUND_BUG;
     return obj->car;
 }
 
@@ -297,7 +302,8 @@ LispObject * b_car(LispObject * obj) {
 // internal use by the interpreter, while b_cdr_2 implements a builtin cdr
 // function with proper error handling.
 LispObject * b_cdr(LispObject * obj) {
-    assert(b_list_pred(obj));
+    if (!b_list_pred(obj))
+	FOUND_BUG;
     return obj->cdr;
 }
 
@@ -378,7 +384,5 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	return b_equal(b_car(obj1), b_car(obj2))
 	    && b_equal(b_cdr(obj1), b_cdr(obj2));
 
-    // TODO: bug message
-    printf("COMPARISON ERROR: unrecognized type\n");
-    exit(1);
+    FOUND_BUG;
 }

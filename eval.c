@@ -86,9 +86,8 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	return global_def;
     }
 
-    if (!b_cons_pred(expr)) {
+    if (!b_cons_pred(expr))
 	FOUND_BUG;
-    }
 
     if (b_equal(b_car(expr), LISP_QUOTE)) {
 	if (len(b_cdr(expr)) != 1) {

@@ -1,12 +1,15 @@
 // misc.h
+// Header for miscellaneous utilities.
 
 
 #ifndef MISC_H
 #define MISC_H
 
 
-// TODO: instructions for reporting
-#define FOUND_BUG printf("It looks like you have found a bug.\n"); exit(1);
+#define FOUND_BUG found_bug(__FILE__, __LINE__, __func__);
+
+
+void found_bug(const char * file, int line, const char * func);
 
 
 #endif

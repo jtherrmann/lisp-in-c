@@ -62,11 +62,8 @@ void print_obj(LispObject * obj) {
 	printf(">");
     }
 
-    else {
-	// TODO: bug message
-	printf("PRINT ERROR: unrecognized type\n");
-	exit(1);
-    }
+    else
+	FOUND_BUG;
 }
 
 

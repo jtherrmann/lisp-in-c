@@ -9,7 +9,6 @@
 // - https://stackoverflow.com/a/30081106
 
 
-#include <assert.h>
 #include <stdio.h>
 
 #include "env.h"
@@ -133,7 +132,8 @@ void sweep() {
 // free_obj
 // Free a Lisp object.
 void free_obj(LispObject * obj) {
-    assert(weakrefs_count > 0);
+    if (weakrefs_count <= 0)
+	FOUND_BUG;
 
     if (gc_output) {
 	printf("free: ");
