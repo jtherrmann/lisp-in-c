@@ -109,7 +109,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	    // b_car(clauses) is reachable from clauses.
 	    clause = b_car(clauses);
 
-	    if (len(clause) != 2) {
+	    if (!b_list_pred(clause) || len(clause) != 2) {
 		INVALID_EXPR;
 		print_obj(LISP_COND);
 		printf(" takes lists of length 2\n");
