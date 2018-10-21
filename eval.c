@@ -177,8 +177,6 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     }
 
     if(b_equal(b_car(expr), LISP_LAMBDA)) {
-	// TODO: ensure no duplicate arg symbols
-
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_LAMBDA);
@@ -194,12 +192,31 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	    return NULL;
 	}
 
+	// Check that all argument names are symbols.
 	while (!b_null_pred(args_list)) {
 	    if (!b_symbol_pred(b_car(args_list))) {
 		INVALID_EXPR;
 		print_obj(b_car(args_list));
 		printf(" is not a symbol\n");
 		return NULL;
+	    }
+	    args_list = b_cdr(args_list);
+	}
+
+	// Check for duplicate argument names.
+	args_list = b_car(b_cdr(expr));
+	LispObject * args_compare_list;
+	while(!b_null_pred(args_list)) {
+	    args_compare_list = b_cdr(args_list);
+	    while (!b_null_pred(args_compare_list)) {
+		if (b_equal(b_car(args_list), b_car(args_compare_list))) {
+		    INVALID_EXPR;
+		    printf("Duplicate argument name ");
+		    print_obj(b_car(args_list));
+		    printf("\n");
+		    return NULL;
+		}
+		args_compare_list = b_cdr(args_compare_list);
 	    }
 	    args_list = b_cdr(args_list);
 	}
