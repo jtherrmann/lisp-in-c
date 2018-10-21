@@ -77,7 +77,13 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
 	// The local env doesn't contain a binding for expr, so look it up in
 	// the global env.
-	return get_def(expr);
+	LispObject * global_def = get_def(expr);
+	if (global_def == NULL) {
+	    INVALID_EXPR;
+	    print_obj(expr);
+	    printf(" is undefined\n");
+	}
+	return global_def;
     }
 
     if (!b_cons_pred(expr)) {

@@ -2,7 +2,6 @@
 // Source for the stack.
 
 
-#include <assert.h>
 #include <stdio.h>
 
 #include "obj.h"
@@ -17,7 +16,10 @@
 // push
 // Push an object to the stack.
 void push(LispObject * obj) {
-    assert(sp < STACK_SIZE - 1);
+    if (sp >= STACK_SIZE - 1) {
+	printf("\nStack overflow.\n");
+	exit(1);
+    }
 
     ++sp;
     stack[sp] = obj;
@@ -33,7 +35,10 @@ void push(LispObject * obj) {
 // pop
 // Decrement the stack pointer.
 void pop() {
-    assert(sp > 0);
+    if (sp <= 0) {
+	printf("\nStack underflow.\n");
+	exit(1);
+    }
 
     --sp;
 

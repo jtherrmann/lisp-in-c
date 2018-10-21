@@ -5,7 +5,6 @@
 // The hash table implementation is adapted from K&R C, 2nd ed., pp. 143-45.
 
 
-#include <assert.h>
 #include <stdio.h>
 
 #include "env.h"
@@ -43,15 +42,16 @@ void bind(LispObject * sym, LispObject * def) {
 
 
 // get_def
-// Return the definition bound to the given name.
+// Return the definition bound to the given name, or NULL if the name is
+// undefined.
 //
 // Pre:
 // - b_symbol_pred(sym)
 LispObject * get_def(LispObject * sym) {
     unsigned hashval = hash(sym);
     struct binding * b = lookup(sym, hashval);
-    // TODO: proper error
-    assert(b != NULL);
+    if (b == NULL)
+	return NULL;
     return b->def;
 }
 
