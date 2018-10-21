@@ -143,6 +143,10 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 
 LispObject * b_cons(LispObject * car, LispObject * cdr);
 
+LispObject * b_car_2(LispObject * obj);
+
+LispObject * b_cdr_2(LispObject * obj);
+
 LispObject * b_car(LispObject * obj);
 
 LispObject * b_cdr(LispObject * obj);

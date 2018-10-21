@@ -8,6 +8,7 @@
 #include "obj.h"
 #include "env.h"
 #include "gc.h"
+#include "print.h"
 #include "stack.h"
 
 
@@ -80,12 +81,12 @@ void make_initial_objs() {
 
     char car_str[] = "car";
     LispObject * car_name = get_sym(car_str);
-    LispObject * car_def = get_builtin_1(car_name, &b_car);
+    LispObject * car_def = get_builtin_1(car_name, &b_car_2);
     bind(car_name, car_def);
 
     char cdr_str[] = "cdr";
     LispObject * cdr_name = get_sym(cdr_str);
-    LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr);
+    LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr_2);
     bind(cdr_name, cdr_def);
 
     char equal_str[] = "eq";
@@ -252,15 +253,50 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 }
 
 
+// TODO: rename the car/cdr funcs
+
+
+// b_car_2
+// Builtin Lisp function car.
+LispObject * b_car_2(LispObject * obj) {
+    if (!b_list_pred(obj)) {
+	printf("Type error: ");
+	print_obj(obj);
+	printf(" is not a list\n\n");
+	return NULL;
+    }
+    return obj->car;
+}
+
+
+// b_cdr_2
+// Builtin Lisp function cdr.
+LispObject * b_cdr_2(LispObject * obj) {
+    if (!b_list_pred(obj)) {
+	printf("Type error: ");
+	print_obj(obj);
+	printf(" is not a list\n\n");
+	return NULL;
+    }
+    return obj->cdr;
+}
+
+
+// b_car
+// Previously this was builtin Lisp function car, but now it is just for
+// internal use by the interpreter, while b_car_2 implements a builtin car
+// function with proper error handling.
 LispObject * b_car(LispObject * obj) {
-    // TODO: proper typecheck
     assert(b_list_pred(obj));
     return obj->car;
 }
 
 
+// b_cdr
+// Previously this was builtin Lisp function cdr, but now it is just for
+// internal use by the interpreter, while b_cdr_2 implements a builtin cdr
+// function with proper error handling.
 LispObject * b_cdr(LispObject * obj) {
-    // TODO: proper typecheck
     assert(b_list_pred(obj));
     return obj->cdr;
 }
@@ -342,6 +378,7 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	return b_equal(b_car(obj1), b_car(obj2))
 	    && b_equal(b_cdr(obj1), b_cdr(obj2));
 
+    // TODO: bug message
     printf("COMPARISON ERROR: unrecognized type\n");
     exit(1);
 }

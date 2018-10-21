@@ -244,6 +244,12 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 
 	pop();  // pop func
 
+	if (result == NULL) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" signaled an error\n");
+	}
+
 	return result;
 
     case TYPE_BOOL_BUILTIN_1:
