@@ -65,7 +65,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	//
 	// Set binding to the first (name . value) pair in env.
 	LispObject * binding = b_car(env);
-	while (!b_equal(binding, LISP_NIL)) {
+	while (!b_null_pred(binding)) {
 
 	    // If expr equals the name in the (name . value) pair, return the
 	    // value.
@@ -446,7 +446,7 @@ LispObject * get_env(LispObject * arg_names,
     LispObject * binding;
     LispObject * arg_val;
 
-    while (!b_equal(arg_names, LISP_NIL)) {
+    while (!b_null_pred(arg_names)) {
 
 	// Protect new_env from GC that could be triggered by eval or b_cons.
 	push(new_env);
