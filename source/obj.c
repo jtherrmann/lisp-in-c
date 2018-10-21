@@ -6,6 +6,7 @@
 
 #include "obj.h"
 #include "env.h"
+#include "eval.h"
 #include "gc.h"
 #include "misc.h"
 #include "print.h"
@@ -50,6 +51,9 @@ LispObject * get_nil() {
 
 // make_initial_objs
 // Construct an initial set of Lisp objects.
+//
+// This function must be called exactly once. Garbage collection must not be
+// triggered for the first time until after this function is called.
 void make_initial_objs() {
     LISP_NIL = get_nil();
 
@@ -73,6 +77,11 @@ void make_initial_objs() {
 
     char lambda[] = "lambda";
     LISP_LAMBDA = get_sym(lambda);
+
+    char eval_str[] = "eval";
+    LispObject * eval_name = get_sym(eval_str);
+    LispObject * eval_def = get_builtin_1_env(eval_name, &eval);
+    bind(eval_name, eval_def);
 
     char cons_str[] = "cons";
     LispObject * cons_name = get_sym(cons_str);
@@ -189,7 +198,8 @@ LispObject * get_func(LispObject * args, LispObject * body) {
 
 // get_builtin_1
 // Construct a builtin function that takes one argument.
-LispObject * get_builtin_1(LispObject * builtin_name, LispObject * (* b_func_1)(LispObject *)) {
+LispObject * get_builtin_1(LispObject * builtin_name,
+			   LispObject * (* b_func_1)(LispObject *)) {
     if (!b_symbol_pred(builtin_name))
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BUILTIN_1);
@@ -201,7 +211,8 @@ LispObject * get_builtin_1(LispObject * builtin_name, LispObject * (* b_func_1)(
 
 // get_builtin_2
 // Construct a builtin function that takes two arguments.
-LispObject * get_builtin_2(LispObject * builtin_name, LispObject * (* b_func_2)(LispObject *, LispObject *)) {
+LispObject * get_builtin_2(LispObject * builtin_name,
+			   LispObject * (* b_func_2)(LispObject *, LispObject *)) {
     if (!b_symbol_pred(builtin_name))
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
@@ -213,7 +224,8 @@ LispObject * get_builtin_2(LispObject * builtin_name, LispObject * (* b_func_2)(
 
 // get_bool_builtin_1
 // Construct a builtin function that takes one argument and returns a bool.
-LispObject * get_bool_builtin_1(LispObject * builtin_name, bool (* b_bool_func_1)(LispObject *)) {
+LispObject * get_bool_builtin_1(LispObject * builtin_name,
+				bool (* b_bool_func_1)(LispObject *)) {
     if (!b_symbol_pred(builtin_name))
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
@@ -224,11 +236,27 @@ LispObject * get_bool_builtin_1(LispObject * builtin_name, bool (* b_bool_func_1
 
 
 // get_bool_builtin_2
-LispObject * get_bool_builtin_2(LispObject * builtin_name, bool (* b_bool_func_2)(LispObject *, LispObject *)) {
+// Construct a builtin function that takes two arguments and returns a bool.
+LispObject * get_bool_builtin_2(LispObject * builtin_name,
+				bool (* b_bool_func_2)(LispObject *, LispObject *)) {
     if (!b_symbol_pred(builtin_name))
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
+    obj->builtin_name = builtin_name;
+    return obj;
+}
+
+
+// get_builtin_1_env
+// Construct a builtin function that takes one explicit argument and one
+// implicit argument: the local environment.
+LispObject * get_builtin_1_env(LispObject * builtin_name,
+			       LispObject * (* b_func_1_env)(LispObject *, LispObject *)) {
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
+    LispObject * obj = get_obj(TYPE_BUILTIN_1_ENV);
+    obj->b_func_1_env = b_func_1_env;
     obj->builtin_name = builtin_name;
     return obj;
 }
@@ -346,7 +374,8 @@ bool b_builtin_pred(LispObject * obj) {
     return obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1
-	|| obj->type == TYPE_BOOL_BUILTIN_2;
+	|| obj->type == TYPE_BOOL_BUILTIN_2
+	|| obj->type == TYPE_BUILTIN_1_ENV;
 }
 
 

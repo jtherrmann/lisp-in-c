@@ -248,6 +248,37 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     bool bool_result;
     switch(func->type) {
 
+	// TODO: DRY up this switch block, possibly with macros
+
+    case TYPE_BUILTIN_1_ENV:
+
+	if (len(b_cdr(expr)) != 1) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes 1 argument\n");
+	    pop();  // pop func
+	    return NULL;
+	}
+
+	arg1 = eval(b_car(b_cdr(expr)), env);
+
+	if (arg1 == NULL) {
+	    pop();  // pop func
+	    return NULL;
+	}
+
+	result = func->b_func_1_env(arg1, env);
+
+	pop();  // pop func
+
+	if (result == NULL) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" signaled an error\n");
+	}
+
+	return result;
+
     case TYPE_BUILTIN_1:
 
 	if (len(b_cdr(expr)) != 1) {

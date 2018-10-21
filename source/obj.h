@@ -26,7 +26,8 @@ typedef enum {
 	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
 	      TYPE_BOOL_BUILTIN_1,
-	      TYPE_BOOL_BUILTIN_2
+	      TYPE_BOOL_BUILTIN_2,
+	      TYPE_BUILTIN_1_ENV
 } LispType;
 
 
@@ -94,6 +95,9 @@ struct LispObjectStruct {
 
 		// TYPE_BOOL_BUILTIN_2
 		bool (* b_bool_func_2)(LispObject *, LispObject *);
+
+		// TYPE_BUILTIN_1_ENV
+		LispObject * (* b_func_1_env)(LispObject *, LispObject *);
 	    };
 	};
     };
@@ -135,6 +139,9 @@ LispObject * get_bool_builtin_1(LispObject * builtin_name,
 
 LispObject * get_bool_builtin_2(LispObject * builtin_name,
 				bool (* b_bool_func_2)(LispObject *, LispObject *));
+
+LispObject * get_builtin_1_env(LispObject * builtin_name,
+		  LispObject * (* b_func_1_env)(LispObject *, LispObject *));
 
 
 // ----------------------------------------------------------------------------
