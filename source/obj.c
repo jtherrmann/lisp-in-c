@@ -80,7 +80,7 @@ void make_initial_objs() {
 
     char eval_str[] = "eval";
     LispObject * eval_name = get_sym(eval_str);
-    LispObject * eval_def = get_builtin_1_env(eval_name, &eval);
+    LispObject * eval_def = get_builtin_1_env(eval_name, &b_eval);
     bind(eval_name, eval_def);
 
     char cons_str[] = "cons";

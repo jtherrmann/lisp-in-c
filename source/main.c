@@ -74,7 +74,7 @@ int main() {
 
     make_initial_objs();
 
-    // Stores the return values of parse and eval.
+    // Stores the return values of parse and b_eval.
     LispObject * obj;
 
     printf("Welcome to Lisp!\n");
@@ -103,13 +103,13 @@ int main() {
 	    }
 
 	    if (obj != NULL) {
-		// Meet eval's pre by protecting its first arg from GC.
+		// Meet b_eval's pre by protecting its first arg from GC.
 		push(obj);
 
 		// LISP_NIL is part of the initial set of objects protected
-		// from GC, so it meets eval's pre that its second arg is
+		// from GC, so it meets b_eval's pre that its second arg is
 		// protected from GC.
-		obj = eval(obj, LISP_NIL);
+		obj = b_eval(obj, LISP_NIL);
 
 		pop();
 
