@@ -385,4 +385,5 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	    && b_equal(b_cdr(obj1), b_cdr(obj2));
 
     FOUND_BUG;
+    exit(1);  // Avoid gcc warning about missing return.
 }

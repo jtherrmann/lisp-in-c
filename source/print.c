@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 
+#include "misc.h"
 #include "print.h"
 
 

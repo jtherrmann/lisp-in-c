@@ -13,6 +13,7 @@
 
 #include "env.h"
 #include "gc.h"
+#include "misc.h"
 #include "print.h"
 #include "stack.h"
 
