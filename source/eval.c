@@ -53,7 +53,9 @@ LispObject * b_eval(LispObject * expr, LispObject * env) {
     if (b_number_pred(expr)
 	|| b_null_pred(expr)
 	|| expr == LISP_T
-	|| expr == LISP_F)
+	|| expr == LISP_F
+	|| b_func_pred(expr)
+	|| b_builtin_pred(expr))
 	return expr;
 
     if (b_symbol_pred(expr)) {
