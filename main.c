@@ -13,12 +13,22 @@
 // implement cons, car, and cdr.
 // - check for malloc failure wherever it's used; look for other funcs that
 //   need checked for errors
+// - document (source:
+//   http://www.buildyourownlisp.com/chapter4_interactive_prompt#editing_input):
+//   - install debian package libedit-dev
+//   - use -ledit option with gcc to link to editline
+//     - record full gcc command (see ccc alias) used to compile, as well as
+//       Debian version and gcc version know to work
+//       - add -std=c99 option to alias?
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <editline/readline.h>
+#include <editline/history.h>
 
 #include "commands.h"
 #include "env.h"
@@ -64,8 +74,8 @@ int main() {
     printf("Exit with Ctrl-c\n\n");
 
     while (true) {
-    	fputs("> ", stdout);
-    	fgets(input, INPUT_LEN, stdin);
+	input = readline("> ");
+	add_history(input);
 
 	input_index = 0;
 	skipspace();  // Meet parse's pre.
@@ -105,6 +115,8 @@ int main() {
 		}
 	    }
 	}
+
+	free(input);
     }
 
     return 0;

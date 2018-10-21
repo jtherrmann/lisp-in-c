@@ -13,9 +13,7 @@
 // Macros
 // ============================================================================
 
-#define INPUT_LEN 2048
-
-#define INPUT_END '\n'
+#define INPUT_END '\0'
 
 #define PARSE_ERR "Parse error: "
 
@@ -24,7 +22,7 @@
 // Global variables
 // ============================================================================
 
-char input[INPUT_LEN];
+char * input;
 
 int input_index;
 
