@@ -91,6 +91,19 @@ LispObject * b_eval(LispObject * expr, LispObject * env) {
     if (!b_cons_pred(expr))
 	FOUND_BUG;
 
+    // TODO: find a more efficient solution?
+    LispObject * expr_tail = b_cdr(expr);
+    while (!b_null_pred(expr_tail)) {
+	if (!b_cons_pred(expr_tail)) {
+	    INVALID_EXPR;
+	    printf("cannot evaluate a list whose last element is not ");
+	    print_obj(LISP_NIL);
+	    printf("\n");
+	    return NULL;
+	}
+	expr_tail = b_cdr(expr_tail);
+    }
+
     if (b_equal(b_car(expr), LISP_QUOTE)) {
 	if (len(b_cdr(expr)) != 1) {
 	    INVALID_EXPR;
