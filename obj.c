@@ -177,7 +177,7 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 //
 // Pre:
 // - args and body are protected from garbage collection.
-// - b_list_pred(args)
+// - args is the empty list or a list of symbols.
 LispObject * get_func(LispObject * args, LispObject * body) {
     LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;

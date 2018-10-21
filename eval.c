@@ -150,8 +150,6 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     }
 
     if(b_equal(b_car(expr), LISP_DEF)) {
-	// TODO: proper errors
-
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_DEF);
@@ -179,10 +177,7 @@ LispObject * eval(LispObject * expr, LispObject * env) {
     }
 
     if(b_equal(b_car(expr), LISP_LAMBDA)) {
-	// TODO: proper errors
 	// TODO: ensure no duplicate arg symbols
-	// TODO: ensure args are all symbols (probably check in get_func);
-	// get_env's pre
 
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
@@ -197,6 +192,16 @@ LispObject * eval(LispObject * expr, LispObject * env) {
 	    print_obj(args_list);
 	    printf(" is not a list\n");
 	    return NULL;
+	}
+
+	while (!b_null_pred(args_list)) {
+	    if (!b_symbol_pred(b_car(args_list))) {
+		INVALID_EXPR;
+		print_obj(b_car(args_list));
+		printf(" is not a symbol\n");
+		return NULL;
+	    }
+	    args_list = b_cdr(args_list);
 	}
 
 	// eval's pre that expr is protected from GC meets get_func's pre that
