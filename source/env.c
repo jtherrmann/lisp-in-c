@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "env.h"
+#include "binops.h"
 #include "print.h"
 
 

@@ -6,8 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "obj.h"
 #include "parse.h"
+#include "binops.h"
+#include "obj.h"
 #include "stack.h"
 
 

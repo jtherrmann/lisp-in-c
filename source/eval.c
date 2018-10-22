@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "env.h"
+#include "binops.h"
 #include "eval.h"
 #include "misc.h"
 #include "obj.h"

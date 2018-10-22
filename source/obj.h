@@ -179,11 +179,4 @@ bool b_func_pred(LispObject * obj);
 bool b_builtin_pred(LispObject * obj);
 
 
-// ============================================================================
-// Comparison functions
-// ============================================================================
-
-bool b_equal(LispObject * obj1, LispObject * obj2);
-
-
 #endif
