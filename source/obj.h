@@ -79,6 +79,7 @@ struct LispObjectStruct {
 	struct {
 	    LispObject * args;
 	    LispObject * body;
+	    LispObject * env_list;
 	};
 
 	struct {
@@ -126,7 +127,7 @@ LispObject * get_sym(char * str);
 // Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, int begin, int end);
 
-LispObject * get_func(LispObject * args, LispObject * body);
+LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);
 
 LispObject * get_builtin_1(LispObject * builtin_name,
 			   LispObject * (* b_func_1)(LispObject *));

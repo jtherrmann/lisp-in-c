@@ -51,7 +51,9 @@ void print_obj(LispObject * obj) {
 	print_list(obj);
 
     else if (b_func_pred(obj)) {
-	printf("#<function>");
+	printf("#<function>[");
+	print_obj(obj->env_list);
+	printf("]");
 	print_obj(obj->args);
 	printf("->");
 	print_obj(obj->body);

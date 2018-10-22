@@ -185,12 +185,15 @@ LispObject * get_sym_by_substr(char * str, int begin, int end) {
 // Construct a Lisp function.
 //
 // Pre:
-// - args and body are protected from garbage collection.
+// - args, body, and env_list are protected from garbage collection.
 // - args is the empty list or a list of symbols.
-LispObject * get_func(LispObject * args, LispObject * body) {
+// - env_list is the current list of local environments, of the same form as
+//   described by b_eval's pre.
+LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list) {
     LispObject * obj = get_obj(TYPE_FUNC);
     obj->args = args;
     obj->body = body;
+    obj->env_list = env_list;
 
     return obj;
 }
@@ -250,7 +253,7 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 
 // get_builtin_1_env
 // Construct a builtin function that takes one explicit argument and one
-// implicit argument: the local environment.
+// implicit argument: the current list of local environments.
 LispObject * get_builtin_1_env(LispObject * builtin_name,
 			       LispObject * (* b_func_1_env)(LispObject *, LispObject *)) {
     if (!b_symbol_pred(builtin_name))
