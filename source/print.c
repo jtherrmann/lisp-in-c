@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-#include "misc.h"
+#include "error.h"
 #include "print.h"
 
 

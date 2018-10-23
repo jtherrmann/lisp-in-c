@@ -33,7 +33,7 @@
 #include "env.h"
 #include "eval.h"
 #include "gc.h"
-#include "misc.h"
+#include "error.h"
 #include "obj.h"
 #include "parse.h"
 #include "print.h"

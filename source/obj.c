@@ -9,7 +9,7 @@
 #include "env.h"
 #include "eval.h"
 #include "gc.h"
-#include "misc.h"
+#include "error.h"
 #include "print.h"
 #include "stack.h"
 
@@ -99,6 +99,21 @@ void make_initial_objs() {
     LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr_2);
     bind(cdr_name, cdr_def);
 
+    char and_str[] = "and";
+    LispObject * and_name = get_sym(and_str);
+    LispObject * and_def = get_builtin_2(and_name, &b_and);
+    bind(and_name, and_def);
+
+    char or_str[] = "or";
+    LispObject * or_name = get_sym(or_str);
+    LispObject * or_def = get_builtin_2(or_name, &b_or);
+    bind(or_name, or_def);
+
+    char not_str[] = "not";
+    LispObject * not_name = get_sym(not_str);
+    LispObject * not_def = get_builtin_1(not_name, &b_not);
+    bind(not_name, not_def);
+
     char equal_str[] = "eq";
     LispObject * equal_name = get_sym(equal_str);
     LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal);
@@ -108,6 +123,11 @@ void make_initial_objs() {
     LispObject * null_pred_name = get_sym(null_pred_str);
     LispObject * null_pred_def = get_bool_builtin_1(null_pred_name, &b_null_pred);
     bind(null_pred_name, null_pred_def);
+
+    char bool_pred_str[] = "bool?";
+    LISP_BOOL_PRED_SYM = get_sym(bool_pred_str);
+    LispObject * bool_pred_def = get_bool_builtin_1(LISP_BOOL_PRED_SYM, &b_bool_pred);
+    bind(LISP_BOOL_PRED_SYM, bool_pred_def);
 
     char number_pred_str[] = "number?";
     LispObject * number_pred_name = get_sym(number_pred_str);
@@ -125,9 +145,9 @@ void make_initial_objs() {
     bind(cons_pred_name, cons_pred_def);
 
     char list_pred_str[] = "list?";
-    LispObject * list_pred_name = get_sym(list_pred_str);
-    LispObject * list_pred_def = get_bool_builtin_1(list_pred_name, &b_list_pred);
-    bind(list_pred_name, list_pred_def);
+    LISP_LIST_PRED_SYM = get_sym(list_pred_str);
+    LispObject * list_pred_def = get_bool_builtin_1(LISP_LIST_PRED_SYM, &b_list_pred);
+    bind(LISP_LIST_PRED_SYM, list_pred_def);
 
     char func_pred_str[] = "func?";
     LispObject * func_pred_name = get_sym(func_pred_str);
@@ -295,12 +315,8 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 // b_car_2
 // Builtin Lisp function car.
 LispObject * b_car_2(LispObject * obj) {
-    if (!b_list_pred(obj)) {
-	printf("Type error: ");
-	print_obj(obj);
-	printf(" is not a list\n\n");
-	return NULL;
-    }
+    if (!typecheck(obj, LISP_LIST_PRED_SYM))
+    	return NULL;
     return obj->car;
 }
 
@@ -308,12 +324,8 @@ LispObject * b_car_2(LispObject * obj) {
 // b_cdr_2
 // Builtin Lisp function cdr.
 LispObject * b_cdr_2(LispObject * obj) {
-    if (!b_list_pred(obj)) {
-	printf("Type error: ");
-	print_obj(obj);
-	printf(" is not a list\n\n");
-	return NULL;
-    }
+    if (!typecheck(obj, LISP_LIST_PRED_SYM))
+    	return NULL;
     return obj->cdr;
 }
 
@@ -346,6 +358,11 @@ LispObject * b_cdr(LispObject * obj) {
 
 bool b_null_pred(LispObject * obj) {
     return obj == LISP_NIL;
+}
+
+
+bool b_bool_pred(LispObject * obj) {
+    return obj == LISP_T || obj == LISP_F;
 }
 
 

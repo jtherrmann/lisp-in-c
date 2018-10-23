@@ -52,6 +52,11 @@ LispObject * LISP_COND;
 LispObject * LISP_DEF;
 LispObject * LISP_LAMBDA;
 
+// Symbols bound to builtin type predicate functions used by other builtin
+// functions to type-check arguments.
+LispObject * LISP_BOOL_PRED_SYM;
+LispObject * LISP_LIST_PRED_SYM;
+
 
 // ============================================================================
 // LispObject
@@ -165,6 +170,8 @@ LispObject * b_cdr(LispObject * obj);
 // ============================================================================
 
 bool b_null_pred(LispObject * obj);
+
+bool b_bool_pred(LispObject * obj);
 
 bool b_number_pred(LispObject * obj);
 

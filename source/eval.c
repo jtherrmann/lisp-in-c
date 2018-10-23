@@ -7,7 +7,7 @@
 #include "env.h"
 #include "binops.h"
 #include "eval.h"
-#include "misc.h"
+#include "error.h"
 #include "obj.h"
 #include "print.h"
 #include "stack.h"
@@ -390,6 +390,12 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	result = func->b_func_2(arg1, arg2);
 
 	pop();  // pop func
+
+	if (result == NULL) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" signaled an error\n");
+	}
 
 	return result;
 
