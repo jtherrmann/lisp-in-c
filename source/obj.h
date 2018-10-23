@@ -78,6 +78,7 @@ struct LispObjectStruct {
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;
+	    bool empty_last;
 	};
 
 	// TYPE_FUNC

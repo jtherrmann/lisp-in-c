@@ -42,6 +42,7 @@ LispObject * get_nil() {
     LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->car = obj;
     obj->cdr = obj;
+    obj->empty_last = true;
     return obj;
 }
 
@@ -302,6 +303,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
     pop();
     pop();
 
+    obj->empty_last = cdr->empty_last;
     obj->car = car;
     obj->cdr = cdr;
 
