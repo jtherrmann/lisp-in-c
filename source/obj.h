@@ -55,7 +55,7 @@ LispObject * LISP_LAMBDA;
 // Symbols bound to builtin type predicate functions used by other builtin
 // functions to type-check arguments.
 LispObject * LISP_BOOL_PRED_SYM;
-LispObject * LISP_LIST_PRED_SYM;
+LispObject * LISP_CONS_PRED_SYM;
 
 
 // ============================================================================
@@ -66,7 +66,7 @@ LispObject * LISP_LIST_PRED_SYM;
 // http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 struct LispObjectStruct {
     LispType type;
-    bool empty_last;
+    bool is_list;
 
     union {
 	// TYPE_INT
@@ -75,7 +75,7 @@ struct LispObjectStruct {
 	// TYPE_SYM
 	char * print_name;
 
-	// TYPE_CONS and LISP_NIL
+	// TYPE_CONS
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;

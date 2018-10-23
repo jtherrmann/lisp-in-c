@@ -29,7 +29,7 @@ LispObject * get_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
 
     obj->type = type;
-    obj->empty_last = false;
+    obj->is_list = false;
     obj->marked = false;
 
     obj->weakref = weakrefs_head;
@@ -41,9 +41,7 @@ LispObject * get_obj(LispType type) {
 
 LispObject * get_nil() {
     LispObject * obj = get_obj(TYPE_UNIQUE);
-    obj->car = obj;
-    obj->cdr = obj;
-    obj->empty_last = true;
+    obj->is_list = true;
     return obj;
 }
 
@@ -142,14 +140,14 @@ void make_initial_objs() {
     bind(symbol_pred_name, symbol_pred_def, true);
 
     char cons_pred_str[] = "cons?";
-    LispObject * cons_pred_name = get_sym(cons_pred_str);
-    LispObject * cons_pred_def = get_bool_builtin_1(cons_pred_name, &b_cons_pred);
-    bind(cons_pred_name, cons_pred_def, true);
+    LISP_CONS_PRED_SYM = get_sym(cons_pred_str);
+    LispObject * cons_pred_def = get_bool_builtin_1(LISP_CONS_PRED_SYM, &b_cons_pred);
+    bind(LISP_CONS_PRED_SYM, cons_pred_def, true);
 
     char list_pred_str[] = "list?";
-    LISP_LIST_PRED_SYM = get_sym(list_pred_str);
-    LispObject * list_pred_def = get_bool_builtin_1(LISP_LIST_PRED_SYM, &b_list_pred);
-    bind(LISP_LIST_PRED_SYM, list_pred_def, true);
+    LispObject * list_pred_name = get_sym(list_pred_str);
+    LispObject * list_pred_def = get_bool_builtin_1(list_pred_name, &b_list_pred);
+    bind(list_pred_name, list_pred_def, true);
 
     char func_pred_str[] = "func?";
     LispObject * func_pred_name = get_sym(func_pred_str);
@@ -304,7 +302,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
     pop();
     pop();
 
-    obj->empty_last = cdr->empty_last;
+    obj->is_list = cdr->is_list;
     obj->car = car;
     obj->cdr = cdr;
 
@@ -318,7 +316,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 // b_car_2
 // Builtin Lisp function car.
 LispObject * b_car_2(LispObject * obj) {
-    if (!typecheck(obj, LISP_LIST_PRED_SYM))
+    if (!typecheck(obj, LISP_CONS_PRED_SYM))
     	return NULL;
     return obj->car;
 }
@@ -327,7 +325,7 @@ LispObject * b_car_2(LispObject * obj) {
 // b_cdr_2
 // Builtin Lisp function cdr.
 LispObject * b_cdr_2(LispObject * obj) {
-    if (!typecheck(obj, LISP_LIST_PRED_SYM))
+    if (!typecheck(obj, LISP_CONS_PRED_SYM))
     	return NULL;
     return obj->cdr;
 }
@@ -338,7 +336,7 @@ LispObject * b_cdr_2(LispObject * obj) {
 // internal use by the interpreter, while b_car_2 implements a builtin car
 // function with proper error handling.
 LispObject * b_car(LispObject * obj) {
-    if (!b_list_pred(obj))
+    if (!b_cons_pred(obj))
 	FOUND_BUG;
     return obj->car;
 }
@@ -349,7 +347,7 @@ LispObject * b_car(LispObject * obj) {
 // internal use by the interpreter, while b_cdr_2 implements a builtin cdr
 // function with proper error handling.
 LispObject * b_cdr(LispObject * obj) {
-    if (!b_list_pred(obj))
+    if (!b_cons_pred(obj))
 	FOUND_BUG;
     return obj->cdr;
 }
@@ -385,7 +383,7 @@ bool b_cons_pred(LispObject * obj) {
 
 
 bool b_list_pred(LispObject * obj) {
-    return b_cons_pred(obj) || b_null_pred(obj);
+    return obj->is_list;
 }
 
 

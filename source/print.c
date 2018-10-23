@@ -12,12 +12,12 @@
 // Private function prototypes
 // ============================================================================
 
-// print_list
-// Print a non-empty Lisp list.
+// print_cons
+// Print a Lisp cons.
 //
 // Pre:
 // - b_cons_pred(obj)
-void print_list(LispObject * obj);
+void print_cons(LispObject * obj);
 
 
 // ============================================================================
@@ -41,14 +41,7 @@ void print_obj(LispObject * obj) {
 	printf("%s", obj->print_name);
 
     else if (b_cons_pred(obj))
-	// TODO: print lists properly but maybe leave this version in as a
-	// debug option
-	/* printf("(cons "); */
-	/* print_obj(b_car(obj)); */
-	/* printf(" "); */
-	/* print_obj(b_cdr(obj)); */
-	/* printf(")"); */
-	print_list(obj);
+	print_cons(obj);
 
     else if (b_func_pred(obj)) {
 	printf("#<function>[");
@@ -74,9 +67,9 @@ void print_obj(LispObject * obj) {
 // Private functions
 // ============================================================================
 
-// print_list
-// Print up to the first 100 items of a Lisp list.
-void print_list(LispObject * obj) {
+// print_cons
+// Print up to the first 100 items of a chain of Lisp cons cells.
+void print_cons(LispObject * obj) {
     printf("(");
 
     int i = 0;

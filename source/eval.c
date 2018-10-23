@@ -97,14 +97,11 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	return global_def;
     }
 
-    if (!b_cons_pred(expr))
-	FOUND_BUG;
-
-    if (!expr->empty_last) {
+    if (!b_list_pred(expr)) {
+	if (!b_cons_pred(expr))
+	    FOUND_BUG;
 	INVALID_EXPR;
-	printf("cannot evaluate a list whose last element is not ");
-	print_obj(LISP_NIL);
-	printf("\n");
+	printf("Cannot evaluate a non-list cons\n");
 	return NULL;
     }
 
@@ -131,10 +128,17 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    // b_car(clauses) is reachable from clauses.
 	    clause = b_car(clauses);
 
-	    if (!b_list_pred(clause) || len(clause) != 2) {
+	    if (!b_list_pred(clause)) {
 		INVALID_EXPR;
-		print_obj(LISP_COND);
-		printf(" takes lists of length 2\n");
+		print_obj(clause);
+		printf(" is not a list\n");
+		return NULL;
+	    }
+
+	    if (len(clause) != 2) {
+		INVALID_EXPR;
+		print_obj(clause);
+		printf(" is not of length 2\n");
 		return NULL;
 	    }
 
@@ -251,12 +255,23 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    args_list = b_cdr(args_list);
 	}
 
+	// body is protected from GC because expr is protected from GC by
+	// b_eval's pre and b_car(b_cdr(b_cdr(expr))) is reachable from expr.
+	LispObject * body = b_car(b_cdr(b_cdr(expr)));
+	if (b_cons_pred(body) && !b_list_pred(body)) {
+	    INVALID_EXPR;
+	    print_obj(body);
+	    printf(" is a non-list cons\n");
+	    return NULL;
+	}
+
 	// b_eval's pre that expr is protected from GC meets get_func's pre
-	// that its args are protected from GC, because b_car(b_cdr(expr)) and
-	// b_car(b_cdr(b_cdr(expr))) are both reachable from expr; and b_eval's
-	// pre that env_list is protected from GC meets get_func's pre that
-	// env_list is protected from GC.
-	return get_func(b_car(b_cdr(expr)), b_car(b_cdr(b_cdr(expr))), env_list);
+	// that its first arg is protected from GC, because b_car(b_cdr(expr))
+	// is reachable from expr; body's protection from GC meets get_func's
+	// pre that body is protected from GC; and b_eval's pre that env_list
+	// is protected from GC meets get_func's pre that env_list is protected
+	// from GC.
+	return get_func(b_car(b_cdr(expr)), body, env_list);
     }
 
     // expr represents a function application.
@@ -555,7 +570,6 @@ LispObject * get_new_env(LispObject * arg_names,
 //
 // Pre:
 // - b_list_pred(list)
-// - The last element of list is the empty list.
 int len(LispObject * list) {
     int count = 0;
     while (!b_null_pred(list)) {
