@@ -82,82 +82,82 @@ void make_initial_objs() {
     char eval_str[] = "eval";
     LispObject * eval_name = get_sym(eval_str);
     LispObject * eval_def = get_builtin_1_env(eval_name, &b_eval);
-    bind(eval_name, eval_def);
+    bind(eval_name, eval_def, true);
 
     char cons_str[] = "cons";
     LispObject * cons_name = get_sym(cons_str);
     LispObject * cons_def = get_builtin_2(cons_name, &b_cons);
-    bind(cons_name, cons_def);
+    bind(cons_name, cons_def, true);
 
     char car_str[] = "car";
     LispObject * car_name = get_sym(car_str);
     LispObject * car_def = get_builtin_1(car_name, &b_car_2);
-    bind(car_name, car_def);
+    bind(car_name, car_def, true);
 
     char cdr_str[] = "cdr";
     LispObject * cdr_name = get_sym(cdr_str);
     LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr_2);
-    bind(cdr_name, cdr_def);
+    bind(cdr_name, cdr_def, true);
 
     char and_str[] = "and";
     LispObject * and_name = get_sym(and_str);
     LispObject * and_def = get_builtin_2(and_name, &b_and);
-    bind(and_name, and_def);
+    bind(and_name, and_def, true);
 
     char or_str[] = "or";
     LispObject * or_name = get_sym(or_str);
     LispObject * or_def = get_builtin_2(or_name, &b_or);
-    bind(or_name, or_def);
+    bind(or_name, or_def, true);
 
     char not_str[] = "not";
     LispObject * not_name = get_sym(not_str);
     LispObject * not_def = get_builtin_1(not_name, &b_not);
-    bind(not_name, not_def);
+    bind(not_name, not_def, true);
 
     char equal_str[] = "eq";
     LispObject * equal_name = get_sym(equal_str);
     LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal);
-    bind(equal_name, equal_def);
+    bind(equal_name, equal_def, true);
 
     char null_pred_str[] = "null?";
     LispObject * null_pred_name = get_sym(null_pred_str);
     LispObject * null_pred_def = get_bool_builtin_1(null_pred_name, &b_null_pred);
-    bind(null_pred_name, null_pred_def);
+    bind(null_pred_name, null_pred_def, true);
 
     char bool_pred_str[] = "bool?";
     LISP_BOOL_PRED_SYM = get_sym(bool_pred_str);
     LispObject * bool_pred_def = get_bool_builtin_1(LISP_BOOL_PRED_SYM, &b_bool_pred);
-    bind(LISP_BOOL_PRED_SYM, bool_pred_def);
+    bind(LISP_BOOL_PRED_SYM, bool_pred_def, true);
 
     char number_pred_str[] = "number?";
     LispObject * number_pred_name = get_sym(number_pred_str);
     LispObject * number_pred_def = get_bool_builtin_1(number_pred_name, &b_number_pred);
-    bind(number_pred_name, number_pred_def);
+    bind(number_pred_name, number_pred_def, true);
 
     char symbol_pred_str[] = "symbol?";
     LispObject * symbol_pred_name = get_sym(symbol_pred_str);
     LispObject * symbol_pred_def = get_bool_builtin_1(symbol_pred_name, &b_symbol_pred);
-    bind(symbol_pred_name, symbol_pred_def);
+    bind(symbol_pred_name, symbol_pred_def, true);
 
     char cons_pred_str[] = "cons?";
     LispObject * cons_pred_name = get_sym(cons_pred_str);
     LispObject * cons_pred_def = get_bool_builtin_1(cons_pred_name, &b_cons_pred);
-    bind(cons_pred_name, cons_pred_def);
+    bind(cons_pred_name, cons_pred_def, true);
 
     char list_pred_str[] = "list?";
     LISP_LIST_PRED_SYM = get_sym(list_pred_str);
     LispObject * list_pred_def = get_bool_builtin_1(LISP_LIST_PRED_SYM, &b_list_pred);
-    bind(LISP_LIST_PRED_SYM, list_pred_def);
+    bind(LISP_LIST_PRED_SYM, list_pred_def, true);
 
     char func_pred_str[] = "func?";
     LispObject * func_pred_name = get_sym(func_pred_str);
     LispObject * func_pred_def = get_bool_builtin_1(func_pred_name, &b_func_pred);
-    bind(func_pred_name, func_pred_def);
+    bind(func_pred_name, func_pred_def, true);
 
     char builtin_pred_str[] = "builtin?";
     LispObject * builtin_pred_name = get_sym(builtin_pred_str);
     LispObject * builtin_pred_def = get_bool_builtin_1(builtin_pred_name, &b_builtin_pred);
-    bind(builtin_pred_name, builtin_pred_def);
+    bind(builtin_pred_name, builtin_pred_def, true);
 }
 
 

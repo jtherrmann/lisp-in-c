@@ -198,9 +198,17 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	if (def == NULL)
 	    return NULL;
 
-	bind(sym, def);
+	bool success = bind(sym, def, false);
 
-	return def;
+	if (success)
+	    return def;
+	else {
+	    INVALID_EXPR;
+	    printf("Cannot redefine ");
+	    print_obj(sym);
+	    printf("\n");
+	    return NULL;
+	}
     }
 
     if(b_equal(b_car(expr), LISP_LAMBDA)) {

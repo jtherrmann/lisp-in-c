@@ -19,6 +19,7 @@ struct binding {
     LispObject * name;
     LispObject * def;
     struct binding * next;
+    bool constant;
 };
 
 struct binding * global_env[HASHSIZE];
@@ -28,7 +29,7 @@ struct binding * global_env[HASHSIZE];
 // Public functions
 // ============================================================================
 
-void bind(LispObject * sym, LispObject * def);
+bool bind(LispObject * sym, LispObject * def, bool constant);
 
 LispObject * get_def(LispObject * name);
 

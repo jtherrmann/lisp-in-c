@@ -29,7 +29,10 @@ struct binding * lookup(LispObject * sym, unsigned hashval);
 //
 // Pre:
 // - b_symbol_pred(sym)
-void bind(LispObject * sym, LispObject * def) {
+//
+// On error:
+// - Return false.
+bool bind(LispObject * sym, LispObject * def, bool constant) {
     unsigned hashval = hash(sym);
     struct binding * b = lookup(sym, hashval);
     if (b == NULL) {
@@ -37,8 +40,13 @@ void bind(LispObject * sym, LispObject * def) {
 	b->next = global_env[hashval];
 	global_env[hashval] = b;
     }
+    else if (b->constant)
+	return false;
+
     b->name = sym;
     b->def = def;
+    b->constant = constant;
+    return true;
 }
 
 
