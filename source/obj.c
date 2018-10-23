@@ -29,6 +29,7 @@ LispObject * get_obj(LispType type) {
     LispObject * obj = malloc(sizeof(LispObject));
 
     obj->type = type;
+    obj->empty_last = false;
     obj->marked = false;
 
     obj->weakref = weakrefs_head;

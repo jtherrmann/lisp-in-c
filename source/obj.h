@@ -66,6 +66,7 @@ LispObject * LISP_LIST_PRED_SYM;
 // http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 struct LispObjectStruct {
     LispType type;
+    bool empty_last;
 
     union {
 	// TYPE_INT
@@ -78,7 +79,6 @@ struct LispObjectStruct {
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;
-	    bool empty_last;
 	};
 
 	// TYPE_FUNC
