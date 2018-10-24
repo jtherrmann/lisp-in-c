@@ -48,21 +48,7 @@ void bad_stack() {
 }
 
 
-// TODO: use the library used in build your own lisp to allow arrow keys and
-// history; also allow Ctrl-h as backspace
 int main() {
-
-    // TODO: remove when no longer needed
-    /* long i = 1; */
-    /* while (true) { */
-    /* 	get_int(0); */
-    /* 	if (i % 100000000 == 0) { */
-    /* 	    free_all(); // without this line we get memory leak */
-    /* 	    i = 1; */
-    /* 	} */
-    /* 	++i; */
-    /* } */
-
     // Initialize the stack pointer.
     sp = 0;
 

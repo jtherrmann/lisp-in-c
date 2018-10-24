@@ -170,16 +170,3 @@ void collect_garbage() {
 	printf("\n");
 }
 
-
-// ----------------------------------------------------------------------------
-// Debugging
-// ----------------------------------------------------------------------------
-
-// TODO: remove when unneeded
-void free_all() {
-    while (weakrefs_head != NULL) {
-	LispObject * next = weakrefs_head->weakref;
-	free(weakrefs_head);
-	weakrefs_head = next;
-    }
-}
