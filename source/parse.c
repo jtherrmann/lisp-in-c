@@ -248,7 +248,7 @@ LispObject * parselist() {
 
     // Invariant: pre still true.
 
-    LispObject * car = parse(input);  // parselist's pre meets parse's pre.
+    LispObject * car = parse();  // parselist's pre meets parse's pre.
 
     if (car == NULL)
 	return NULL;
@@ -257,7 +257,7 @@ LispObject * parselist() {
     // parse, above).
     push(car);
 
-    LispObject * cdr = parselist(input);
+    LispObject * cdr = parselist();
 
     pop();
 
