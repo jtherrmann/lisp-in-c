@@ -294,21 +294,16 @@ bool is_digit(char ch) {
 }
 
 
-// TODO: convert to macro
-//
 // is_sym_char
 // Return whether a symbol can contain the char.
 bool is_sym_char(char ch) {
-    return ch == '?' || (ch >= '0' && ch <= '9') || is_sym_start_char(ch);
+    return is_sym_start_char(ch) || ch == '-' || ch == '?'
+	|| (ch >= '0' && ch <= '9');
 }
 
 
-// TODO: convert to macro
-//
 // is_sym_start_char
 // Return whether a symbol can start with the char.
 bool is_sym_start_char(char ch) {
-    return (ch >= 'a' && ch <= 'z')
-	|| (ch >= 'A' && ch <= 'Z')
-	|| ch == '-';
+    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
