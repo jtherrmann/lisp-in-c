@@ -164,3 +164,43 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
     FOUND_BUG;
     exit(1);  // Avoid gcc warning about missing return.
 }
+
+
+// b_lt
+// Builtin Lisp function <.
+LispObject * b_lt(LispObject * obj1, LispObject * obj2) {
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
+    return (obj1->value < obj2->value ? LISP_T : LISP_F);
+}
+
+
+// b_lte
+// Builtin Lisp function <=.
+LispObject * b_lte(LispObject * obj1, LispObject * obj2) {
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
+    return (obj1->value <= obj2->value ? LISP_T : LISP_F);
+}
+
+
+// b_gt
+// Builtin Lisp function >.
+LispObject * b_gt(LispObject * obj1, LispObject * obj2) {
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
+    return (obj1->value > obj2->value ? LISP_T : LISP_F);
+}
+
+
+// b_gte
+// Builtin Lisp function >=.
+LispObject * b_gte(LispObject * obj1, LispObject * obj2) {
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
+    return (obj1->value >= obj2->value ? LISP_T : LISP_F);
+}

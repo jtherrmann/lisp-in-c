@@ -41,5 +41,13 @@ LispObject * b_not(LispObject * obj);
 
 bool b_equal(LispObject * obj1, LispObject * obj2);
 
+LispObject * b_lt(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_lte(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_gt(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_gte(LispObject * obj1, LispObject * obj2);
+
 
 #endif

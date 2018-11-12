@@ -22,7 +22,7 @@
 
 LispObject * get_obj(LispType type) {
     // TODO: determine good number for demo; define it in gc.h
-    if (weakrefs_count > 50)
+    if (weakrefs_count > 100)
 	collect_garbage();
 
     // TODO: check for malloc error code?
@@ -138,6 +138,26 @@ void make_initial_objs() {
     LispObject * equal_name = get_sym(equal_str);
     LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal);
     bind(equal_name, equal_def, true);
+
+    char lt_str[] = "<";
+    LispObject * lt_name = get_sym(lt_str);
+    LispObject * lt_def = get_builtin_2(lt_name, &b_lt);
+    bind(lt_name, lt_def, true);
+
+    char lte_str[] = "<=";
+    LispObject * lte_name = get_sym(lte_str);
+    LispObject * lte_def = get_builtin_2(lte_name, &b_lte);
+    bind(lte_name, lte_def, true);
+
+    char gt_str[] = ">";
+    LispObject * gt_name = get_sym(gt_str);
+    LispObject * gt_def = get_builtin_2(gt_name, &b_gt);
+    bind(gt_name, gt_def, true);
+
+    char gte_str[] = ">=";
+    LispObject * gte_name = get_sym(gte_str);
+    LispObject * gte_def = get_builtin_2(gte_name, &b_gte);
+    bind(gte_name, gte_def, true);
 
     char null_pred_str[] = "null?";
     LispObject * null_pred_name = get_sym(null_pred_str);

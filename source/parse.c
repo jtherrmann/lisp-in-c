@@ -300,7 +300,8 @@ bool is_digit(char ch) {
 // is_sym_char
 // Return whether a symbol can contain the char.
 bool is_sym_char(char ch) {
-    return is_sym_start_char(ch) || ch == '?' || (ch >= '0' && ch <= '9');
+    return is_sym_start_char(ch) || ch == '?' || ch == '='
+	|| (ch >= '0' && ch <= '9');
 }
 
 
@@ -308,5 +309,5 @@ bool is_sym_char(char ch) {
 // Return whether a symbol can start with the char.
 bool is_sym_start_char(char ch) {
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '-'
-	|| ch == '+' || ch == '/' || ch == '*';
+	|| ch == '+' || ch == '/' || ch == '*' || ch == '<' || ch == '>';
 }
