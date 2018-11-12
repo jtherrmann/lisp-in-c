@@ -34,7 +34,7 @@ void print_obj(LispObject * obj) {
     else if (obj == LISP_F)
 	print_obj(LISP_F_SYM);
 
-    else if (b_number_pred(obj))
+    else if (b_int_pred(obj))
 	printf("%d", obj->value);
 
     else if (b_symbol_pred(obj))

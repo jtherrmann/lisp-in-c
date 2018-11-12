@@ -56,6 +56,7 @@ LispObject * LISP_LAMBDA;
 // functions to type-check arguments.
 LispObject * LISP_BOOL_PRED_SYM;
 LispObject * LISP_CONS_PRED_SYM;
+LispObject * LISP_INT_PRED_SYM;
 
 
 // ============================================================================
@@ -174,7 +175,7 @@ bool b_null_pred(LispObject * obj);
 
 bool b_bool_pred(LispObject * obj);
 
-bool b_number_pred(LispObject * obj);
+bool b_int_pred(LispObject * obj);
 
 bool b_symbol_pred(LispObject * obj);
 

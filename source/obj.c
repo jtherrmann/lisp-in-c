@@ -149,10 +149,10 @@ void make_initial_objs() {
     LispObject * bool_pred_def = get_bool_builtin_1(LISP_BOOL_PRED_SYM, &b_bool_pred);
     bind(LISP_BOOL_PRED_SYM, bool_pred_def, true);
 
-    char number_pred_str[] = "number?";
-    LispObject * number_pred_name = get_sym(number_pred_str);
-    LispObject * number_pred_def = get_bool_builtin_1(number_pred_name, &b_number_pred);
-    bind(number_pred_name, number_pred_def, true);
+    char int_pred_str[] = "int?";
+    LISP_INT_PRED_SYM = get_sym(int_pred_str);
+    LispObject * int_pred_def = get_bool_builtin_1(LISP_INT_PRED_SYM, &b_int_pred);
+    bind(LISP_INT_PRED_SYM, int_pred_def, true);
 
     char symbol_pred_str[] = "symbol?";
     LispObject * symbol_pred_name = get_sym(symbol_pred_str);
@@ -387,7 +387,7 @@ bool b_bool_pred(LispObject * obj) {
 }
 
 
-bool b_number_pred(LispObject * obj) {
+bool b_int_pred(LispObject * obj) {
     return obj->type == TYPE_INT;
 }
 

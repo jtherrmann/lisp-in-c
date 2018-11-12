@@ -55,7 +55,7 @@ int len(LispObject * list);
 // On error:
 // - Return NULL.
 LispObject * b_eval(LispObject * expr, LispObject * env_list) {
-    if (b_number_pred(expr)
+    if (b_int_pred(expr)
 	|| b_null_pred(expr)
 	|| expr == LISP_T
 	|| expr == LISP_F

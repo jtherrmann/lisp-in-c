@@ -16,7 +16,9 @@
 // b_add
 // Builtin Lisp function +.
 LispObject * b_add(LispObject * obj1, LispObject * obj2) {
-    // TODO: error if types not int
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
 
     // Protect operands from GC that could be triggered by get_int.
     push(obj1);
@@ -34,7 +36,9 @@ LispObject * b_add(LispObject * obj1, LispObject * obj2) {
 // b_sub
 // Builtin Lisp function -.
 LispObject * b_sub(LispObject * obj1, LispObject * obj2) {
-    // TODO: error if types not int
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
 
     // Protect operands from GC that could be triggered by get_int.
     push(obj1);
@@ -52,7 +56,9 @@ LispObject * b_sub(LispObject * obj1, LispObject * obj2) {
 // b_mul
 // Builtin Lisp function *.
 LispObject * b_mul(LispObject * obj1, LispObject * obj2) {
-    // TODO: error if types not int
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
 
     // Protect operands from GC that could be triggered by get_int.
     push(obj1);
@@ -70,7 +76,9 @@ LispObject * b_mul(LispObject * obj1, LispObject * obj2) {
 // b_div
 // Builtin Lisp function /.
 LispObject * b_div(LispObject * obj1, LispObject * obj2) {
-    // TODO: error if types not int
+    if (!typecheck(obj1, LISP_INT_PRED_SYM)
+	|| !typecheck(obj2, LISP_INT_PRED_SYM))
+	return NULL;
 
     // Protect operands from GC that could be triggered by get_int.
     push(obj1);
@@ -133,7 +141,7 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	// We already know they're not the same object.
 	return false;
 
-    if (b_number_pred(obj1))
+    if (b_int_pred(obj1))
 	return obj1->value == obj2->value;
 
     if (b_symbol_pred(obj1)) {
