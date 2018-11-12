@@ -99,6 +99,26 @@ void make_initial_objs() {
     LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr_2);
     bind(cdr_name, cdr_def, true);
 
+    char add_str[] = "+";
+    LispObject * add_name = get_sym(add_str);
+    LispObject * add_def = get_builtin_2(add_name, &b_add);
+    bind(add_name, add_def, true);
+
+    char sub_str[] = "-";
+    LispObject * sub_name = get_sym(sub_str);
+    LispObject * sub_def = get_builtin_2(sub_name, &b_sub);
+    bind(sub_name, sub_def, true);
+
+    char mul_str[] = "*";
+    LispObject * mul_name = get_sym(mul_str);
+    LispObject * mul_def = get_builtin_2(mul_name, &b_mul);
+    bind(mul_name, mul_def, true);
+
+    char div_str[] = "/";
+    LispObject * div_name = get_sym(div_str);
+    LispObject * div_def = get_builtin_2(div_name, &b_div);
+    bind(div_name, div_def, true);
+
     char and_str[] = "and";
     LispObject * and_name = get_sym(and_str);
     LispObject * and_def = get_builtin_2(and_name, &b_and);

@@ -6,6 +6,83 @@
 #include "binops.h"
 #include "error.h"
 #include "print.h"
+#include "stack.h"
+
+
+// ============================================================================
+// Arithmetic
+// ============================================================================
+
+// b_add
+// Builtin Lisp function +.
+LispObject * b_add(LispObject * obj1, LispObject * obj2) {
+    // TODO: error if types not int
+
+    // Protect operands from GC that could be triggered by get_int.
+    push(obj1);
+    push(obj2);
+
+    LispObject * result = get_int(obj1->value + obj2->value);
+
+    pop();
+    pop();
+
+    return result;
+}
+
+
+// b_sub
+// Builtin Lisp function -.
+LispObject * b_sub(LispObject * obj1, LispObject * obj2) {
+    // TODO: error if types not int
+
+    // Protect operands from GC that could be triggered by get_int.
+    push(obj1);
+    push(obj2);
+
+    LispObject * result = get_int(obj1->value - obj2->value);
+
+    pop();
+    pop();
+
+    return result;
+}
+
+
+// b_mul
+// Builtin Lisp function *.
+LispObject * b_mul(LispObject * obj1, LispObject * obj2) {
+    // TODO: error if types not int
+
+    // Protect operands from GC that could be triggered by get_int.
+    push(obj1);
+    push(obj2);
+
+    LispObject * result = get_int(obj1->value * obj2->value);
+
+    pop();
+    pop();
+
+    return result;
+}
+
+
+// b_div
+// Builtin Lisp function /.
+LispObject * b_div(LispObject * obj1, LispObject * obj2) {
+    // TODO: error if types not int
+
+    // Protect operands from GC that could be triggered by get_int.
+    push(obj1);
+    push(obj2);
+
+    LispObject * result = get_int(obj1->value / obj2->value);
+
+    pop();
+    pop();
+
+    return result;
+}
 
 
 // ============================================================================

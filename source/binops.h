@@ -12,6 +12,19 @@
 
 
 // ============================================================================
+// Arithmetic
+// ============================================================================
+
+LispObject * b_add(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_sub(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_mul(LispObject * obj1, LispObject * obj2);
+
+LispObject * b_div(LispObject * obj1, LispObject * obj2);
+
+
+// ============================================================================
 // Boolean logic
 // ============================================================================
 
