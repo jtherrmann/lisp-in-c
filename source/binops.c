@@ -53,7 +53,8 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
 	return false;
 
     if (obj1->type == TYPE_UNIQUE)
-	return obj1 == obj2;
+	// We already know they're not the same object.
+	return false;
 
     if (b_number_pred(obj1))
 	return obj1->value == obj2->value;
