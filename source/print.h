@@ -9,8 +9,6 @@
 #include "obj.h"
 
 
-// print_obj
-// Print a Lisp object.
 void print_obj(LispObject * obj);
 
 

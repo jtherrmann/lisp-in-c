@@ -19,6 +19,8 @@ void print_pair(LispObject * obj);
 // Public functions
 // ============================================================================
 
+// print_obj
+// Print a Lisp object.
 void print_obj(LispObject * obj) {
     if (b_null_pred(obj))
 	printf("()");

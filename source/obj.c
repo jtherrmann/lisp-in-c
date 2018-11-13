@@ -17,9 +17,9 @@
 // ============================================================================
 // Private functions
 // ============================================================================
-//
-// Functions not declared in header.
 
+// get_obj
+// Construct a Lisp object.
 LispObject * get_obj(LispType type) {
     // TODO: determine good number for demo; define it in gc.h
     if (weakrefs_count > 100)
@@ -39,6 +39,8 @@ LispObject * get_obj(LispType type) {
     return obj;
 }
 
+// get_nil
+// Construct the empty list object.
 LispObject * get_nil() {
     LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->is_list = true;
@@ -210,6 +212,8 @@ void make_initial_objs() {
 // Constructors
 // ----------------------------------------------------------------------------
 
+// get_int
+// Construct a Lisp int.
 LispObject * get_int(int value) {
     LispObject * obj = get_obj(TYPE_INT);
     obj->value = value;
@@ -217,6 +221,8 @@ LispObject * get_int(int value) {
 }
 
 
+// get_sym
+// Construct a Lisp symbol from str.
 LispObject * get_sym(char * str) {
     int len = 0;
     while (str[len] != '\0')
@@ -233,6 +239,8 @@ LispObject * get_sym(char * str) {
 }
 
 
+// get_sym_by_substr
+// Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, int begin, int end) {
     int len = end - begin;
 
@@ -423,41 +431,57 @@ int len(LispObject * obj) {
 // Type predicates
 // ============================================================================
 
+// b_null_pred
+// Builtin Lisp function null?.
 bool b_null_pred(LispObject * obj) {
     return obj == LISP_NIL;
 }
 
 
+// b_bool_pred
+// Builtin Lisp function bool?.
 bool b_bool_pred(LispObject * obj) {
     return obj == LISP_T || obj == LISP_F;
 }
 
 
+// b_int_pred
+// Builtin Lisp function int?.
 bool b_int_pred(LispObject * obj) {
     return obj->type == TYPE_INT;
 }
 
 
+// b_symbol_pred
+// Builtin Lisp function symbol?.
 bool b_symbol_pred(LispObject * obj) {
     return obj->type == TYPE_SYM;
 }
 
 
+// b_pair_pred
+// Builtin Lisp function pair?.
 bool b_pair_pred(LispObject * obj) {
     return obj->type == TYPE_PAIR;
 }
 
 
+// b_list_pred
+// Builtin Lisp function list?.
 bool b_list_pred(LispObject * obj) {
     return obj->is_list;
 }
 
 
+// b_func_pred
+// Builtin Lisp function func?.
 bool b_func_pred(LispObject * obj) {
     return obj->type == TYPE_FUNC;
 }
 
 
+// b_builtin_pred
+// Builtin Lisp function builtin?.
 bool b_builtin_pred(LispObject * obj) {
     return obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2

@@ -122,16 +122,10 @@ void make_initial_objs();
 // Constructors
 // ----------------------------------------------------------------------------
 
-// get_int
-// Construct a Lisp int.
 LispObject * get_int(int value);
 
-// get_sym
-// Construct a Lisp symbol from str.
 LispObject * get_sym(char * str);
 
-// get_sym_by_substr
-// Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, int begin, int end);
 
 LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);

@@ -1,12 +1,9 @@
 // TODO:
 // - address TODO/FIXME throughout files
-// - split into multiple files, *.c or *.h as appropriate
 // - temp sources list:
 //   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
 //   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
 // - remove unneeded #include lines
-// - comment all func definitions (name, summary, pre & post); don't comment
-//   prototypes (change where this has already been done)
 // - document (b_ for builtin):
 // Function names are prefixed with b_ if they implement Lisp functions of the
 // same name (without the prefix). For example, b_cons, b_car, and b_cdr
@@ -40,6 +37,8 @@
 #include "stack.h"
 
 
+// bad_stack
+// Handle an invalid stack state.
 void bad_stack() {
     printf("\nAbort! Stack pointer is %d but should be 0.\nStack contents: ", sp);
     print_stack();
@@ -48,6 +47,8 @@ void bad_stack() {
 }
 
 
+// main
+// Set up the interpreter and run the REPL.
 int main() {
     // Initialize the stack pointer.
     sp = 0;
@@ -66,6 +67,7 @@ int main() {
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
+    // REPL.
     while (true) {
 	input = readline("> ");
 	add_history(input);
