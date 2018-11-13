@@ -39,9 +39,9 @@ LispObject * get_obj(LispType type) {
     return obj;
 }
 
-// get_nil
+// get_empty_list
 // Construct the empty list object.
-LispObject * get_nil() {
+LispObject * get_empty_list() {
     LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->is_list = true;
     return obj;
@@ -58,7 +58,7 @@ LispObject * get_nil() {
 // This function must be called exactly once. Garbage collection must not be
 // triggered for the first time until after this function is called.
 void make_initial_objs() {
-    LISP_NIL = get_nil();
+    LISP_EMPTY = get_empty_list();
 
     LISP_T = get_obj(TYPE_UNIQUE);
     LISP_F = get_obj(TYPE_UNIQUE);
@@ -434,7 +434,7 @@ int len(LispObject * obj) {
 // b_null_pred
 // Builtin Lisp function null?.
 bool b_null_pred(LispObject * obj) {
-    return obj == LISP_NIL;
+    return obj == LISP_EMPTY;
 }
 
 

@@ -237,7 +237,7 @@ LispObject * parselist() {
 	skipspace();
 
 	// Return the empty list object.
-	return LISP_NIL;
+	return LISP_EMPTY;
     }
 
     if (input[input_index] == INPUT_END) {

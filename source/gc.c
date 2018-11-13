@@ -39,7 +39,7 @@ void free_obj(LispObject * obj);
 // Mark the initial set of objects and objects reachable from the global
 // environment or the stack.
 void mark() {
-    mark_obj(LISP_NIL);
+    mark_obj(LISP_EMPTY);
 
     mark_obj(LISP_T);
     mark_obj(LISP_F);

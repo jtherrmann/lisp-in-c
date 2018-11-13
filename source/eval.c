@@ -170,7 +170,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    // cdr(clauses) is reachable from the old value of clauses.
 	    clauses = cdr(clauses);
 	}
-	return LISP_NIL;
+	return LISP_EMPTY;
     }
 
     if(b_equal_pred(car(expr), LISP_DEF)) {
@@ -461,7 +461,7 @@ LispObject * get_new_env(LispObject * arg_names,
 			 LispObject * arg_exprs,
 			 LispObject * env_list)
 {
-    LispObject * new_env = LISP_NIL;
+    LispObject * new_env = LISP_EMPTY;
     LispObject * binding;
     LispObject * arg_val;
 

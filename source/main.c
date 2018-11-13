@@ -94,10 +94,10 @@ int main() {
 		// Meet b_eval's pre by protecting its first arg from GC.
 		push(obj);
 
-		// LISP_NIL is part of the initial set of objects protected
+		// LISP_EMPTY is part of the initial set of objects protected
 		// from GC, so it meets b_eval's pre that its second arg is
 		// protected from GC.
-		obj = b_eval(obj, LISP_NIL);
+		obj = b_eval(obj, LISP_EMPTY);
 
 		pop();
 

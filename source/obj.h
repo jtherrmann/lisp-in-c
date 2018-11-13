@@ -35,8 +35,8 @@ typedef enum {
 // Initial objects
 // ============================================================================
 
-// The empty list object NIL.
-LispObject * LISP_NIL;
+// The empty list object.
+LispObject * LISP_EMPTY;
 
 // Boolean objects.
 LispObject * LISP_T;
