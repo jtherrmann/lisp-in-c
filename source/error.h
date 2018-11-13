@@ -16,7 +16,7 @@
 
 bool typecheck(LispObject * obj, LispObject * pred_sym);
 
-void found_bug(const char * file, int line, const char * func);
+void found_bug(const char * file, long line, const char * func);
 
 
 #endif

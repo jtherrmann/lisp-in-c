@@ -53,7 +53,7 @@ void pop() {
 // print_stack
 // Print the stack.
 void print_stack() {
-    for (int i = 1; i <= sp; ++i) {
+    for (long i = 1; i <= sp; ++i) {
 	print_obj(stack[i]);
 	printf("  ");
     }

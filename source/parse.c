@@ -24,7 +24,7 @@ LispObject * parsebool();
 
 LispObject * parselist();
 
-int power(int b, int n);
+long power(long b, long n);
 
 bool is_digit(char ch);
 
@@ -88,7 +88,7 @@ void skipspace() {
 // - The REPL prompt is two chars wide.
 void show_input_char() {
     printf("  ");
-    for (int i = 0; i < input_index; ++i)
+    for (long i = 0; i < input_index; ++i)
 	printf(" ");
     printf("^\n");
 }
@@ -98,8 +98,7 @@ void show_input_char() {
 // Private functions
 // ============================================================================
 
-// TODO: handle overflow; also, make ints as large as possible (e.g. signed
-// longs or whatever); when handling overflow consider that the max abs val
+// TODO: handle overflow; when handling overflow consider that the max abs val
 // for a negative num is 1 more than the max abs val for a positive num
 //
 // parseint
@@ -123,7 +122,7 @@ LispObject * parseint() {
     }
 
     // Go to the end of the substr that represents the int.
-    int begin = input_index;
+    long begin = input_index;
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
@@ -137,14 +136,14 @@ LispObject * parseint() {
 	}
     	++input_index;
     }
-    int end = input_index;
+    long end = input_index;
     --input_index;
 
     // Go back through the substr, adding up the values of the digits to get
     // the overall value of the int.
-    int total = 0;
-    int place = 0;
-    int digit;
+    long total = 0;
+    long place = 0;
+    long digit;
     while (input_index >= begin) {
 	digit = input[input_index] - 0x30;
 	total += digit * power(10, place);
@@ -174,7 +173,7 @@ LispObject * parseint() {
 LispObject * parsesym() {
 
     // Go to the end of the substr that represents the symbol.
-    int begin = input_index;
+    long begin = input_index;
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
@@ -188,7 +187,7 @@ LispObject * parsesym() {
 	}
 	++input_index;
     }
-    int end = input_index;
+    long end = input_index;
     skipspace();  // Fulfill post.
     return get_sym_by_substr(input, begin, end);
 
@@ -302,11 +301,11 @@ LispObject * parselist() {
 //
 // Pre:
 // - n >= 0
-int power(int b, int n) {
+long power(long b, long n) {
     if (n == 0)
 	return 1;
 
-    int total = b;
+    long total = b;
     while (n > 1) {
 	total *= b;
 	--n;

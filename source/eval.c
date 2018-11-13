@@ -405,11 +405,11 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     LispObject * arg_names = func->args;
     LispObject * arg_exprs = cdr(expr);
 
-    int len_arg_names = len(arg_names);
+    long len_arg_names = len(arg_names);
     if (len(arg_exprs) != len_arg_names) {
 	INVALID_EXPR;
 	print_obj(func);
-	printf(" takes %d argument%s",
+	printf(" takes %ld argument%s",
 	       len_arg_names, (len_arg_names == 1 ? "\n" : "s\n"));
 	pop();  // pop func
 	return NULL;

@@ -214,7 +214,7 @@ void make_initial_objs() {
 
 // get_int
 // Construct a Lisp int.
-LispObject * get_int(int value) {
+LispObject * get_int(long value) {
     LispObject * obj = get_obj(TYPE_INT);
     obj->value = value;
     return obj;
@@ -224,14 +224,14 @@ LispObject * get_int(int value) {
 // get_sym
 // Construct a Lisp symbol from str.
 LispObject * get_sym(char * str) {
-    int len = 0;
+    long len = 0;
     while (str[len] != '\0')
 	++len;
 
     LispObject * obj = get_obj(TYPE_SYM);
     obj->print_name = malloc((len + 1) * sizeof(char));
 
-    for (int i = 0; i < len; ++i)
+    for (long i = 0; i < len; ++i)
 	obj->print_name[i] = str[i];
     obj->print_name[len] = '\0';
     
@@ -241,13 +241,13 @@ LispObject * get_sym(char * str) {
 
 // get_sym_by_substr
 // Construct a Lisp symbol from a substr of str.
-LispObject * get_sym_by_substr(char * str, int begin, int end) {
-    int len = end - begin;
+LispObject * get_sym_by_substr(char * str, long begin, long end) {
+    long len = end - begin;
 
     LispObject * obj = get_obj(TYPE_SYM);
     obj->print_name = malloc((len + 1) * sizeof(char));
 
-    for (int i = 0; i < len; ++i)
+    for (long i = 0; i < len; ++i)
 	obj->print_name[i] = str[begin + i];
     obj->print_name[len] = '\0';
 
@@ -417,8 +417,8 @@ LispObject * b_len(LispObject * obj) {
 //
 // Pre:
 // - b_list_pred(obj)
-int len(LispObject * obj) {
-    int count = 0;
+long len(LispObject * obj) {
+    long count = 0;
     while (!b_null_pred(obj)) {
 	++count;
 	obj = cdr(obj);

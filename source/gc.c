@@ -53,14 +53,14 @@ void mark() {
     mark_obj(LISP_LAMBDA);
 
     struct binding * b;
-    for (int i = 0; i < HASHSIZE; ++i) {
+    for (long i = 0; i < HASHSIZE; ++i) {
 	for (b = global_env[i]; b != NULL; b = b->next) {
 	    mark_obj(b->name);
 	    mark_obj(b->def);
 	}
     }
 
-    for (int i = sp; i > 0; --i)
+    for (long i = sp; i > 0; --i)
 	mark_obj(stack[i]);
 }
 

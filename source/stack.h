@@ -15,7 +15,7 @@
 
 LispObject * stack[STACK_SIZE];
 
-int sp;
+long sp;
 
 bool stack_output;
 

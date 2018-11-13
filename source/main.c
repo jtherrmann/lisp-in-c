@@ -40,7 +40,7 @@
 // bad_stack
 // Handle an invalid stack state.
 void bad_stack() {
-    printf("\nAbort! Stack pointer is %d but should be 0.\nStack contents: ", sp);
+    printf("\nAbort! Stack pointer is %ld but should be 0.\nStack contents: ", sp);
     print_stack();
     printf("\n");
     FOUND_BUG;

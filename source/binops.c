@@ -150,7 +150,7 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
 	// TODO: once string interning implemented, just compare str ptrs (or
 	// intern entire symbols, in which case remove this if block because
 	// the first if (obj1 == obj2) will execute)
-	int i = 0;
+	long i = 0;
 	while (obj1->print_name[i] != '\0' && obj2->print_name[i] != '\0') {
 	    if (obj1->print_name[i] != obj2->print_name[i])
 		return false;

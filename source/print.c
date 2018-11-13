@@ -32,7 +32,7 @@ void print_obj(LispObject * obj) {
 	print_obj(LISP_F_SYM);
 
     else if (b_int_pred(obj))
-	printf("%d", obj->value);
+	printf("%ld", obj->value);
 
     else if (b_symbol_pred(obj))
 	printf("%s", obj->print_name);
@@ -72,7 +72,7 @@ void print_obj(LispObject * obj) {
 void print_pair(LispObject * obj) {
     printf("(");
 
-    int i = 0;
+    long i = 0;
     while (true) {
 	print_obj(car(obj));
 	obj = cdr(obj);

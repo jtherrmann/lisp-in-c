@@ -72,7 +72,7 @@ struct LispObjectStruct {
 
     union {
 	// TYPE_INT
-	int value;
+	long value;
 
 	// TYPE_SYM
 	char * print_name;
@@ -122,11 +122,11 @@ void make_initial_objs();
 // Constructors
 // ----------------------------------------------------------------------------
 
-LispObject * get_int(int value);
+LispObject * get_int(long value);
 
 LispObject * get_sym(char * str);
 
-LispObject * get_sym_by_substr(char * str, int begin, int end);
+LispObject * get_sym_by_substr(char * str, long begin, long end);
 
 LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);
 
@@ -162,7 +162,7 @@ LispObject * cdr(LispObject * obj);
 
 LispObject * b_len(LispObject * obj);
 
-int len(LispObject * obj);
+long len(LispObject * obj);
 
 
 // ============================================================================

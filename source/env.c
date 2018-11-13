@@ -76,7 +76,7 @@ LispObject * get_def(LispObject * sym) {
 // - b_symbol_pred(sym)
 unsigned hash(LispObject * sym) {
     unsigned hashval = 0;
-    int i = 0;
+    long i = 0;
     while (sym->print_name[i] != '\0') {
 	hashval = sym->print_name[i] + 31 * hashval;
 	++i;
