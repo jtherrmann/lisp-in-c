@@ -290,12 +290,8 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     LispObject * arg1;
     LispObject * arg2;
     bool bool_result;
-    switch(func->type) {
 
-	// TODO: DRY up this switch block, possibly with macros
-
-    case TYPE_BUILTIN_1_ENV:
-
+    if (func->type == TYPE_BUILTIN_1_ENV) {
 	if (len(b_cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(func);
@@ -322,8 +318,9 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
 
 	return result;
+    }
 
-    case TYPE_BUILTIN_1:
+    if (func->type == TYPE_BUILTIN_1) {
 
 	if (len(b_cdr(expr)) != 1) {
 	    INVALID_EXPR;
@@ -351,8 +348,9 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
 
 	return result;
+    }
 
-    case TYPE_BOOL_BUILTIN_1:
+    if (func->type == TYPE_BOOL_BUILTIN_1) {
 
 	if (len(b_cdr(expr)) != 1) {
 	    INVALID_EXPR;
@@ -374,8 +372,9 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	pop();  // pop func
 
 	return (bool_result ? LISP_T : LISP_F);
+    }
 
-    case TYPE_BUILTIN_2:
+    if (func->type == TYPE_BUILTIN_2) {
 
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
@@ -416,8 +415,9 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
 
 	return result;
+    }
 
-    case TYPE_BOOL_BUILTIN_2:
+    if (func->type == TYPE_BOOL_BUILTIN_2) {
 
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
@@ -452,9 +452,6 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	pop();  // pop func
 
 	return (bool_result ? LISP_T : LISP_F);
-
-    default:
-	break;
     }
 
     if (!b_func_pred(func)) {
