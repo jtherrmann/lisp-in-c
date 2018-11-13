@@ -69,10 +69,10 @@ LispObject * parse() {
 	if (sym == NULL)
 	    return NULL;
 
-	if (b_equal(sym, LISP_T_SYM))
+	if (b_equal_pred(sym, LISP_T_SYM))
 	    return LISP_T;
 
-	if (b_equal(sym, LISP_F_SYM))
+	if (b_equal_pred(sym, LISP_F_SYM))
 	    return LISP_F;
 
 	if (sym->print_name[0] == '#') {

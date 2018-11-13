@@ -78,7 +78,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 
 		// If expr equals the name in the (name . value) pair, return
 		// the value.
-		if (b_equal(car(binding), expr))
+		if (b_equal_pred(car(binding), expr))
 		    return cdr(binding);
 
 		env = cdr(env);
@@ -105,7 +105,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	return NULL;
     }
 
-    if (b_equal(car(expr), LISP_QUOTE)) {
+    if (b_equal_pred(car(expr), LISP_QUOTE)) {
 	if (len(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(LISP_QUOTE);
@@ -115,7 +115,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     	return car(cdr(expr));
     }
 
-    if (b_equal(car(expr), LISP_COND)) {
+    if (b_equal_pred(car(expr), LISP_COND)) {
 
 	// clauses is protected from GC because cdr(expr) is reachable from
 	// expr, which is protected from GC as per b_eval's pre.
@@ -175,7 +175,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	return LISP_NIL;
     }
 
-    if(b_equal(car(expr), LISP_DEF)) {
+    if(b_equal_pred(car(expr), LISP_DEF)) {
 	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_DEF);
@@ -210,7 +210,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
     }
 
-    if(b_equal(car(expr), LISP_LAMBDA)) {
+    if(b_equal_pred(car(expr), LISP_LAMBDA)) {
 	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_LAMBDA);
@@ -243,7 +243,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	while(!b_null_pred(args_list)) {
 	    args_compare_list = cdr(args_list);
 	    while (!b_null_pred(args_compare_list)) {
-		if (b_equal(car(args_list), car(args_compare_list))) {
+		if (b_equal_pred(car(args_list), car(args_compare_list))) {
 		    INVALID_EXPR;
 		    printf("Duplicate argument name ");
 		    print_obj(car(args_list));

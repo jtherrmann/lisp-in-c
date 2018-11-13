@@ -94,7 +94,7 @@ unsigned hash(LispObject * sym) {
 // - hashval == hash(sym)
 struct binding * lookup(LispObject * sym, unsigned hashval) {
     for (struct binding * b = global_env[hashval]; b != NULL; b = b->next)
-	if (b_equal(sym, b->name))
+	if (b_equal_pred(sym, b->name))
 	    return b;
     return NULL;
 }

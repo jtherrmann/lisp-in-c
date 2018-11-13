@@ -134,9 +134,9 @@ void make_initial_objs() {
     LispObject * not_def = get_builtin_1(not_name, &b_not);
     bind(not_name, not_def, true);
 
-    char equal_str[] = "eq";
+    char equal_str[] = "equal?";
     LispObject * equal_name = get_sym(equal_str);
-    LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal);
+    LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal_pred);
     bind(equal_name, equal_def, true);
 
     char lt_str[] = "<";

@@ -130,7 +130,9 @@ LispObject * b_not(LispObject * obj) {
 // Comparison functions
 // ============================================================================
 
-bool b_equal(LispObject * obj1, LispObject * obj2) {
+// b_equal_pred
+// Builtin Lisp function equal?.
+bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
     if (obj1 == obj2)
 	return true;
 
@@ -158,8 +160,8 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
     }
 
     if (b_cons_pred(obj1))
-	return b_equal(car(obj1), car(obj2))
-	    && b_equal(cdr(obj1), cdr(obj2));
+	return b_equal_pred(car(obj1), car(obj2))
+	    && b_equal_pred(cdr(obj1), cdr(obj2));
 
     FOUND_BUG;
     exit(1);  // Avoid gcc warning about missing return.

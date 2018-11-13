@@ -39,7 +39,7 @@ LispObject * b_not(LispObject * obj);
 // Comparison functions
 // ============================================================================
 
-bool b_equal(LispObject * obj1, LispObject * obj2);
+bool b_equal_pred(LispObject * obj1, LispObject * obj2);
 
 LispObject * b_lt(LispObject * obj1, LispObject * obj2);
 
