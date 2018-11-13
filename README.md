@@ -40,8 +40,9 @@ Binds the symbol *name* to the result of evaluating *definition*.
 
 special form: **lambda** *args* *body*
 
-Evaluates to a new function. The function's parameters are given by the list of
-symbols *args* and the function's body is given by the expression *body*.
+Evaluates to a function whose parameter names are given by *args* and whose
+body is given by *body*, where *args* is a list of symbols and *body* is a
+single expression.
 
     > (define add (lambda (x y) (+ x y)))
     #<function>[()](x y)->(+ x y)
