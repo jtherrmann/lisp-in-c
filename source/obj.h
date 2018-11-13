@@ -42,10 +42,6 @@ LispObject * LISP_EMPTY;
 LispObject * LISP_T;
 LispObject * LISP_F;
 
-// Boolean symbols.
-LispObject * LISP_T_SYM;
-LispObject * LISP_F_SYM;
-
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;
 LispObject * LISP_COND;

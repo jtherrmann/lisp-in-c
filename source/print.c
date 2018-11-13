@@ -26,10 +26,10 @@ void print_obj(LispObject * obj) {
 	printf("()");
 
     else if (obj == LISP_T)
-	print_obj(LISP_T_SYM);
+	printf("#t");
 
     else if (obj == LISP_F)
-	print_obj(LISP_F_SYM);
+	printf("#f");
 
     else if (b_int_pred(obj))
 	printf("%ld", obj->value);

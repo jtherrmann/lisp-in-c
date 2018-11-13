@@ -63,12 +63,6 @@ void make_initial_objs() {
     LISP_T = get_obj(TYPE_UNIQUE);
     LISP_F = get_obj(TYPE_UNIQUE);
 
-    char T_str[] = "#t";
-    LISP_T_SYM = get_sym(T_str);
-
-    char F_str[] = "#f";
-    LISP_F_SYM = get_sym(F_str);
-
     char quote[] = "quote";
     LISP_QUOTE = get_sym(quote);
 

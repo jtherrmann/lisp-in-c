@@ -44,9 +44,6 @@ void mark() {
     mark_obj(LISP_T);
     mark_obj(LISP_F);
 
-    mark_obj(LISP_T_SYM);
-    mark_obj(LISP_F_SYM);
-
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_COND);
     mark_obj(LISP_DEF);
