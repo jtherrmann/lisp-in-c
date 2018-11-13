@@ -286,13 +286,12 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     push(func);
 
     LispObject * result;
+    bool builtin;
 
-    // TODO: DRY these up even more by having the pop, NULL check, and return
-    // at the end
-
-    if (func->type == TYPE_BUILTIN_1
-	|| func->type == TYPE_BOOL_BUILTIN_1
+    if (func->type == TYPE_BUILTIN_1 || func->type == TYPE_BOOL_BUILTIN_1
 	|| func == LISP_BUILTIN_EVAL) {
+
+	builtin = true;
 
 	if (len(cdr(expr)) != 1) {
 	    INVALID_EXPR;
@@ -314,20 +313,13 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	else if (func->type == TYPE_BOOL_BUILTIN_1)
 	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_F);
 
-	else if (func == LISP_BUILTIN_EVAL)
+	else
+	    // func == LISP_BUILTIN_EVAL
 	    result = b_eval(arg1, env_list, false);
-
-	pop();  // pop func
-
-	if (result == NULL) {
-	    INVALID_EXPR;
-	    print_obj(func);
-	    printf(" signaled an error\n");
-	}
-	return result;
     }
-
-    if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
+    else if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
+	builtin = true;
+	
 	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(func);
@@ -355,18 +347,21 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	if (func->type == TYPE_BUILTIN_2) {
+	if (func->type == TYPE_BUILTIN_2)
 	    result = func->b_func_2(arg1, arg2);
-	    pop();  // pop func
-	    if (result == NULL) {
-		INVALID_EXPR;
-		print_obj(func);
-		printf(" signaled an error\n");
-	    }
-	}
-	else if (func->type == TYPE_BOOL_BUILTIN_2) {
+	else
+	    // func->type == TYPE_BOOL_BUILTIN_2
 	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_F);
-	    pop();  // pop func
+    }
+    else
+	builtin = false;
+
+    if (builtin) {
+	pop();  // pop func
+	if (result == NULL) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" signaled an error\n");
 	}
 	return result;
     }
