@@ -56,6 +56,7 @@ LispObject * LISP_LAMBDA;
 // functions to type-check arguments.
 LispObject * LISP_BOOL_PRED_SYM;
 LispObject * LISP_PAIR_PRED_SYM;
+LispObject * LISP_LIST_PRED_SYM;
 LispObject * LISP_INT_PRED_SYM;
 
 
@@ -114,12 +115,11 @@ struct LispObjectStruct {
     LispObject * weakref;
 };
 
-
 void make_initial_objs();
 
 
 // ----------------------------------------------------------------------------
-// Internal constructors
+// Constructors
 // ----------------------------------------------------------------------------
 
 // get_int
@@ -151,12 +151,12 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 LispObject * get_builtin_1_env(LispObject * builtin_name,
 		  LispObject * (* b_func_1_env)(LispObject *, LispObject *));
 
-
-// ----------------------------------------------------------------------------
-// cons, car, and cdr
-// ----------------------------------------------------------------------------
-
 LispObject * b_cons(LispObject * car, LispObject * cdr);
+
+
+// ============================================================================
+// car, cdr, and len
+// ============================================================================
 
 LispObject * b_car(LispObject * obj);
 
@@ -165,6 +165,10 @@ LispObject * b_cdr(LispObject * obj);
 LispObject * car(LispObject * obj);
 
 LispObject * cdr(LispObject * obj);
+
+LispObject * b_len(LispObject * obj);
+
+int len(LispObject * obj);
 
 
 // ============================================================================

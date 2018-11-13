@@ -99,6 +99,11 @@ void make_initial_objs() {
     LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr);
     bind(cdr_name, cdr_def, true);
 
+    char len_str[] = "len";
+    LispObject * len_name = get_sym(len_str);
+    LispObject * len_def = get_builtin_1(len_name, &b_len);
+    bind(len_name, len_def, true);
+
     char add_str[] = "+";
     LispObject * add_name = get_sym(add_str);
     LispObject * add_def = get_builtin_2(add_name, &b_add);
@@ -185,9 +190,9 @@ void make_initial_objs() {
     bind(LISP_PAIR_PRED_SYM, pair_pred_def, true);
 
     char list_pred_str[] = "list?";
-    LispObject * list_pred_name = get_sym(list_pred_str);
-    LispObject * list_pred_def = get_bool_builtin_1(list_pred_name, &b_list_pred);
-    bind(list_pred_name, list_pred_def, true);
+    LISP_LIST_PRED_SYM = get_sym(list_pred_str);
+    LispObject * list_pred_def = get_bool_builtin_1(LISP_LIST_PRED_SYM, &b_list_pred);
+    bind(LISP_LIST_PRED_SYM, list_pred_def, true);
 
     char func_pred_str[] = "func?";
     LispObject * func_pred_name = get_sym(func_pred_str);
@@ -202,7 +207,7 @@ void make_initial_objs() {
 
 
 // ----------------------------------------------------------------------------
-// Internal constructors
+// Constructors
 // ----------------------------------------------------------------------------
 
 LispObject * get_int(int value) {
@@ -326,10 +331,6 @@ LispObject * get_builtin_1_env(LispObject * builtin_name,
 }
 
 
-// ----------------------------------------------------------------------------
-// cons, car, and cdr
-// ----------------------------------------------------------------------------
-
 // b_cons
 // Builtin Lisp function cons.
 LispObject * b_cons(LispObject * car, LispObject * cdr) {
@@ -349,6 +350,10 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
     return obj;
 }
 
+
+// ============================================================================
+// car, cdr, and len
+// ============================================================================
 
 // b_car
 // Builtin Lisp function car.
@@ -383,6 +388,34 @@ LispObject * cdr(LispObject * obj) {
     if (!b_pair_pred(obj))
 	FOUND_BUG;
     return obj->cdr;
+}
+
+
+// b_len
+// Builtin Lisp function len.
+LispObject * b_len(LispObject * obj) {
+    if (!typecheck(obj, LISP_LIST_PRED_SYM))
+	return NULL;
+
+    push(obj);  // Protect obj from GC that could be triggered by get_int.
+    LispObject * result = get_int(len(obj));
+    pop();
+    return result;
+}
+
+
+// len
+// Return the length of a Lisp list.
+//
+// Pre:
+// - b_list_pred(obj)
+int len(LispObject * obj) {
+    int count = 0;
+    while (!b_null_pred(obj)) {
+	++count;
+	obj = cdr(obj);
+    }
+    return count;
 }
 
 

@@ -30,8 +30,6 @@ LispObject * get_new_env(LispObject * arg_names,
 			 LispObject * arg_exprs,
 			 LispObject * env_list);
 
-int len(LispObject * list);
-
 
 // ============================================================================
 // Public functions
@@ -498,17 +496,3 @@ LispObject * get_new_env(LispObject * arg_names,
     return new_env;
 }
 
-
-// len
-// Return the length of a Lisp list.
-//
-// Pre:
-// - b_list_pred(list)
-int len(LispObject * list) {
-    int count = 0;
-    while (!b_null_pred(list)) {
-	++count;
-	list = cdr(list);
-    }
-    return count;
-}
