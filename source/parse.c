@@ -24,6 +24,8 @@ LispObject * parseint();
 
 LispObject * parsesym();
 
+LispObject * parsebool();
+
 LispObject * parselist();
 
 int power(int b, int n);
@@ -61,29 +63,11 @@ LispObject * parse() {
 	return parselist();  // parselist fulfills parse's post.
     }
 
-    if (is_sym_start_char(input[input_index]) || input[input_index] == '#') {
+    if (is_sym_start_char(input[input_index]))
+	return parsesym();  // parsesym fulfills parse's post.
 
-	int start = input_index;
-	LispObject * sym = parsesym();  // parsesym fulfills parse's post.
-
-	if (sym == NULL)
-	    return NULL;
-
-	if (b_equal_pred(sym, LISP_T_SYM))
-	    return LISP_T;
-
-	if (b_equal_pred(sym, LISP_F_SYM))
-	    return LISP_F;
-
-	if (sym->print_name[0] == '#') {
-	    input_index = start;
-	    show_input_char();
-	    printf("%s'#' unrecognized in this context\n", PARSE_ERR);
-	    return NULL;
-	}
-
-	return sym;
-    }
+    if (input[input_index] == '#')
+	return parsebool();  // parsebool fulfills parse's post.
 
     show_input_char();
     printf("%s'%c' unrecognized in this context\n",
@@ -174,7 +158,7 @@ LispObject * parseint() {
 // Convert part of the input str to a Lisp symbol.
 //
 // Pre:
-// - is_sym_start_char(input[input_index]) || input[input_index] == '#'
+// - is_sym_start_char(input[input_index])
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
@@ -185,7 +169,6 @@ LispObject * parsesym() {
 
     // Go to the end of the substr that represents the symbol.
     int begin = input_index;
-    ++input_index;  // Skip validation of the first char in case it's '#'.
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
@@ -216,6 +199,43 @@ LispObject * parsesym() {
     //   quickly if one already exists; then sweep each list in the hash
     //   table during GC
     //   - K&R C p. 143
+}
+
+
+// parsebool
+// Convert part of the input str to a Lisp bool.
+//
+// Pre:
+// - input[input_index] is '#'.
+//
+// Post:
+// - input[input_index] is the first non-space char after the parsed substr.
+//
+// On error:
+// - Return NULL.
+LispObject * parsebool() {
+    ++input_index;
+    char boolch = input[input_index];
+
+    if (boolch != 't' && boolch != 'f') {
+	show_input_char();
+	printf("%sexpected 't' or 'f' but got '%c'\n", PARSE_ERR, boolch);
+	return NULL;
+    }
+
+    ++input_index;
+    if (input[input_index] != '('
+	&& input[input_index] != ')'
+	&& input[input_index] != ' '
+	&& input[input_index] != INPUT_END) {
+	show_input_char();
+	printf("%sbool followed by invalid char '%c'\n",
+	       PARSE_ERR, input[input_index]);
+	return NULL;
+    }
+
+    skipspace();  // Fulfill post.
+    return (boolch == 't' ? LISP_T : LISP_F);
 }
 
 
