@@ -69,16 +69,16 @@ void make_initial_objs() {
     char cond[] = "cond";
     LISP_COND = get_sym(cond);
 
-    char def[] = "def";
-    LISP_DEF = get_sym(def);
+    char define[] = "define";
+    LISP_DEFINE = get_sym(define);
 
     char lambda[] = "lambda";
     LISP_LAMBDA = get_sym(lambda);
 
     char eval_str[] = "eval";
     LispObject * eval_name = get_sym(eval_str);
-    LispObject * eval_def = get_builtin_1_env(eval_name, &b_eval);
-    bind(eval_name, eval_def, true);
+    LISP_BUILTIN_EVAL = get_builtin_eval(eval_name);
+    bind(eval_name, LISP_BUILTIN_EVAL, true);
 
     char cons_str[] = "cons";
     LispObject * cons_name = get_sym(cons_str);
@@ -267,6 +267,20 @@ LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_lis
 }
 
 
+// TODO: make more of these private
+
+
+// get_builtin_eval
+// Construct the builtin eval function.
+LispObject * get_builtin_eval(LispObject * builtin_name) {
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
+    LispObject * obj = get_obj(TYPE_UNIQUE);
+    obj->builtin_name = builtin_name;
+    return obj;
+}
+
+
 // get_builtin_1
 // Construct a builtin function that takes one argument.
 LispObject * get_builtin_1(LispObject * builtin_name,
@@ -314,20 +328,6 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
-    obj->builtin_name = builtin_name;
-    return obj;
-}
-
-
-// get_builtin_1_env
-// Construct a builtin function that takes one explicit argument and one
-// implicit argument: the current list of local environments.
-LispObject * get_builtin_1_env(LispObject * builtin_name,
-			       LispObject * (* b_func_1_env)(LispObject *, LispObject *)) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
-    LispObject * obj = get_obj(TYPE_BUILTIN_1_ENV);
-    obj->b_func_1_env = b_func_1_env;
     obj->builtin_name = builtin_name;
     return obj;
 }
@@ -481,6 +481,6 @@ bool b_builtin_pred(LispObject * obj) {
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1
 	|| obj->type == TYPE_BOOL_BUILTIN_2
-	|| obj->type == TYPE_BUILTIN_1_ENV;
+	|| obj == LISP_BUILTIN_EVAL;
 }
 

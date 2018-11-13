@@ -46,7 +46,7 @@ void mark() {
 
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_COND);
-    mark_obj(LISP_DEF);
+    mark_obj(LISP_DEFINE);
     mark_obj(LISP_LAMBDA);
 
     struct binding * b;

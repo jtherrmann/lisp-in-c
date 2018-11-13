@@ -26,8 +26,7 @@ typedef enum {
 	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
 	      TYPE_BOOL_BUILTIN_1,
-	      TYPE_BOOL_BUILTIN_2,
-	      TYPE_BUILTIN_1_ENV
+	      TYPE_BOOL_BUILTIN_2
 } LispType;
 
 
@@ -45,8 +44,11 @@ LispObject * LISP_F;
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;
 LispObject * LISP_COND;
-LispObject * LISP_DEF;
+LispObject * LISP_DEFINE;
 LispObject * LISP_LAMBDA;
+
+// Builtin eval function.
+LispObject * LISP_BUILTIN_EVAL;
 
 // Symbols bound to builtin type predicate functions used by other builtin
 // functions to type-check arguments.
@@ -100,9 +102,6 @@ struct LispObjectStruct {
 
 		// TYPE_BOOL_BUILTIN_2
 		bool (* b_bool_func_2)(LispObject *, LispObject *);
-
-		// TYPE_BUILTIN_1_ENV
-		LispObject * (* b_func_1_env)(LispObject *, LispObject *);
 	    };
 	};
     };
@@ -126,6 +125,8 @@ LispObject * get_sym_by_substr(char * str, long begin, long end);
 
 LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);
 
+LispObject * get_builtin_eval(LispObject * builtin_name);
+
 LispObject * get_builtin_1(LispObject * builtin_name,
 			   LispObject * (* b_func_1)(LispObject *));
 
@@ -137,9 +138,6 @@ LispObject * get_bool_builtin_1(LispObject * builtin_name,
 
 LispObject * get_bool_builtin_2(LispObject * builtin_name,
 				bool (* b_bool_func_2)(LispObject *, LispObject *));
-
-LispObject * get_builtin_1_env(LispObject * builtin_name,
-		  LispObject * (* b_func_1_env)(LispObject *, LispObject *));
 
 LispObject * b_cons(LispObject * car, LispObject * cdr);
 

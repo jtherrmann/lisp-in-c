@@ -9,7 +9,7 @@
 #include "obj.h"
 
 
-LispObject * b_eval(LispObject * expr, LispObject * env);
+LispObject * b_eval(LispObject * expr, LispObject * env, bool toplevel);
 
 
 #endif
