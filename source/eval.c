@@ -281,15 +281,11 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     if (func == NULL)
 	return NULL;
 
-    LispObject * result;
-
     // Protect func from GC that could be triggered by calls to b_eval and/or
     // get_new_env, below.
     push(func);
 
-    LispObject * arg1;
-    LispObject * arg2;
-    bool bool_result;
+    LispObject * result;
 
     if (func->type == TYPE_BUILTIN_1_ENV) {
 	if (len(b_cdr(expr)) != 1) {
@@ -300,7 +296,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	arg1 = b_eval(b_car(b_cdr(expr)), env_list);
+	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
 
 	if (arg1 == NULL) {
 	    pop();  // pop func
@@ -320,8 +316,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	return result;
     }
 
-    if (func->type == TYPE_BUILTIN_1) {
-
+    if (func->type == TYPE_BUILTIN_1 || func->type == TYPE_BOOL_BUILTIN_1) {
 	if (len(b_cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(func);
@@ -330,52 +325,29 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	arg1 = b_eval(b_car(b_cdr(expr)), env_list);
-
+	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func
 	    return NULL;
 	}
 
-	result = func->b_func_1(arg1);
-
-	pop();  // pop func
-
-	if (result == NULL) {
-	    INVALID_EXPR;
-	    print_obj(func);
-	    printf(" signaled an error\n");
+	if (func->type == TYPE_BUILTIN_1) {
+	    result = func->b_func_1(arg1);
+	    pop();  // pop func
+	    if (result == NULL) {
+		INVALID_EXPR;
+		print_obj(func);
+		printf(" signaled an error\n");
+	    }
 	}
-
+	else if (func->type == TYPE_BOOL_BUILTIN_1) {
+	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_F);
+	    pop();  // pop func
+	}
 	return result;
     }
 
-    if (func->type == TYPE_BOOL_BUILTIN_1) {
-
-	if (len(b_cdr(expr)) != 1) {
-	    INVALID_EXPR;
-	    print_obj(func);
-	    printf(" takes 1 argument\n");
-	    pop();  // pop func
-	    return NULL;
-	}
-
-	arg1 = b_eval(b_car(b_cdr(expr)), env_list);
-
-	if (arg1 == NULL) {
-	    pop();  // pop func
-	    return NULL;
-	}
-
-	bool_result = func->b_bool_func_1(arg1);
-
-	pop();  // pop func
-
-	return (bool_result ? LISP_T : LISP_F);
-    }
-
-    if (func->type == TYPE_BUILTIN_2) {
-
+    if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
 	if (len(b_cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(func);
@@ -384,8 +356,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	arg1 = b_eval(b_car(b_cdr(expr)), env_list);
-
+	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func;
 	    return NULL;
@@ -395,7 +366,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	// second argument.
 	push(arg1);
 
-	arg2 = b_eval(b_car(b_cdr(b_cdr(expr))), env_list);
+	LispObject * arg2 = b_eval(b_car(b_cdr(b_cdr(expr))), env_list);
 
 	pop(); // pop arg1
 
@@ -404,54 +375,20 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	result = func->b_func_2(arg1, arg2);
-
-	pop();  // pop func
-
-	if (result == NULL) {
-	    INVALID_EXPR;
-	    print_obj(func);
-	    printf(" signaled an error\n");
+	if (func->type == TYPE_BUILTIN_2) {
+	    result = func->b_func_2(arg1, arg2);
+	    pop();  // pop func
+	    if (result == NULL) {
+		INVALID_EXPR;
+		print_obj(func);
+		printf(" signaled an error\n");
+	    }
 	}
-
+	else if (func->type == TYPE_BOOL_BUILTIN_2) {
+	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_F);
+	    pop();  // pop func
+	}
 	return result;
-    }
-
-    if (func->type == TYPE_BOOL_BUILTIN_2) {
-
-	if (len(b_cdr(expr)) != 2) {
-	    INVALID_EXPR;
-	    print_obj(func);
-	    printf(" takes 2 arguments\n");
-	    pop();  // pop func
-	    return NULL;
-	}
-
-	arg1 = b_eval(b_car(b_cdr(expr)), env_list);
-
-	if (arg1 == NULL) {
-	    pop();  // pop func
-	    return NULL;
-	}
-
-	// Protect arg1 from GC that could be triggered by b_eval'ing the
-	// second argument.
-	push(arg1);
-
-	arg2 = b_eval(b_car(b_cdr(b_cdr(expr))), env_list);
-
-	pop(); // pop arg1
-
-	if (arg2 == NULL) {
-	    pop();  // pop func
-	    return NULL;
-	}
-
-	bool_result = func->b_bool_func_2(arg1, arg2);
-
-	pop();  // pop func
-
-	return (bool_result ? LISP_T : LISP_F);
     }
 
     if (!b_func_pred(func)) {
