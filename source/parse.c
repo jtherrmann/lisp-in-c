@@ -12,9 +12,6 @@
 #include "stack.h"
 
 
-// TODO: parse negative ints
-
-
 // ============================================================================
 // Private function prototypes
 // ============================================================================
@@ -52,7 +49,8 @@ bool is_sym_start_char(char ch);
 // On error:
 // - Return NULL.
 LispObject * parse() {
-    if (is_digit(input[input_index]))
+    if (is_digit(input[input_index])
+	|| (input[input_index] == '-' && is_digit(input[input_index + 1])))
 	return parseint();  // parseint fulfills parse's post.
 
     if (input[input_index] == '(') {
@@ -101,13 +99,15 @@ void show_input_char() {
 // ============================================================================
 
 // TODO: handle overflow; also, make ints as large as possible (e.g. signed
-// longs or whatever)
+// longs or whatever); when handling overflow consider that the max abs val
+// for a negative num is 1 more than the max abs val for a positive num
 //
 // parseint
 // Convert part of the input str to a Lisp int.
 //
 // Pre:
 // - is_digit(input[input_index])
+//   || (input[input_index] == '-' && is_digit(input[input_index + 1]))
 //
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
@@ -115,6 +115,12 @@ void show_input_char() {
 // On error:
 // - Return NULL.
 LispObject * parseint() {
+
+    bool positive = true;
+    if (input[input_index] == '-') {
+	positive = false;
+	++input_index;
+    }
 
     // Go to the end of the substr that represents the int.
     int begin = input_index;
@@ -150,7 +156,7 @@ LispObject * parseint() {
     input_index = end;
     skipspace();
 
-    return get_int(total);
+    return get_int(positive ? total : -total);
 }
 
 
