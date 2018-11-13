@@ -57,8 +57,8 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	|| b_null_pred(expr)
 	|| expr == LISP_T
 	|| expr == LISP_F
-	|| b_func_pred(expr)
-	|| b_builtin_pred(expr))
+	|| expr->type == TYPE_LAMBDA
+	|| is_builtin(expr))
 	return expr;
 
     if (b_symbol_pred(expr)) {
@@ -265,13 +265,13 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	// b_eval's pre that expr is protected from GC meets get_func's pre
-	// that its first arg is protected from GC, because car(cdr(expr))
-	// is reachable from expr; body's protection from GC meets get_func's
+	// b_eval's pre that expr is protected from GC meets get_lambda's pre
+	// that its first arg is protected from GC, because car(cdr(expr)) is
+	// reachable from expr; body's protection from GC meets get_lambda's
 	// pre that body is protected from GC; and b_eval's pre that env_list
-	// is protected from GC meets get_func's pre that env_list is protected
-	// from GC.
-	return get_func(car(cdr(expr)), body, env_list);
+	// is protected from GC meets get_lambda's pre that env_list is
+	// protected from GC.
+	return get_lambda(car(cdr(expr)), body, env_list);
     }
 
     // expr represents a function application.
@@ -366,7 +366,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	return result;
     }
 
-    if (!b_func_pred(func)) {
+    if (func->type != TYPE_LAMBDA) {
 	INVALID_EXPR;
 	print_obj(func);
 	printf(" is not a function\n");

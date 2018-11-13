@@ -180,15 +180,10 @@ void make_initial_objs() {
     LispObject * list_pred_def = get_bool_builtin_1(LISP_LIST_PRED_SYM, &b_list_pred);
     bind(LISP_LIST_PRED_SYM, list_pred_def, true);
 
-    char func_pred_str[] = "func?";
-    LispObject * func_pred_name = get_sym(func_pred_str);
-    LispObject * func_pred_def = get_bool_builtin_1(func_pred_name, &b_func_pred);
-    bind(func_pred_name, func_pred_def, true);
-
-    char builtin_pred_str[] = "builtin?";
-    LispObject * builtin_pred_name = get_sym(builtin_pred_str);
-    LispObject * builtin_pred_def = get_bool_builtin_1(builtin_pred_name, &b_builtin_pred);
-    bind(builtin_pred_name, builtin_pred_def, true);
+    char function_pred_str[] = "function?";
+    LispObject * function_pred_name = get_sym(function_pred_str);
+    LispObject * function_pred_def = get_bool_builtin_1(function_pred_name, &b_function_pred);
+    bind(function_pred_name, function_pred_def, true);
 }
 
 
@@ -221,16 +216,16 @@ LispObject * get_sym_by_substr(char * str, long begin, long end) {
 }
 
 
-// get_func
-// Construct a Lisp function.
+// get_lambda
+// Construct a Lisp lambda function.
 //
 // Pre:
 // - args, body, and env_list are protected from garbage collection.
 // - args is the empty list or a list of symbols.
 // - env_list is the current list of local environments, of the same form as
 //   described by b_eval's pre.
-LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list) {
-    LispObject * obj = get_obj(TYPE_FUNC);
+LispObject * get_lambda(LispObject * args, LispObject * body, LispObject * env_list) {
+    LispObject * obj = get_obj(TYPE_LAMBDA);
     obj->args = args;
     obj->body = body;
     obj->env_list = env_list;
@@ -489,16 +484,16 @@ bool b_list_pred(LispObject * obj) {
 }
 
 
-// b_func_pred
-// Builtin Lisp function func?.
-bool b_func_pred(LispObject * obj) {
-    return obj->type == TYPE_FUNC;
+// b_function_pred
+// Builtin Lisp function function?.
+bool b_function_pred(LispObject * obj) {
+    return obj->type == TYPE_LAMBDA || is_builtin(obj);
 }
 
 
-// b_builtin_pred
-// Builtin Lisp function builtin?.
-bool b_builtin_pred(LispObject * obj) {
+// is_builtin
+// Return whether the object is a builtin Lisp function.
+bool is_builtin(LispObject * obj) {
     return obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1

@@ -40,7 +40,7 @@ void print_obj(LispObject * obj) {
     else if (b_pair_pred(obj))
 	print_pair(obj);
 
-    else if (b_func_pred(obj)) {
+    else if (obj->type == TYPE_LAMBDA) {
 	printf("#<function>[");
 	print_obj(obj->env_list);
 	printf("]");
@@ -49,7 +49,7 @@ void print_obj(LispObject * obj) {
 	print_obj(obj->body);
     }
 
-    else if (b_builtin_pred(obj)) {
+    else if (is_builtin(obj)) {
 	printf("#<builtin function: ");
 	print_obj(obj->builtin_name);
 	printf(">");

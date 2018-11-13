@@ -22,7 +22,7 @@ typedef enum {
 	      TYPE_SYM,
 	      TYPE_UNIQUE,
 	      TYPE_PAIR,
-	      TYPE_FUNC,
+	      TYPE_LAMBDA,
 	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
 	      TYPE_BOOL_BUILTIN_1,
@@ -81,7 +81,7 @@ struct LispObjectStruct {
 	    LispObject * cdr;
 	};
 
-	// TYPE_FUNC
+	// TYPE_LAMBDA
 	struct {
 	    LispObject * args;
 	    LispObject * body;
@@ -121,7 +121,7 @@ LispObject * get_int(long value);
 
 LispObject * get_sym_by_substr(char * str, long begin, long end);
 
-LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);
+LispObject * get_lambda(LispObject * args, LispObject * body, LispObject * env_list);
 
 LispObject * b_cons(LispObject * car, LispObject * cdr);
 
@@ -159,9 +159,9 @@ bool b_pair_pred(LispObject * obj);
 
 bool b_list_pred(LispObject * obj);
 
-bool b_func_pred(LispObject * obj);
+bool b_function_pred(LispObject * obj);
 
-bool b_builtin_pred(LispObject * obj);
+bool is_builtin(LispObject * obj);
 
 
 #endif
