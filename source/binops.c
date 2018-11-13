@@ -158,8 +158,8 @@ bool b_equal(LispObject * obj1, LispObject * obj2) {
     }
 
     if (b_cons_pred(obj1))
-	return b_equal(b_car(obj1), b_car(obj2))
-	    && b_equal(b_cdr(obj1), b_cdr(obj2));
+	return b_equal(car(obj1), car(obj2))
+	    && b_equal(cdr(obj1), cdr(obj2));
 
     FOUND_BUG;
     exit(1);  // Avoid gcc warning about missing return.

@@ -91,12 +91,12 @@ void make_initial_objs() {
 
     char car_str[] = "car";
     LispObject * car_name = get_sym(car_str);
-    LispObject * car_def = get_builtin_1(car_name, &b_car_2);
+    LispObject * car_def = get_builtin_1(car_name, &b_car);
     bind(car_name, car_def, true);
 
     char cdr_str[] = "cdr";
     LispObject * cdr_name = get_sym(cdr_str);
-    LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr_2);
+    LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr);
     bind(cdr_name, cdr_def, true);
 
     char add_str[] = "+";
@@ -350,43 +350,36 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 }
 
 
-// TODO: rename the car/cdr funcs
-
-
-// b_car_2
+// b_car
 // Builtin Lisp function car.
-LispObject * b_car_2(LispObject * obj) {
+LispObject * b_car(LispObject * obj) {
     if (!typecheck(obj, LISP_CONS_PRED_SYM))
     	return NULL;
     return obj->car;
 }
 
 
-// b_cdr_2
+// b_cdr
 // Builtin Lisp function cdr.
-LispObject * b_cdr_2(LispObject * obj) {
+LispObject * b_cdr(LispObject * obj) {
     if (!typecheck(obj, LISP_CONS_PRED_SYM))
     	return NULL;
     return obj->cdr;
 }
 
 
-// b_car
-// Previously this was builtin Lisp function car, but now it is just for
-// internal use by the interpreter, while b_car_2 implements a builtin car
-// function with proper error handling.
-LispObject * b_car(LispObject * obj) {
+// car
+// car function for internal use by the interpreter.
+LispObject * car(LispObject * obj) {
     if (!b_cons_pred(obj))
 	FOUND_BUG;
     return obj->car;
 }
 
 
-// b_cdr
-// Previously this was builtin Lisp function cdr, but now it is just for
-// internal use by the interpreter, while b_cdr_2 implements a builtin cdr
-// function with proper error handling.
-LispObject * b_cdr(LispObject * obj) {
+// cdr
+// cdr function for internal use by the interpreter.
+LispObject * cdr(LispObject * obj) {
     if (!b_cons_pred(obj))
 	FOUND_BUG;
     return obj->cdr;

@@ -74,8 +74,8 @@ void print_cons(LispObject * obj) {
 
     int i = 0;
     while (true) {
-	print_obj(b_car(obj));
-	obj = b_cdr(obj);
+	print_obj(car(obj));
+	obj = cdr(obj);
 
 	if (!b_cons_pred(obj))
 	    break;

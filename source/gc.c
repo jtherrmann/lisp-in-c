@@ -82,8 +82,8 @@ void mark_obj(LispObject * obj) {
 	obj->marked = true;
 
 	if (b_cons_pred(obj)) {
-	    mark_obj(b_car(obj));
-	    mark_obj(b_cdr(obj));
+	    mark_obj(car(obj));
+	    mark_obj(cdr(obj));
 	}
 	else if (b_func_pred(obj)) {
 	    mark_obj(obj->args);

@@ -69,21 +69,21 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	// Search env_list for expr's binding.
 	LispObject * env;
 	while (!b_null_pred(env_list)) {
-	    env = b_car(env_list);
+	    env = car(env_list);
 
 	    // Search env for expr's binding.
 	    LispObject * binding;
 	    while (!b_null_pred(env)) {
-		binding = b_car(env);
+		binding = car(env);
 
 		// If expr equals the name in the (name . value) pair, return
 		// the value.
-		if (b_equal(b_car(binding), expr))
-		    return b_cdr(binding);
+		if (b_equal(car(binding), expr))
+		    return cdr(binding);
 
-		env = b_cdr(env);
+		env = cdr(env);
 	    }
-	    env_list = b_cdr(env_list);
+	    env_list = cdr(env_list);
 	}
 
 	// env_list doesn't contain a binding for expr, so look it up in the
@@ -105,28 +105,28 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	return NULL;
     }
 
-    if (b_equal(b_car(expr), LISP_QUOTE)) {
-	if (len(b_cdr(expr)) != 1) {
+    if (b_equal(car(expr), LISP_QUOTE)) {
+	if (len(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(LISP_QUOTE);
 	    printf(" takes 1 argument\n");
 	    return NULL;
 	}
-    	return b_car(b_cdr(expr));
+    	return car(cdr(expr));
     }
 
-    if (b_equal(b_car(expr), LISP_COND)) {
+    if (b_equal(car(expr), LISP_COND)) {
 
-	// clauses is protected from GC because b_cdr(expr) is reachable from
+	// clauses is protected from GC because cdr(expr) is reachable from
 	// expr, which is protected from GC as per b_eval's pre.
-	LispObject * clauses = b_cdr(expr);
+	LispObject * clauses = cdr(expr);
 
 	LispObject * clause;
 	LispObject * bool_val;
 	while (!b_null_pred(clauses)) {
 	    // clauses' protection from GC protects clause from GC because
-	    // b_car(clauses) is reachable from clauses.
-	    clause = b_car(clauses);
+	    // car(clauses) is reachable from clauses.
+	    clause = car(clauses);
 
 	    if (!b_list_pred(clause)) {
 		INVALID_EXPR;
@@ -143,25 +143,25 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    }
 
 	    // clause being protected from GC meets b_eval's pre that expr is
-	    // protected from GC because b_car(clause) is reachable from
-	    // clause; and b_eval's pre that env_list is protected from GC is
-	    // still true here.
-	    bool_val = b_eval(b_car(clause), env_list);
+	    // protected from GC because car(clause) is reachable from clause;
+	    // and b_eval's pre that env_list is protected from GC is still
+	    // true here.
+	    bool_val = b_eval(car(clause), env_list);
 
 	    if (bool_val == NULL)
 		return NULL;
 
 	    if (bool_val == LISP_T)
 		// clause being protected from GC meets b_eval's pre that expr
-		// is protected from GC because b_car(b_cdr(clause)) is
-		// reachable from clause; and b_eval's pre that env_list is
-		// protected from GC is still true here.
-		return b_eval(b_car(b_cdr(clause)), env_list);
+		// is protected from GC because car(cdr(clause)) is reachable
+		// from clause; and b_eval's pre that env_list is protected
+		// from GC is still true here.
+		return b_eval(car(cdr(clause)), env_list);
 
 	    if (bool_val != LISP_F) {
 		INVALID_EXPR;
 		printf("Predicate ");
-		print_obj(b_car(clause));
+		print_obj(car(clause));
 		printf(" evaluates to non-boolean value ");
 		print_obj(bool_val);
 		printf("\n");
@@ -169,21 +169,21 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    }
 
 	    // The new value of clauses is still protected from GC because
-	    // b_cdr(clauses) is reachable from the old value of clauses.
-	    clauses = b_cdr(clauses);
+	    // cdr(clauses) is reachable from the old value of clauses.
+	    clauses = cdr(clauses);
 	}
 	return LISP_NIL;
     }
 
-    if(b_equal(b_car(expr), LISP_DEF)) {
-	if (len(b_cdr(expr)) != 2) {
+    if(b_equal(car(expr), LISP_DEF)) {
+	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_DEF);
 	    printf(" takes 2 arguments\n");
 	    return NULL;
 	}
 
-	LispObject * sym = b_car(b_cdr(expr));
+	LispObject * sym = car(cdr(expr));
 
 	if (!b_symbol_pred(sym)) {
 	    INVALID_EXPR;
@@ -192,7 +192,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	LispObject * def = b_eval(b_car(b_cdr(b_cdr(expr))), env_list);
+	LispObject * def = b_eval(car(cdr(cdr(expr))), env_list);
 
 	if (def == NULL)
 	    return NULL;
@@ -210,15 +210,15 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
     }
 
-    if(b_equal(b_car(expr), LISP_LAMBDA)) {
-	if (len(b_cdr(expr)) != 2) {
+    if(b_equal(car(expr), LISP_LAMBDA)) {
+	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_LAMBDA);
 	    printf(" takes 2 arguments\n");
 	    return NULL;
 	}
 
-	LispObject * args_list = b_car(b_cdr(expr));
+	LispObject * args_list = car(cdr(expr));
 	if (!b_list_pred(args_list)) {
 	    INVALID_EXPR;
 	    print_obj(args_list);
@@ -228,36 +228,36 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 
 	// Check that all argument names are symbols.
 	while (!b_null_pred(args_list)) {
-	    if (!b_symbol_pred(b_car(args_list))) {
+	    if (!b_symbol_pred(car(args_list))) {
 		INVALID_EXPR;
-		print_obj(b_car(args_list));
+		print_obj(car(args_list));
 		printf(" is not a symbol\n");
 		return NULL;
 	    }
-	    args_list = b_cdr(args_list);
+	    args_list = cdr(args_list);
 	}
 
 	// Check for duplicate argument names.
-	args_list = b_car(b_cdr(expr));
+	args_list = car(cdr(expr));
 	LispObject * args_compare_list;
 	while(!b_null_pred(args_list)) {
-	    args_compare_list = b_cdr(args_list);
+	    args_compare_list = cdr(args_list);
 	    while (!b_null_pred(args_compare_list)) {
-		if (b_equal(b_car(args_list), b_car(args_compare_list))) {
+		if (b_equal(car(args_list), car(args_compare_list))) {
 		    INVALID_EXPR;
 		    printf("Duplicate argument name ");
-		    print_obj(b_car(args_list));
+		    print_obj(car(args_list));
 		    printf("\n");
 		    return NULL;
 		}
-		args_compare_list = b_cdr(args_compare_list);
+		args_compare_list = cdr(args_compare_list);
 	    }
-	    args_list = b_cdr(args_list);
+	    args_list = cdr(args_list);
 	}
 
 	// body is protected from GC because expr is protected from GC by
-	// b_eval's pre and b_car(b_cdr(b_cdr(expr))) is reachable from expr.
-	LispObject * body = b_car(b_cdr(b_cdr(expr)));
+	// b_eval's pre and car(cdr(cdr(expr))) is reachable from expr.
+	LispObject * body = car(cdr(cdr(expr)));
 	if (b_cons_pred(body) && !b_list_pred(body)) {
 	    INVALID_EXPR;
 	    print_obj(body);
@@ -266,17 +266,17 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	}
 
 	// b_eval's pre that expr is protected from GC meets get_func's pre
-	// that its first arg is protected from GC, because b_car(b_cdr(expr))
+	// that its first arg is protected from GC, because car(cdr(expr))
 	// is reachable from expr; body's protection from GC meets get_func's
 	// pre that body is protected from GC; and b_eval's pre that env_list
 	// is protected from GC meets get_func's pre that env_list is protected
 	// from GC.
-	return get_func(b_car(b_cdr(expr)), body, env_list);
+	return get_func(car(cdr(expr)), body, env_list);
     }
 
     // expr represents a function application.
 
-    LispObject * func = b_eval(b_car(expr), env_list);
+    LispObject * func = b_eval(car(expr), env_list);
 
     if (func == NULL)
 	return NULL;
@@ -288,7 +288,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     LispObject * result;
 
     if (func->type == TYPE_BUILTIN_1_ENV) {
-	if (len(b_cdr(expr)) != 1) {
+	if (len(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(func);
 	    printf(" takes 1 argument\n");
@@ -296,7 +296,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
+	LispObject * arg1 = b_eval(car(cdr(expr)), env_list);
 
 	if (arg1 == NULL) {
 	    pop();  // pop func
@@ -317,7 +317,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     }
 
     if (func->type == TYPE_BUILTIN_1 || func->type == TYPE_BOOL_BUILTIN_1) {
-	if (len(b_cdr(expr)) != 1) {
+	if (len(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(func);
 	    printf(" takes 1 argument\n");
@@ -325,7 +325,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
+	LispObject * arg1 = b_eval(car(cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func
 	    return NULL;
@@ -348,7 +348,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     }
 
     if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
-	if (len(b_cdr(expr)) != 2) {
+	if (len(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(func);
 	    printf(" takes 2 arguments\n");
@@ -356,7 +356,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	    return NULL;
 	}
 
-	LispObject * arg1 = b_eval(b_car(b_cdr(expr)), env_list);
+	LispObject * arg1 = b_eval(car(cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func;
 	    return NULL;
@@ -366,7 +366,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	// second argument.
 	push(arg1);
 
-	LispObject * arg2 = b_eval(b_car(b_cdr(b_cdr(expr))), env_list);
+	LispObject * arg2 = b_eval(car(cdr(cdr(expr))), env_list);
 
 	pop(); // pop arg1
 
@@ -402,10 +402,10 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     // func is protected from GC, so it meets get_new_env's pre that arg_names
     // is protected from GC, because func->args is reachable from func; and
     // b_eval's pre that expr is protected from GC meets get_new_env's pre that
-    // arg_exprs is protected from GC, because b_cdr(expr) is reachable from
+    // arg_exprs is protected from GC, because cdr(expr) is reachable from
     // expr.
     LispObject * arg_names = func->args;
-    LispObject * arg_exprs = b_cdr(expr);
+    LispObject * arg_exprs = cdr(expr);
 
     int len_arg_names = len(arg_names);
     if (len(arg_exprs) != len_arg_names) {
@@ -474,10 +474,10 @@ LispObject * get_new_env(LispObject * arg_names,
 
 	// get_new_env's pre that arg_exprs is protected from GC meets b_eval's
 	// pre that its first arg is protected from GC, because
-	// b_car(arg_exprs) is reachable from arg_exprs; and get_new_env's pre
+	// car(arg_exprs) is reachable from arg_exprs; and get_new_env's pre
 	// that env_list is protected from GC meets b_eval's pre that env_list
 	// is protected from GC.
-	arg_val = b_eval(b_car(arg_exprs), env_list);
+	arg_val = b_eval(car(arg_exprs), env_list);
 
 	if (arg_val == NULL) {
 	    pop();  // pop new_env
@@ -485,14 +485,14 @@ LispObject * get_new_env(LispObject * arg_names,
 	}
 
 	// Construct a (name . value) pair.
-	binding = b_cons(b_car(arg_names), arg_val);
+	binding = b_cons(car(arg_names), arg_val);
 
 	pop();  // pop new_env
 
 	new_env = b_cons(binding, new_env);
 
-	arg_names = b_cdr(arg_names);
-	arg_exprs = b_cdr(arg_exprs);
+	arg_names = cdr(arg_names);
+	arg_exprs = cdr(arg_exprs);
     }
 
     return new_env;
@@ -508,7 +508,7 @@ int len(LispObject * list) {
     int count = 0;
     while (!b_null_pred(list)) {
 	++count;
-	list = b_cdr(list);
+	list = cdr(list);
     }
     return count;
 }
