@@ -15,38 +15,28 @@
 
 
 // ============================================================================
-// Private functions
+// Private function prototypes
 // ============================================================================
 
-// get_obj
-// Construct a Lisp object.
-LispObject * get_obj(LispType type) {
-    // TODO: determine good number for demo; define it in gc.h
-    if (weakrefs_count > 100)
-	collect_garbage();
+LispObject * get_obj(LispType type);
 
-    // TODO: check for malloc error code?
-    LispObject * obj = malloc(sizeof(LispObject));
+LispObject * get_empty_list();
 
-    obj->type = type;
-    obj->is_list = false;
-    obj->marked = false;
+LispObject * get_sym(char * str);
 
-    obj->weakref = weakrefs_head;
-    weakrefs_head = obj;
-    ++weakrefs_count;
+LispObject * get_builtin_eval(LispObject * builtin_name);
 
-    return obj;
-}
+LispObject * get_builtin_1(LispObject * builtin_name,
+			   LispObject * (* b_func_1)(LispObject *));
 
-// get_empty_list
-// Construct the empty list object.
-LispObject * get_empty_list() {
-    LispObject * obj = get_obj(TYPE_UNIQUE);
-    obj->is_list = true;
-    return obj;
-}
+LispObject * get_builtin_2(LispObject * builtin_name,
+			   LispObject * (* b_func_2)(LispObject *, LispObject *));
 
+LispObject * get_bool_builtin_1(LispObject * builtin_name,
+				bool (* b_bool_func_1)(LispObject *));
+
+LispObject * get_bool_builtin_2(LispObject * builtin_name,
+				bool (* b_bool_func_2)(LispObject *, LispObject *));
 
 // ============================================================================
 // LispObject
@@ -203,7 +193,7 @@ void make_initial_objs() {
 
 
 // ----------------------------------------------------------------------------
-// Constructors
+// Public constructors
 // ----------------------------------------------------------------------------
 
 // get_int
@@ -211,24 +201,6 @@ void make_initial_objs() {
 LispObject * get_int(long value) {
     LispObject * obj = get_obj(TYPE_INT);
     obj->value = value;
-    return obj;
-}
-
-
-// get_sym
-// Construct a Lisp symbol from str.
-LispObject * get_sym(char * str) {
-    long len = 0;
-    while (str[len] != '\0')
-	++len;
-
-    LispObject * obj = get_obj(TYPE_SYM);
-    obj->print_name = malloc((len + 1) * sizeof(char));
-
-    for (long i = 0; i < len; ++i)
-	obj->print_name[i] = str[i];
-    obj->print_name[len] = '\0';
-    
     return obj;
 }
 
@@ -267,7 +239,77 @@ LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_lis
 }
 
 
-// TODO: make more of these private
+// b_cons
+// Builtin Lisp function cons.
+LispObject * b_cons(LispObject * car, LispObject * cdr) {
+    // Protect car and cdr from GC that could be triggered by get_obj.
+    push(car);
+    push(cdr);
+
+    LispObject * obj = get_obj(TYPE_PAIR);
+
+    pop();
+    pop();
+
+    obj->is_list = cdr->is_list;
+    obj->car = car;
+    obj->cdr = cdr;
+
+    return obj;
+}
+
+
+// ----------------------------------------------------------------------------
+// Private constructors
+// ----------------------------------------------------------------------------
+
+// get_obj
+// Construct a Lisp object.
+LispObject * get_obj(LispType type) {
+    // TODO: determine good number for demo; define it in gc.h
+    if (weakrefs_count > 100)
+	collect_garbage();
+
+    // TODO: check for malloc error code?
+    LispObject * obj = malloc(sizeof(LispObject));
+
+    obj->type = type;
+    obj->is_list = false;
+    obj->marked = false;
+
+    obj->weakref = weakrefs_head;
+    weakrefs_head = obj;
+    ++weakrefs_count;
+
+    return obj;
+}
+
+
+// get_empty_list
+// Construct the empty list object.
+LispObject * get_empty_list() {
+    LispObject * obj = get_obj(TYPE_UNIQUE);
+    obj->is_list = true;
+    return obj;
+}
+
+
+// get_sym
+// Construct a Lisp symbol from str.
+LispObject * get_sym(char * str) {
+    long len = 0;
+    while (str[len] != '\0')
+	++len;
+
+    LispObject * obj = get_obj(TYPE_SYM);
+    obj->print_name = malloc((len + 1) * sizeof(char));
+
+    for (long i = 0; i < len; ++i)
+	obj->print_name[i] = str[i];
+    obj->print_name[len] = '\0';
+    
+    return obj;
+}
 
 
 // get_builtin_eval
@@ -329,26 +371,6 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
     obj->builtin_name = builtin_name;
-    return obj;
-}
-
-
-// b_cons
-// Builtin Lisp function cons.
-LispObject * b_cons(LispObject * car, LispObject * cdr) {
-    // Protect car and cdr from GC that could be triggered by get_obj.
-    push(car);
-    push(cdr);
-
-    LispObject * obj = get_obj(TYPE_PAIR);
-
-    pop();
-    pop();
-
-    obj->is_list = cdr->is_list;
-    obj->car = car;
-    obj->cdr = cdr;
-
     return obj;
 }
 

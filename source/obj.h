@@ -114,30 +114,14 @@ void make_initial_objs();
 
 
 // ----------------------------------------------------------------------------
-// Constructors
+// Public constructors
 // ----------------------------------------------------------------------------
 
 LispObject * get_int(long value);
 
-LispObject * get_sym(char * str);
-
 LispObject * get_sym_by_substr(char * str, long begin, long end);
 
 LispObject * get_func(LispObject * args, LispObject * body, LispObject * env_list);
-
-LispObject * get_builtin_eval(LispObject * builtin_name);
-
-LispObject * get_builtin_1(LispObject * builtin_name,
-			   LispObject * (* b_func_1)(LispObject *));
-
-LispObject * get_builtin_2(LispObject * builtin_name,
-			   LispObject * (* b_func_2)(LispObject *, LispObject *));
-
-LispObject * get_bool_builtin_1(LispObject * builtin_name,
-				bool (* b_bool_func_1)(LispObject *));
-
-LispObject * get_bool_builtin_2(LispObject * builtin_name,
-				bool (* b_bool_func_2)(LispObject *, LispObject *));
 
 LispObject * b_cons(LispObject * car, LispObject * cdr);
 
