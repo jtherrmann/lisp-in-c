@@ -13,7 +13,6 @@
 
 
 // TODO: parse negative ints
-// TODO: ignore comments (; and anything after)
 
 
 // ============================================================================
@@ -122,7 +121,8 @@ LispObject * parseint() {
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
-	   && input[input_index] != INPUT_END) {
+	   && input[input_index] != INPUT_END
+	   && input[input_index] != ';') {
     	if (!is_digit(input[input_index])) {
 	    show_input_char();
 	    printf("%snumber contains non-numeral '%c'\n",
@@ -172,7 +172,8 @@ LispObject * parsesym() {
     while (input[input_index] != '('
 	   && input[input_index] != ')'
 	   && input[input_index] != ' '
-	   && input[input_index] != INPUT_END) {
+	   && input[input_index] != INPUT_END
+	   && input[input_index] != ';') {
 	if (!is_sym_char(input[input_index])) {
 	    show_input_char();
 	    printf("%ssymbol contains invalid char '%c'\n",
@@ -227,7 +228,8 @@ LispObject * parsebool() {
     if (input[input_index] != '('
 	&& input[input_index] != ')'
 	&& input[input_index] != ' '
-	&& input[input_index] != INPUT_END) {
+	&& input[input_index] != INPUT_END
+	&& input[input_index] != ';') {
 	show_input_char();
 	printf("%sbool followed by invalid char '%c'\n",
 	       PARSE_ERR, input[input_index]);
@@ -260,7 +262,7 @@ LispObject * parselist() {
 	return LISP_EMPTY;
     }
 
-    if (input[input_index] == INPUT_END) {
+    if (input[input_index] == INPUT_END || input[input_index] == ';') {
 	show_input_char();
 	printf("%sincomplete list\n", PARSE_ERR);
 	return NULL;

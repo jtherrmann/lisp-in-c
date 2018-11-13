@@ -77,13 +77,13 @@ int main() {
 
 	if (input[input_index] == ':')
 	    exec_command(input[input_index + 1]);
-	else if (input[input_index] != INPUT_END) {
+	else if (input[input_index] != INPUT_END && input[input_index] != ';') {
 	    obj = parse();
 
 	    if (sp != 0)
 		bad_stack();
 
-	    if (obj != NULL && input[input_index] != INPUT_END) {
+	    if (obj != NULL && input[input_index] != INPUT_END && input[input_index] != ';') {
 		show_input_char();
 		printf("%sexpected end of input but got '%c'\n",
 		       PARSE_ERR, input[input_index]);
