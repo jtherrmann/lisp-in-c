@@ -21,7 +21,7 @@ typedef enum {
 	      TYPE_INT,
 	      TYPE_SYM,
 	      TYPE_UNIQUE,
-	      TYPE_CONS,
+	      TYPE_PAIR,
 	      TYPE_FUNC,
 	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
@@ -55,7 +55,7 @@ LispObject * LISP_LAMBDA;
 // Symbols bound to builtin type predicate functions used by other builtin
 // functions to type-check arguments.
 LispObject * LISP_BOOL_PRED_SYM;
-LispObject * LISP_CONS_PRED_SYM;
+LispObject * LISP_PAIR_PRED_SYM;
 LispObject * LISP_INT_PRED_SYM;
 
 
@@ -76,7 +76,7 @@ struct LispObjectStruct {
 	// TYPE_SYM
 	char * print_name;
 
-	// TYPE_CONS
+	// TYPE_PAIR
 	struct {
 	    LispObject * car;
 	    LispObject * cdr;
@@ -179,7 +179,7 @@ bool b_int_pred(LispObject * obj);
 
 bool b_symbol_pred(LispObject * obj);
 
-bool b_cons_pred(LispObject * obj);
+bool b_pair_pred(LispObject * obj);
 
 bool b_list_pred(LispObject * obj);
 

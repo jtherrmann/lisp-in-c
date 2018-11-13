@@ -159,7 +159,7 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
 	return obj1->print_name[i] == obj2->print_name[i];
     }
 
-    if (b_cons_pred(obj1))
+    if (b_pair_pred(obj1))
 	return b_equal_pred(car(obj1), car(obj2))
 	    && b_equal_pred(cdr(obj1), cdr(obj2));
 

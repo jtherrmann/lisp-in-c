@@ -179,10 +179,10 @@ void make_initial_objs() {
     LispObject * symbol_pred_def = get_bool_builtin_1(symbol_pred_name, &b_symbol_pred);
     bind(symbol_pred_name, symbol_pred_def, true);
 
-    char cons_pred_str[] = "cons?";
-    LISP_CONS_PRED_SYM = get_sym(cons_pred_str);
-    LispObject * cons_pred_def = get_bool_builtin_1(LISP_CONS_PRED_SYM, &b_cons_pred);
-    bind(LISP_CONS_PRED_SYM, cons_pred_def, true);
+    char pair_pred_str[] = "pair?";
+    LISP_PAIR_PRED_SYM = get_sym(pair_pred_str);
+    LispObject * pair_pred_def = get_bool_builtin_1(LISP_PAIR_PRED_SYM, &b_pair_pred);
+    bind(LISP_PAIR_PRED_SYM, pair_pred_def, true);
 
     char list_pred_str[] = "list?";
     LispObject * list_pred_name = get_sym(list_pred_str);
@@ -337,7 +337,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
     push(car);
     push(cdr);
 
-    LispObject * obj = get_obj(TYPE_CONS);
+    LispObject * obj = get_obj(TYPE_PAIR);
 
     pop();
     pop();
@@ -353,7 +353,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 // b_car
 // Builtin Lisp function car.
 LispObject * b_car(LispObject * obj) {
-    if (!typecheck(obj, LISP_CONS_PRED_SYM))
+    if (!typecheck(obj, LISP_PAIR_PRED_SYM))
     	return NULL;
     return obj->car;
 }
@@ -362,7 +362,7 @@ LispObject * b_car(LispObject * obj) {
 // b_cdr
 // Builtin Lisp function cdr.
 LispObject * b_cdr(LispObject * obj) {
-    if (!typecheck(obj, LISP_CONS_PRED_SYM))
+    if (!typecheck(obj, LISP_PAIR_PRED_SYM))
     	return NULL;
     return obj->cdr;
 }
@@ -371,7 +371,7 @@ LispObject * b_cdr(LispObject * obj) {
 // car
 // car function for internal use by the interpreter.
 LispObject * car(LispObject * obj) {
-    if (!b_cons_pred(obj))
+    if (!b_pair_pred(obj))
 	FOUND_BUG;
     return obj->car;
 }
@@ -380,7 +380,7 @@ LispObject * car(LispObject * obj) {
 // cdr
 // cdr function for internal use by the interpreter.
 LispObject * cdr(LispObject * obj) {
-    if (!b_cons_pred(obj))
+    if (!b_pair_pred(obj))
 	FOUND_BUG;
     return obj->cdr;
 }
@@ -410,8 +410,8 @@ bool b_symbol_pred(LispObject * obj) {
 }
 
 
-bool b_cons_pred(LispObject * obj) {
-    return obj->type == TYPE_CONS;
+bool b_pair_pred(LispObject * obj) {
+    return obj->type == TYPE_PAIR;
 }
 
 

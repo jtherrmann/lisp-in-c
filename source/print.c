@@ -12,12 +12,7 @@
 // Private function prototypes
 // ============================================================================
 
-// print_cons
-// Print a Lisp cons.
-//
-// Pre:
-// - b_cons_pred(obj)
-void print_cons(LispObject * obj);
+void print_pair(LispObject * obj);
 
 
 // ============================================================================
@@ -40,8 +35,8 @@ void print_obj(LispObject * obj) {
     else if (b_symbol_pred(obj))
 	printf("%s", obj->print_name);
 
-    else if (b_cons_pred(obj))
-	print_cons(obj);
+    else if (b_pair_pred(obj))
+	print_pair(obj);
 
     else if (b_func_pred(obj)) {
 	printf("#<function>[");
@@ -67,9 +62,12 @@ void print_obj(LispObject * obj) {
 // Private functions
 // ============================================================================
 
-// print_cons
-// Print up to the first 100 items of a chain of Lisp cons cells.
-void print_cons(LispObject * obj) {
+// print_pair
+// Print up to the first 100 car values in a chain of Lisp pairs.
+//
+// Pre:
+// - b_pair_pred(obj)
+void print_pair(LispObject * obj) {
     printf("(");
 
     int i = 0;
@@ -77,7 +75,7 @@ void print_cons(LispObject * obj) {
 	print_obj(car(obj));
 	obj = cdr(obj);
 
-	if (!b_cons_pred(obj))
+	if (!b_pair_pred(obj))
 	    break;
 
 	printf(" ");

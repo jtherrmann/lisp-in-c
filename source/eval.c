@@ -43,9 +43,9 @@ int len(LispObject * list);
 // Pre:
 // - expr and env_list are protected from garbage collection.
 // - env_list is the empty list or a list of local environments, where each
-//   local env is either the empty list or a list of cons cells, where each
-//   cons cell's car is a symbol and its cdr is the value bound to that symbol.
-//   For example, a local env in which x is bound to 1 and y to 2 could be
+//   local env is either the empty list or a list of pairs, where each pair's
+//   car is a symbol and its cdr is the value bound to that symbol. For
+//   example, a local env in which x is bound to 1 and y to 2 could be
 //   represented as ((y . 2) (x . 1)); the order in which the (name . value)
 //   pairs are listed in a local env does not matter. However, names are
 //   lexically scoped, so when looking up a symbol, local envs will be searched
@@ -98,10 +98,10 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     }
 
     if (!b_list_pred(expr)) {
-	if (!b_cons_pred(expr))
+	if (!b_pair_pred(expr))
 	    FOUND_BUG;
 	INVALID_EXPR;
-	printf("Cannot evaluate a non-list cons\n");
+	printf("Cannot evaluate a non-list pair\n");
 	return NULL;
     }
 
@@ -258,10 +258,10 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list) {
 	// body is protected from GC because expr is protected from GC by
 	// b_eval's pre and car(cdr(cdr(expr))) is reachable from expr.
 	LispObject * body = car(cdr(cdr(expr)));
-	if (b_cons_pred(body) && !b_list_pred(body)) {
+	if (b_pair_pred(body) && !b_list_pred(body)) {
 	    INVALID_EXPR;
 	    print_obj(body);
-	    printf(" is a non-list cons\n");
+	    printf(" is a non-list pair\n");
 	    return NULL;
 	}
 

@@ -264,8 +264,8 @@ LispObject * parselist() {
     if (cdr == NULL)
 	return NULL;
 
-    LispObject * cons = b_cons(car, cdr);
-    return cons;
+    LispObject * pair = b_cons(car, cdr);
+    return pair;
 }
 
 

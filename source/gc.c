@@ -70,7 +70,7 @@ void mark() {
 void mark_obj(LispObject * obj) {
     // Don't mark obj if it's already marked. Without this check, marking
     // recurses infinitely if there are any circular references reachable from
-    // obj; for example, if obj is a cons and the cdr of obj is obj.
+    // obj; for example, if obj is a pair and the cdr of obj is obj.
     if (!obj->marked) {
 
 	if (gc_output) {
@@ -81,7 +81,7 @@ void mark_obj(LispObject * obj) {
 
 	obj->marked = true;
 
-	if (b_cons_pred(obj)) {
+	if (b_pair_pred(obj)) {
 	    mark_obj(car(obj));
 	    mark_obj(cdr(obj));
 	}
