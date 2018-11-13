@@ -25,19 +25,14 @@ evaluates to true.
     > (cond ((null? 1) 0) ((null? 2) 1) (#t 2))
     2
 
-TODO: change def to define in code
 #### define
 
 special form: **define** *name* *definition*
 
 Binds the symbol *name* to the result of evaluating *definition*.
 
-Evaluates to the evaluated definition.
-
     > (define x 1)
-    1
     > (define y 2)
-    2
     > (cons x y)
     (1 . 2)
 
