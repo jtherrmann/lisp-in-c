@@ -5,11 +5,9 @@ TODO: toc
 
 TODO: intro
 
-## The language
+## Objects
 
-### Objects
-
-#### ints
+### ints
 
 An int is a signed integer and evaluates to itself.
 
@@ -20,7 +18,7 @@ An int is a signed integer and evaluates to itself.
     > (+ 1 2)
     3
 
-#### symbols
+### symbols
 
 A symbol evaluates to the object to which it is bound.
 
@@ -30,8 +28,7 @@ A symbol evaluates to the object to which it is bound.
     > (quote x)
     x
 
-TODO: rename bool? to boolean? in code
-#### booleans
+### booleans
 
 A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
 
@@ -42,7 +39,7 @@ A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
     > (null? ())
     #t
 
-#### pairs and lists
+### pairs and lists
 
 A pair is an object with two data members, car and cdr.
 
@@ -81,10 +78,10 @@ function application:
 
 A non-list pair cannot be evaluated.
 
-#### functions
+### functions
 
 A function returns a result when applied to zero or more arguments. A function
-may be built-in or created with [lambda](#lambda) and evaluates to itself.
+may be built-in or created with `lambda` and evaluates to itself.
 
     > cons
     #<builtin function: cons>
@@ -100,9 +97,9 @@ Functions created with `lambda` are lexically scoped:
     > (add2 3)
     5
 
-### Special forms
+## Special forms
 
-#### cond
+### cond
 
 special form: **cond** *clause clause ...*
 
@@ -118,7 +115,7 @@ evaluates to true.
     > (cond ((null? 1) 0) ((null? 2) 1) (#t 2))
     2
 
-#### define
+### define
 
 special form: **define** *name* *definition*
 
@@ -129,7 +126,7 @@ Binds the symbol *name* to the result of evaluating *definition*.
     > (cons x y)
     (1 . 2)
 
-#### lambda
+### lambda
 
 special form: **lambda** *args* *body*
 
@@ -141,7 +138,7 @@ single expression.
     > (add 1 2)
     3
 
-#### quote
+### quote
 
 special form: **quote** *object*
 
@@ -154,9 +151,9 @@ Evaluates to *object*.
     > (quote (/ 10 2))
     (/ 10 2)
 
-### Builtin functions
+## Builtin functions
 
-#### eval
+### eval
 
 `eval` evaluates an object as an expression.
 
@@ -170,7 +167,7 @@ Evaluates to *object*.
     > (eval (quote x))
     1
 
-#### cons, car, and cdr
+### cons, car, and cdr
 
 `cons` constructs a pair, while `car` and `cdr` return the car and cdr of a
 pair, respectively.
@@ -184,7 +181,7 @@ pair, respectively.
     > (cdr (cons 1 2))
     2
 
-#### length
+### length
 
 `length` returns the number of pairs in a list.
 
@@ -197,7 +194,7 @@ pair, respectively.
     > (length (quote (1 2 3 4 5)))
     5
 
-#### Arithmetic operators
+### Arithmetic operators
 
 `+`, `-`, `*`, `/`
 
@@ -216,7 +213,7 @@ Each takes two arguments.
     > (/ 1 2)
     0
 
-#### Logical operators
+### Logical operators
 
 `and`, `or`, `not`
 
@@ -227,7 +224,7 @@ Each takes two arguments.
     > (not #t)
     #f
 
-#### Comparison functions
+### Comparison functions
 
 `equal?`, `<`, `<=`, `>`, `>=`
 
@@ -242,7 +239,7 @@ Each takes two arguments.
     > (>= 3 3)
     #t
 
-#### Type predicates
+### Type predicates
 
 `int?`, `symbol?`, `bool?`, `pair?`, `list?`, `null?`, `function?`
 
