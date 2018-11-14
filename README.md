@@ -54,7 +54,7 @@ A pair is an object with two data members, car and cdr.
     > (cdr p)
     2
 
-A list is the empty list, `()`, or any pair whose cdr is a list.
+A list is the empty list, `()`, or any pair whose cdr is a list:
 
     > (define l (cons 1 (cons 2 (cons 3 ()))))
     > l
@@ -82,6 +82,23 @@ function application:
 A non-list pair cannot be evaluated.
 
 #### functions
+
+A function returns a result when applied to zero or more arguments. A function
+may be built-in or created with [lambda](#lambda) and evaluates to itself.
+
+    > cons
+    #<builtin function: cons>
+    > (eval cons)
+    #<builtin function: cons>
+    > (cons 1 2)
+    (1 . 2)
+
+Functions created with lambda are lexically scoped:
+
+    > (define addx (lambda (x) (lambda (n) (+ n x))))
+    > (define add2 (addx 2))
+    > (add2 3)
+    5
 
 ### Special forms
 
@@ -123,13 +140,6 @@ single expression.
     > (define add (lambda (x y) (+ x y)))
     > (add 1 2)
     3
-
-Functions are lexically scoped:
-
-    > (define addx (lambda (x) (lambda (n) (+ n x))))
-    > (define add2 (addx 2))
-    > (add2 3)
-    5
 
 #### quote
 
