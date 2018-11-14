@@ -395,6 +395,10 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     // b_eval's pre that env_list is protected from GC meets get_new_env's pre
     // that env_list is protected from GC.
     LispObject * new_env = get_new_env(arg_names, arg_exprs, env_list);
+    if (new_env == NULL) {
+	pop();  // pop func
+	return NULL;
+    }
 
     LispObject * new_env_list = b_cons(new_env, func->env_list);
 
