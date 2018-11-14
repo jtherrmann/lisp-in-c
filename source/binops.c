@@ -139,10 +139,6 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
     if (obj1->type != obj2->type)
 	return false;
 
-    if (obj1->type == TYPE_UNIQUE)
-	// We already know they're not the same object.
-	return false;
-
     if (b_int_pred(obj1))
 	return obj1->value == obj2->value;
 
@@ -162,6 +158,10 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
     if (b_pair_pred(obj1))
 	return b_equal_pred(car(obj1), car(obj2))
 	    && b_equal_pred(cdr(obj1), cdr(obj2));
+
+    if (obj1->type == TYPE_UNIQUE || b_function_pred(obj1))
+	// We already know they're not the same object.
+	return false;
 
     FOUND_BUG;
     exit(1);  // Avoid gcc warning about missing return.
