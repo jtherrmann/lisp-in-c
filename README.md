@@ -7,6 +7,45 @@ TODO: intro
 
 ## The language
 
+### Objects
+
+#### ints
+
+An int is a signed integer and evaluates to itself.
+
+    > 5
+    5
+    > -2
+    -2
+    > (+ 1 2)
+    3
+
+#### symbols
+
+A symbol evaluates to the object to which it is bound.
+
+    > (define x 3)
+    > x
+    3
+    > (quote x)
+    x
+
+TODO: rename bool? to boolean? in code
+#### boolean
+
+A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
+
+    > #t
+    #t
+    > #f
+    #f
+    > (null? ())
+    #t
+
+#### pairs and lists
+
+#### functions
+
 ### Special forms
 
 #### cond
