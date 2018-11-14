@@ -104,7 +104,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     }
 
     if (b_equal_pred(car(expr), LISP_QUOTE)) {
-	if (len(cdr(expr)) != 1) {
+	if (length(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(LISP_QUOTE);
 	    printf(" takes 1 argument\n");
@@ -133,7 +133,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 		return NULL;
 	    }
 
-	    if (len(clause) != 2) {
+	    if (length(clause) != 2) {
 		INVALID_EXPR;
 		print_obj(clause);
 		printf(" is not of length 2\n");
@@ -181,7 +181,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	if (len(cdr(expr)) != 2) {
+	if (length(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_DEFINE);
 	    printf(" takes 2 arguments\n");
@@ -211,7 +211,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     }
 
     if(b_equal_pred(car(expr), LISP_LAMBDA)) {
-	if (len(cdr(expr)) != 2) {
+	if (length(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_LAMBDA);
 	    printf(" takes 2 arguments\n");
@@ -293,7 +293,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 
 	builtin = true;
 
-	if (len(cdr(expr)) != 1) {
+	if (length(cdr(expr)) != 1) {
 	    INVALID_EXPR;
 	    print_obj(func);
 	    printf(" takes 1 argument\n");
@@ -320,7 +320,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     else if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
 	builtin = true;
 	
-	if (len(cdr(expr)) != 2) {
+	if (length(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(func);
 	    printf(" takes 2 arguments\n");
@@ -382,8 +382,8 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     LispObject * arg_names = func->args;
     LispObject * arg_exprs = cdr(expr);
 
-    long len_arg_names = len(arg_names);
-    if (len(arg_exprs) != len_arg_names) {
+    long len_arg_names = length(arg_names);
+    if (length(arg_exprs) != len_arg_names) {
 	INVALID_EXPR;
 	print_obj(func);
 	printf(" takes %ld argument%s",

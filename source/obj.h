@@ -127,7 +127,7 @@ LispObject * b_cons(LispObject * car, LispObject * cdr);
 
 
 // ============================================================================
-// car, cdr, and len
+// car, cdr, and length
 // ============================================================================
 
 LispObject * b_car(LispObject * obj);
@@ -138,9 +138,9 @@ LispObject * car(LispObject * obj);
 
 LispObject * cdr(LispObject * obj);
 
-LispObject * b_len(LispObject * obj);
+LispObject * b_length(LispObject * obj);
 
-long len(LispObject * obj);
+long length(LispObject * obj);
 
 
 // ============================================================================

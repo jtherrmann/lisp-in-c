@@ -85,10 +85,10 @@ void make_initial_objs() {
     LispObject * cdr_def = get_builtin_1(cdr_name, &b_cdr);
     bind(cdr_name, cdr_def, true);
 
-    char len_str[] = "len";
-    LispObject * len_name = get_sym(len_str);
-    LispObject * len_def = get_builtin_1(len_name, &b_len);
-    bind(len_name, len_def, true);
+    char length_str[] = "length";
+    LispObject * length_name = get_sym(length_str);
+    LispObject * length_def = get_builtin_1(length_name, &b_length);
+    bind(length_name, length_def, true);
 
     char add_str[] = "+";
     LispObject * add_name = get_sym(add_str);
@@ -371,7 +371,7 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 
 
 // ============================================================================
-// car, cdr, and len
+// car, cdr, and length
 // ============================================================================
 
 // b_car
@@ -410,25 +410,25 @@ LispObject * cdr(LispObject * obj) {
 }
 
 
-// b_len
-// Builtin Lisp function len.
-LispObject * b_len(LispObject * obj) {
+// b_length
+// Builtin Lisp function length.
+LispObject * b_length(LispObject * obj) {
     if (!typecheck(obj, LISP_LIST_PRED_SYM))
 	return NULL;
 
     push(obj);  // Protect obj from GC that could be triggered by get_int.
-    LispObject * result = get_int(len(obj));
+    LispObject * result = get_int(length(obj));
     pop();
     return result;
 }
 
 
-// len
+// length
 // Return the length of a Lisp list.
 //
 // Pre:
 // - b_list_pred(obj)
-long len(LispObject * obj) {
+long length(LispObject * obj) {
     long count = 0;
     while (!b_null_pred(obj)) {
 	++count;
