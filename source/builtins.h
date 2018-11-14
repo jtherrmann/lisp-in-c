@@ -1,5 +1,5 @@
-// binops.h
-// Header for builtin binary operators.
+// builtins.h
+// Header for miscellaneous builtin functions.
 
 
 #ifndef BINOPS_H

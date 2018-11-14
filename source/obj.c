@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #include "obj.h"
-#include "binops.h"
+#include "builtins.h"
 #include "env.h"
 #include "eval.h"
 #include "gc.h"

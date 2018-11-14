@@ -1,9 +1,10 @@
-// binops.c
-// Source for builtin binary operators.
+// builtins.c
+// Source for miscellaneous builtin functions.
+
 
 #include <stdio.h>
 
-#include "binops.h"
+#include "builtins.h"
 #include "error.h"
 #include "print.h"
 #include "stack.h"

@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include "parse.h"
-#include "binops.h"
+#include "builtins.h"
 #include "obj.h"
 #include "stack.h"
 

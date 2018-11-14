@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 #include "env.h"
-#include "binops.h"
+#include "builtins.h"
 #include "print.h"
 
 
