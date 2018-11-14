@@ -7,7 +7,7 @@ TODO: intro
 
 ## Objects
 
-### ints
+### Ints
 
 An int is a signed integer and evaluates to itself.
 
@@ -18,7 +18,7 @@ An int is a signed integer and evaluates to itself.
     > (+ 1 2)
     3
 
-### symbols
+### Symbols
 
 A symbol evaluates to the object to which it is bound.
 
@@ -28,9 +28,9 @@ A symbol evaluates to the object to which it is bound.
     > (quote x)
     x
 
-### booleans
+### Bools
 
-A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
+A bool is either true, `#t`, or false, `#f`, and evaluates to itself.
 
     > #t
     #t
@@ -39,7 +39,7 @@ A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
     > (null? ())
     #t
 
-### pairs and lists
+### Pairs and lists
 
 A pair is an object with two data members, car and cdr.
 
@@ -78,7 +78,7 @@ function application:
 
 A non-list pair cannot be evaluated.
 
-### functions
+### Functions
 
 A function returns a result when applied to zero or more arguments. A function
 may be built-in or created with `lambda` and evaluates to itself.
