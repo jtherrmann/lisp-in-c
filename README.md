@@ -11,7 +11,7 @@ TODO: intro
 
 #### cond
 
-special form: **cond** *clause* *clause* ...
+special form: **cond** *clause clause ...*
 
 Each *clause* has the form *predicate expression*.
 
@@ -45,11 +45,15 @@ body is given by *body*, where *args* is a list of symbols and *body* is a
 single expression.
 
     > (define add (lambda (x y) (+ x y)))
-    #<function>[()](x y)->(+ x y)
     > (add 1 2)
     3
 
-TODO: lexical scope
+Functions are lexically scoped:
+
+    > (define addx (lambda (x) (lambda (n) (+ n x))))
+    > (define add2 (addx 2))
+    > (add2 3)
+    5
 
 #### quote
 
