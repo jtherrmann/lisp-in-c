@@ -93,7 +93,7 @@ may be built-in or created with [lambda](#lambda) and evaluates to itself.
     > (cons 1 2)
     (1 . 2)
 
-Functions created with lambda are lexically scoped:
+Functions created with `lambda` are lexically scoped:
 
     > (define addx (lambda (x) (lambda (n) (+ n x))))
     > (define add2 (addx 2))
@@ -153,3 +153,117 @@ Evaluates to *object*.
     (1 2 3)
     > (quote (/ 10 2))
     (/ 10 2)
+
+### Builtin functions
+
+#### eval
+
+`eval` evaluates an object as an expression.
+
+    > (quote (+ 1 2))
+    (+ 1 2)
+    > (eval (quote (+ 1 2)))
+    3
+    > (define x 1)
+    > (quote x)
+    x
+    > (eval (quote x))
+    1
+
+#### cons, car, and cdr
+
+`cons` constructs a pair, while `car` and `cdr` return the car and cdr of a
+pair, respectively.
+
+    > (cons 1 2)
+    (1 . 2)
+    > (cons 1 (cons 2 (cons 3 ())))
+    (1 2 3)
+    > (car (cons 1 2))
+    1
+    > (cdr (cons 1 2))
+    2
+
+#### length
+
+`length` returns the number of pairs in a list.
+
+    > (length ())
+    0
+    > (length (cons 1 ()))
+    1
+    > (length (cons 1 (cons 2 (cons 3 ()))))
+    3
+    > (length (quote (1 2 3 4 5)))
+    5
+
+#### Arithmetic operators
+
+`+`, `-`, `*`, `/`
+
+Each takes two arguments.
+
+    > (+ 1 2)
+    3
+    > (- 7 3)
+    4
+    > (* 5 2)
+    10
+    > (/ 10 2)
+    5
+    > (/ 15 2)
+    7
+    > (/ 1 2)
+    0
+
+#### Logical operators
+
+`and`, `or`, `not`
+
+    > (and #t #f)
+    #f
+    > (or #t #f)
+    #t
+    > (not #t)
+    #f
+
+#### Comparison functions
+
+`equal?`, `<`, `<=`, `>`, `>=`
+
+    > (equal? 1 2)
+    #f
+    > (equal? (quote (1 2 3)) (quote (1 2 3)))
+    #t
+    > (< 1 2)
+    #t
+    > (< 5 1)
+    #f
+    > (>= 3 3)
+    #t
+
+#### Type predicates
+
+`int?`, `symbol?`, `bool?`, `pair?`, `list?`, `null?`, `function?`
+
+Each takes an argument *object* and returns true if *object* is of the
+corresponding type and false otherwise.
+
+    > (int? 5)
+    #t
+    > (symbol? (quote foo))
+    #t
+    > (pair? (cons 1 2))
+    #t
+    > (list? (cons 1 2))
+    #f
+    > (pair? (cons 1 ()))
+    #t
+    > (list? (cons 1 ()))
+    #t
+    > (pair? ())
+    #f
+    > (list? ())
+    #t
+    > (null? ())
+    #t
