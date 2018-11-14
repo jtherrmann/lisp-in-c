@@ -31,7 +31,7 @@ A symbol evaluates to the object to which it is bound.
     x
 
 TODO: rename bool? to boolean? in code
-#### boolean
+#### booleans
 
 A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
 
@@ -43,6 +43,43 @@ A boolean is either `#t` (true) or `#f` (false) and evaluates to itself.
     #t
 
 #### pairs and lists
+
+A pair is an object with two data members, car and cdr.
+
+    > (define p (cons 1 2))
+    > p
+    (1 . 2)
+    > (car p)
+    1
+    > (cdr p)
+    2
+
+A list is the empty list, `()`, or any pair whose cdr is a list.
+
+    > (define l (cons 1 (cons 2 (cons 3 ()))))
+    > l
+    (1 2 3)
+    > (cdr l)
+    (2 3)
+    > (cdr (cdr (cdr l)))
+    ()
+    > (pair? l)
+    #t
+    > (list? l)
+    #t
+
+The empty list evaluates to itself, while a non-empty list evaluates as a
+function application:
+
+    > ()
+    ()
+    > (+ 1 2)
+    3
+    > (define sum3 (lambda (x y z) (+ x (+ y z))))
+    > (sum3 1 2 3)
+    6
+
+A non-list pair cannot be evaluated.
 
 #### functions
 
