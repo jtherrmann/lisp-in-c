@@ -74,6 +74,8 @@ LispObject * b_mul(LispObject * obj1, LispObject * obj2) {
 }
 
 
+// TODO: error for divide by zero
+//
 // b_div
 // Builtin Lisp function /.
 LispObject * b_div(LispObject * obj1, LispObject * obj2) {

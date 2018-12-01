@@ -1,5 +1,9 @@
 # Lisp in C
 
+This is my first attempt at any sort of parser or interpreter. The language is
+similar to a small subset of Scheme, though I made no attempt to conform to
+R5RS or any other standard.
+
 ## Getting started
 
 Known to work on Debian GNU/Linux 9.5 (stretch).
@@ -9,6 +13,15 @@ Known to work on Debian GNU/Linux 9.5 (stretch).
 
         gcc -ledit *.c -o lisp
         ./lisp
+
+## Interpreter commands
+
+- `:w` prints the objects in the weak references list.
+- `:e` prints the global environment.
+- `:E` prints the global environment, including the indices of the buckets in
+  the hash table.
+- `:g` toggles debug output for the garbage collector.
+- `:s` toggles debug output for the garbage collection stack.
 
 ## Objects
 
@@ -269,3 +282,12 @@ corresponding type and false otherwise.
     #t
     > (null? ())
     #t
+
+## Garbage collection
+
+The interpreter uses mark-and-sweep garbage collection.
+
+## TODO
+
+- tail call optimization
+- object interning

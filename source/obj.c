@@ -261,6 +261,8 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 // get_obj
 // Construct a Lisp object.
 LispObject * get_obj(LispType type) {
+    // TODO: for now we just invoke GC when the total number of objects exceeds
+    // some value, but there are certainly better ways to do it
     if (weakrefs_count > 1000)
 	collect_garbage();
 
