@@ -98,8 +98,7 @@ void show_input_char() {
 // Private functions
 // ============================================================================
 
-// TODO: handle overflow; when handling overflow consider that the max abs val
-// for a negative num is 1 more than the max abs val for a positive num
+// TODO: handle overflow
 //
 // parseint
 // Convert part of the input str to a Lisp int.
@@ -190,21 +189,6 @@ LispObject * parsesym() {
     long end = input_index;
     skipspace();  // Fulfill post.
     return get_sym_by_substr(input, begin, end);
-
-    // TODO: a LispObject of type LISP_SYM stores its print name and the length
-    // of its print name; here, check if the substr denoted by begin
-    // (inclusive) and end (exclusive) is equal to the print name of any symbol
-    // in the symbol interns list (by first comparing lens and then comparing
-    // chars if lens are equal) and if it is, return the interned symbol; if
-    // it's not, create a new symbol, add it onto the front of the interns
-    // list, and return it
-    // - in lisp_obj, if the type is LISP_SYM, add the obj to the symbol
-    //   interns list rather than the weakrefs list; then sweep the interns
-    //   list for unmarked symbols during GC
-    // - alternatively could store interns in a hash table to find out more
-    //   quickly if one already exists; then sweep each list in the hash
-    //   table during GC
-    //   - K&R C p. 143
 }
 
 

@@ -261,11 +261,9 @@ LispObject * b_cons(LispObject * car, LispObject * cdr) {
 // get_obj
 // Construct a Lisp object.
 LispObject * get_obj(LispType type) {
-    // TODO: determine good number for demo; define it in gc.h
-    if (weakrefs_count > 100)
+    if (weakrefs_count > 1000)
 	collect_garbage();
 
-    // TODO: check for malloc error code?
     LispObject * obj = malloc(sizeof(LispObject));
 
     obj->type = type;

@@ -1,23 +1,3 @@
-// TODO:
-// - address TODO/FIXME throughout files
-// - temp sources list:
-//   - http://journal.stuffwithstuff.com/2013/12/08/babys-first-garbage-collector/
-//   - https://carld.github.io/2017/06/20/lisp-in-less-than-200-lines-of-c.html
-// - remove unneeded #include lines
-// - document (b_ for builtin):
-// Function names are prefixed with b_ if they implement Lisp functions of the
-// same name (without the prefix). For example, b_cons, b_car, and b_cdr
-// implement cons, car, and cdr.
-// - check for malloc failure wherever it's used; look for other funcs that
-//   need checked for errors
-// - document (source:
-//   http://www.buildyourownlisp.com/chapter4_interactive_prompt#editing_input):
-//   - install debian package libedit-dev
-//   - use -ledit option with gcc to link to editline
-//     - record full gcc command (see ccc alias) used to compile, as well as
-//       Debian version and gcc version know to work
-//       - add -std=c99 option to alias?
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

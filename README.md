@@ -1,9 +1,14 @@
 # Lisp in C
 
-TODO: address TODO/FIXME in file
-TODO: toc
+## Getting started
 
-TODO: intro
+Known to work on Debian GNU/Linux 9.5 (stretch).
+
+1. Install `libedit-dev`.
+2. Clone this repo, `cd` into `source/`, and run:
+
+        gcc -ledit *.c -o lisp
+        ./lisp
 
 ## Objects
 

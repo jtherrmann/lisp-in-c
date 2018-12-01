@@ -16,7 +16,6 @@
 
 typedef struct LispObjectStruct LispObject;
 
-// TODO: weird indentation
 typedef enum {
 	      TYPE_INT,
 	      TYPE_SYM,
