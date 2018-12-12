@@ -4,6 +4,32 @@ This is my first attempt at any sort of parser or interpreter. The language is
 similar to a small subset of Scheme, though I made no attempt to conform to
 R5RS or any other standard.
 
+## Contents
+
+- [Getting started](#getting-started)
+- [Interpreter commands](#interpreter-commands)
+- [Objects](#objects)
+  - [Ints](#ints)
+  - [Symbols](#symbols)
+  - [Bools](#bools)
+  - [Pairs and lists](#pairs-and-lists)
+  - [Functions](#functions)
+- [Special forms](#special-forms)
+  - [cond](#cond)
+  - [define](#define)
+  - [lambda](#lambda)
+  - [quote](#quote)
+- [Builtin functions](#builtin-functions)
+  - [eval](#eval)
+  - [cons, car, and cdr](#cons-car-and-cdr)
+  - [length](#length)
+  - [Arithmetic operators](#arithmetic-operators)
+  - [Logical operators](#logical-operators)
+  - [Comparison functions](#comparison-functions)
+  - [Type predicates](#type-predicates)
+- [Garbage collection](#garbage-collection)
+- [TODO](#todo)
+
 ## Getting started
 
 Known to work on Debian GNU/Linux 9.5 (stretch).
