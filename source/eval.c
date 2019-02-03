@@ -315,7 +315,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 
 	else
 	    // func == LISP_BUILTIN_EVAL
-	    result = b_eval(arg1, env_list, false);
+	    result = b_eval(arg1, LISP_EMPTY, false);
     }
     else if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
 	builtin = true;
