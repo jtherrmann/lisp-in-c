@@ -22,6 +22,7 @@ typedef enum {
 	      TYPE_UNIQUE,
 	      TYPE_PAIR,
 	      TYPE_LAMBDA,
+	      TYPE_BUILTIN_0,
 	      TYPE_BUILTIN_1,
 	      TYPE_BUILTIN_2,
 	      TYPE_BOOL_BUILTIN_1,
@@ -88,6 +89,9 @@ struct LispObjectStruct {
 	struct {
 	    LispObject * builtin_name;
 	    union{
+		// TYPE_BUILTIN_0
+		LispObject * (* b_func_0)();
+
 		// TYPE_BUILTIN_1
 		LispObject * (* b_func_1)(LispObject *);
 

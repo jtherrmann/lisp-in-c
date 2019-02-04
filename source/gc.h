@@ -26,5 +26,7 @@ bool gc_output;
 
 void collect_garbage();
 
+LispObject * b_print_weakrefs();
+
 
 #endif

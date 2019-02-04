@@ -26,6 +26,9 @@ LispObject * get_sym(char * str);
 
 LispObject * get_builtin_eval(LispObject * builtin_name);
 
+LispObject * get_builtin_0(LispObject * builtin_name,
+			   LispObject * (* b_func_0)());
+
 LispObject * get_builtin_1(LispObject * builtin_name,
 			   LispObject * (* b_func_1)(LispObject *));
 
@@ -165,6 +168,11 @@ void make_initial_objs() {
     LispObject * function_pred_name = get_sym(function_pred_str);
     LispObject * function_pred_def = get_bool_builtin_1(function_pred_name, &b_function_pred);
     bind(function_pred_name, function_pred_def, true);
+
+    char print_weakrefs_str[] = "print-weakrefs";
+    LispObject * print_weakrefs_name = get_sym(print_weakrefs_str);
+    LispObject * print_weakrefs_def = get_builtin_0(print_weakrefs_name, &b_print_weakrefs);
+    bind(print_weakrefs_name, print_weakrefs_def, true);
 }
 
 
@@ -294,6 +302,19 @@ LispObject * get_builtin_eval(LispObject * builtin_name) {
     if (!b_symbol_pred(builtin_name))
 	FOUND_BUG;
     LispObject * obj = get_obj(TYPE_UNIQUE);
+    obj->builtin_name = builtin_name;
+    return obj;
+}
+
+
+// get_builtin_0
+// Construct a builtin function that takes no arguments.
+LispObject * get_builtin_0(LispObject * builtin_name,
+			   LispObject * (* b_func_0)()) {
+    if (!b_symbol_pred(builtin_name))
+	FOUND_BUG;
+    LispObject * obj = get_obj(TYPE_BUILTIN_0);
+    obj->b_func_0 = b_func_0;
     obj->builtin_name = builtin_name;
     return obj;
 }
@@ -468,7 +489,8 @@ bool b_function_pred(LispObject * obj) {
 // is_builtin
 // Return whether the object is a builtin Lisp function.
 bool is_builtin(LispObject * obj) {
-    return obj->type == TYPE_BUILTIN_1
+    return obj->type == TYPE_BUILTIN_0
+	|| obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1
 	|| obj->type == TYPE_BOOL_BUILTIN_2

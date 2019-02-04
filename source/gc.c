@@ -165,3 +165,17 @@ void collect_garbage() {
 	printf("\n");
 }
 
+
+// b_print_weakrefs
+// Print the weak refs list.
+LispObject * b_print_weakrefs() {
+    LispObject * current = weakrefs_head;
+    while (current != NULL) {
+	print_obj(current);
+	printf(" -> ");
+	current = current->weakref;
+    }
+    printf("NULL\n\n");
+    printf("weakrefs count: %lu\n", weakrefs_count);
+    return LISP_EMPTY;
+}

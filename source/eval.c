@@ -276,8 +276,21 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     LispObject * result;
     bool builtin;
 
-    if (func->type == TYPE_BUILTIN_1 || func->type == TYPE_BOOL_BUILTIN_1
-	|| func == LISP_BUILTIN_EVAL) {
+    if (func->type == TYPE_BUILTIN_0) {
+	builtin = true;
+	
+	if (!b_null_pred(cdr(expr))) {
+	    INVALID_EXPR;
+	    print_obj(func);
+	    printf(" takes no arguments\n");
+	    pop();  // pop func
+	    return NULL;
+	}
+
+	result = func->b_func_0();
+    }
+    else if (func->type == TYPE_BUILTIN_1 || func->type == TYPE_BOOL_BUILTIN_1
+	     || func == LISP_BUILTIN_EVAL) {
 
 	builtin = true;
 

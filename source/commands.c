@@ -29,10 +29,6 @@ void print_env(bool print_hash);
 void exec_command(char cmd) {
     switch (cmd) {
 
-    case 'w':
-	print_weakrefs();
-	break;
-
     case 'e':
 	print_env(false);
 	break;
@@ -61,19 +57,6 @@ void exec_command(char cmd) {
 // ============================================================================
 // Private functions
 // ============================================================================
-
-// print_weakrefs
-// Print the weak refs list.
-void print_weakrefs() {
-    LispObject * current = weakrefs_head;
-    while (current != NULL) {
-	print_obj(current);
-	printf(" -> ");
-	current = current->weakref;
-    }
-    printf("NULL\n\n");
-    printf("weakrefs count: %lu\n", weakrefs_count);
-}
 
 
 // print_env
