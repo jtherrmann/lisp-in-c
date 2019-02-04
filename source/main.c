@@ -78,6 +78,19 @@ void process_input() {
 }
 
 
+// TODO: eval from a source file
+void eval_lisp_code() {
+    input = "(define not (lambda (x) (cond ((null? x) t) (t ()))))";
+    process_input();
+
+    input = "(define and (lambda (x y) (cond ((null? x) x) (t y))))";
+    process_input();
+
+    input = "(define or (lambda (x y) (cond ((null? x) y) (t x))))";
+    process_input();
+}
+
+
 // main
 // Set up the interpreter and run the REPL.
 int main() {
@@ -91,6 +104,7 @@ int main() {
     weakrefs_count = 0;
 
     make_initial_objs();
+    eval_lisp_code();
 
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
