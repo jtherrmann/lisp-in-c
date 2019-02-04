@@ -27,6 +27,57 @@ void bad_stack() {
 }
 
 
+// process_input
+// Parse and evaluate an input expression and print the result.
+//
+// Pre:
+// - input points to the input string.
+void process_input() {
+    // Stores the return values of parse and b_eval.
+    LispObject * obj;
+
+    input_index = 0;
+    skipspace();  // Meet parse's pre.
+
+    if (input[input_index] != INPUT_END && input[input_index] != ';') {
+	obj = parse();
+
+	if (sp != 0)
+	    bad_stack();
+
+	if (obj != NULL
+	    && input[input_index] != INPUT_END
+	    && input[input_index] != ';') {
+
+	    show_input_char();
+	    printf("%sexpected end of input but got '%c'\n",
+		   PARSE_ERR, input[input_index]);
+	    obj = NULL;
+	}
+
+	if (obj != NULL) {
+	    // Meet b_eval's pre by protecting its first arg from GC.
+	    push(obj);
+
+	    // LISP_EMPTY is part of the initial set of objects protected
+	    // from GC, so it meets b_eval's pre that its second arg is
+	    // protected from GC.
+	    obj = b_eval(obj, LISP_EMPTY, true);
+
+	    pop();
+
+	    if (sp != 0)
+		bad_stack();
+
+	    if (obj != NULL) {
+		print_obj(obj);
+		printf("\n");
+	    }
+	}
+    }
+}
+
+
 // main
 // Set up the interpreter and run the REPL.
 int main() {
@@ -41,9 +92,6 @@ int main() {
 
     make_initial_objs();
 
-    // Stores the return values of parse and b_eval.
-    LispObject * obj;
-
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
@@ -53,43 +101,11 @@ int main() {
 	add_history(input);
 
 	input_index = 0;
-	skipspace();  // Meet parse's pre.
-
+	skipspace();
 	if (input[input_index] == ':')
 	    exec_command(input[input_index + 1]);
-	else if (input[input_index] != INPUT_END && input[input_index] != ';') {
-	    obj = parse();
-
-	    if (sp != 0)
-		bad_stack();
-
-	    if (obj != NULL && input[input_index] != INPUT_END && input[input_index] != ';') {
-		show_input_char();
-		printf("%sexpected end of input but got '%c'\n",
-		       PARSE_ERR, input[input_index]);
-		obj = NULL;
-	    }
-
-	    if (obj != NULL) {
-		// Meet b_eval's pre by protecting its first arg from GC.
-		push(obj);
-
-		// LISP_EMPTY is part of the initial set of objects protected
-		// from GC, so it meets b_eval's pre that its second arg is
-		// protected from GC.
-		obj = b_eval(obj, LISP_EMPTY, true);
-
-		pop();
-
-		if (sp != 0)
-		    bad_stack();
-
-		if (obj != NULL) {
-		    print_obj(obj);
-		    printf("\n");
-		}
-	    }
-	}
+	else
+	    process_input();
 
 	free(input);
     }
