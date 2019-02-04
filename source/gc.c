@@ -40,9 +40,7 @@ void free_obj(LispObject * obj);
 // environment or the stack.
 void mark() {
     mark_obj(LISP_EMPTY);
-
     mark_obj(LISP_T);
-    mark_obj(LISP_F);
 
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_COND);

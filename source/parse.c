@@ -20,8 +20,6 @@ LispObject * parseint();
 
 LispObject * parsesym();
 
-LispObject * parsebool();
-
 LispObject * parselist();
 
 long power(long b, long n);
@@ -62,9 +60,6 @@ LispObject * parse() {
 
     if (is_sym_start_char(input[input_index]))
 	return parsesym();  // parsesym fulfills parse's post.
-
-    if (input[input_index] == '#')
-	return parsebool();  // parsebool fulfills parse's post.
 
     show_input_char();
     printf("%s'%c' unrecognized in this context\n",
@@ -189,44 +184,6 @@ LispObject * parsesym() {
     long end = input_index;
     skipspace();  // Fulfill post.
     return get_sym_by_substr(input, begin, end);
-}
-
-
-// parsebool
-// Convert part of the input str to a Lisp bool.
-//
-// Pre:
-// - input[input_index] is '#'.
-//
-// Post:
-// - input[input_index] is the first non-space char after the parsed substr.
-//
-// On error:
-// - Return NULL.
-LispObject * parsebool() {
-    ++input_index;
-    char boolch = input[input_index];
-
-    if (boolch != 't' && boolch != 'f') {
-	show_input_char();
-	printf("%sexpected 't' or 'f' but got '%c'\n", PARSE_ERR, boolch);
-	return NULL;
-    }
-
-    ++input_index;
-    if (input[input_index] != '('
-	&& input[input_index] != ')'
-	&& input[input_index] != ' '
-	&& input[input_index] != INPUT_END
-	&& input[input_index] != ';') {
-	show_input_char();
-	printf("%sbool followed by invalid char '%c'\n",
-	       PARSE_ERR, input[input_index]);
-	return NULL;
-    }
-
-    skipspace();  // Fulfill post.
-    return (boolch == 't' ? LISP_T : LISP_F);
 }
 
 

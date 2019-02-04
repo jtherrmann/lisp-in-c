@@ -55,8 +55,6 @@ LispObject * get_new_env(LispObject * arg_names,
 LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     if (b_int_pred(expr)
 	|| b_null_pred(expr)
-	|| expr == LISP_T
-	|| expr == LISP_F
 	|| expr->type == TYPE_LAMBDA
 	|| is_builtin(expr))
 	return expr;
@@ -149,22 +147,12 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    if (bool_val == NULL)
 		return NULL;
 
-	    if (bool_val == LISP_T)
+	    if (bool_val != LISP_EMPTY)
 		// clause being protected from GC meets b_eval's pre that expr
 		// is protected from GC because car(cdr(clause)) is reachable
 		// from clause; and b_eval's pre that env_list is protected
 		// from GC is still true here.
 		return b_eval(car(cdr(clause)), env_list, false);
-
-	    if (bool_val != LISP_F) {
-		INVALID_EXPR;
-		printf("Predicate ");
-		print_obj(car(clause));
-		printf(" evaluates to non-boolean value ");
-		print_obj(bool_val);
-		printf("\n");
-		return NULL;
-	    }
 
 	    // The new value of clauses is still protected from GC because
 	    // cdr(clauses) is reachable from the old value of clauses.
@@ -311,7 +299,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    result = func->b_func_1(arg1);
 
 	else if (func->type == TYPE_BOOL_BUILTIN_1)
-	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_F);
+	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_EMPTY);
 
 	else
 	    // func == LISP_BUILTIN_EVAL
@@ -351,7 +339,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    result = func->b_func_2(arg1, arg2);
 	else
 	    // func->type == TYPE_BOOL_BUILTIN_2
-	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_F);
+	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_EMPTY);
     }
     else
 	builtin = false;

@@ -25,12 +25,6 @@ void print_obj(LispObject * obj) {
     if (b_null_pred(obj))
 	printf("()");
 
-    else if (obj == LISP_T)
-	printf("#t");
-
-    else if (obj == LISP_F)
-	printf("#f");
-
     else if (b_int_pred(obj))
 	printf("%ld", obj->value);
 

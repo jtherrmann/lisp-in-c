@@ -50,8 +50,9 @@ LispObject * get_bool_builtin_2(LispObject * builtin_name,
 void make_initial_objs() {
     LISP_EMPTY = get_empty_list();
 
-    LISP_T = get_obj(TYPE_UNIQUE);
-    LISP_F = get_obj(TYPE_UNIQUE);
+    char t[] = "t";
+    LISP_T = get_sym(t);
+    bind(LISP_T, LISP_T, true);
 
     char quote[] = "quote";
     LISP_QUOTE = get_sym(quote);
@@ -110,21 +111,6 @@ void make_initial_objs() {
     LispObject * div_def = get_builtin_2(div_name, &b_div);
     bind(div_name, div_def, true);
 
-    char and_str[] = "and";
-    LispObject * and_name = get_sym(and_str);
-    LispObject * and_def = get_builtin_2(and_name, &b_and);
-    bind(and_name, and_def, true);
-
-    char or_str[] = "or";
-    LispObject * or_name = get_sym(or_str);
-    LispObject * or_def = get_builtin_2(or_name, &b_or);
-    bind(or_name, or_def, true);
-
-    char not_str[] = "not";
-    LispObject * not_name = get_sym(not_str);
-    LispObject * not_def = get_builtin_1(not_name, &b_not);
-    bind(not_name, not_def, true);
-
     char equal_str[] = "equal?";
     LispObject * equal_name = get_sym(equal_str);
     LispObject * equal_def = get_bool_builtin_2(equal_name, &b_equal_pred);
@@ -154,11 +140,6 @@ void make_initial_objs() {
     LispObject * null_pred_name = get_sym(null_pred_str);
     LispObject * null_pred_def = get_bool_builtin_1(null_pred_name, &b_null_pred);
     bind(null_pred_name, null_pred_def, true);
-
-    char bool_pred_str[] = "bool?";
-    LISP_BOOL_PRED_SYM = get_sym(bool_pred_str);
-    LispObject * bool_pred_def = get_bool_builtin_1(LISP_BOOL_PRED_SYM, &b_bool_pred);
-    bind(LISP_BOOL_PRED_SYM, bool_pred_def, true);
 
     char int_pred_str[] = "int?";
     LISP_INT_PRED_SYM = get_sym(int_pred_str);
@@ -446,13 +427,6 @@ long length(LispObject * obj) {
 // Builtin Lisp function null?.
 bool b_null_pred(LispObject * obj) {
     return obj == LISP_EMPTY;
-}
-
-
-// b_bool_pred
-// Builtin Lisp function bool?.
-bool b_bool_pred(LispObject * obj) {
-    return obj == LISP_T || obj == LISP_F;
 }
 
 

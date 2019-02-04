@@ -36,9 +36,8 @@ typedef enum {
 // The empty list object.
 LispObject * LISP_EMPTY;
 
-// Boolean objects.
+// Standard truth symbol.
 LispObject * LISP_T;
-LispObject * LISP_F;
 
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;
@@ -51,7 +50,6 @@ LispObject * LISP_BUILTIN_EVAL;
 
 // Symbols bound to builtin type predicate functions used by other builtin
 // functions to type-check arguments.
-LispObject * LISP_BOOL_PRED_SYM;
 LispObject * LISP_PAIR_PRED_SYM;
 LispObject * LISP_LIST_PRED_SYM;
 LispObject * LISP_INT_PRED_SYM;
@@ -147,8 +145,6 @@ long length(LispObject * obj);
 // ============================================================================
 
 bool b_null_pred(LispObject * obj);
-
-bool b_bool_pred(LispObject * obj);
 
 bool b_int_pred(LispObject * obj);
 
