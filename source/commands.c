@@ -80,7 +80,7 @@ void print_weakrefs() {
 // Print the global environment.
 void print_env(bool print_hash) {
     struct binding * b;
-    for (long i = 0; i < HASHSIZE; ++i) {
+    for (long i = 0; i < ENV_SIZE; ++i) {
 	if (print_hash && global_env[i] != NULL) {
 	    printf("---\n");
 	    printf("%ld\n", i);

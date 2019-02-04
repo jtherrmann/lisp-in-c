@@ -13,7 +13,7 @@
 // env
 // ============================================================================
 
-#define HASHSIZE 101
+#define ENV_SIZE 101
 
 struct binding {
     LispObject * name;
@@ -22,7 +22,7 @@ struct binding {
     bool constant;
 };
 
-struct binding * global_env[HASHSIZE];
+struct binding * global_env[ENV_SIZE];
 
 
 // ============================================================================

@@ -48,7 +48,7 @@ void mark() {
     mark_obj(LISP_LAMBDA);
 
     struct binding * b;
-    for (long i = 0; i < HASHSIZE; ++i) {
+    for (long i = 0; i < ENV_SIZE; ++i) {
 	for (b = global_env[i]; b != NULL; b = b->next) {
 	    mark_obj(b->name);
 	    mark_obj(b->def);

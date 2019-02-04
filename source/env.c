@@ -9,6 +9,7 @@
 
 #include "env.h"
 #include "builtins.h"
+#include "hash.h"
 #include "print.h"
 
 
@@ -17,6 +18,7 @@
 // ============================================================================
 
 unsigned hash(LispObject * sym);
+
 struct binding * lookup(LispObject * sym, unsigned hashval);
 
 
@@ -75,13 +77,7 @@ LispObject * get_def(LispObject * sym) {
 // Pre:
 // - b_symbol_pred(sym)
 unsigned hash(LispObject * sym) {
-    unsigned hashval = 0;
-    long i = 0;
-    while (sym->print_name[i] != '\0') {
-	hashval = sym->print_name[i] + 31 * hashval;
-	++i;
-    }
-    return hashval % HASHSIZE;
+    return hash_string(sym->print_name) % ENV_SIZE;
 }
 
 
