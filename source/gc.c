@@ -144,8 +144,7 @@ void sweep() {
 // free_obj
 // Free a Lisp object.
 void free_obj(LispObject * obj) {
-    if (weakrefs_count <= 0)
-	FOUND_BUG;
+    ASSERT(weakrefs_count > 0);
 
     if (gc_output()) {
 	printf("free: ");

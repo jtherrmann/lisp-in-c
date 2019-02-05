@@ -18,15 +18,12 @@
 // - get_def(pred_sym) != NULL
 // - get_def(pred_sym)->type == TYPE_BOOL_BUILTIN_1
 bool typecheck(LispObject * obj, LispObject * pred_sym) {
-    if (!b_symbol_pred(pred_sym))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(pred_sym));
 
     LispObject * pred_def = get_def(pred_sym);
-    if (pred_def == NULL)
-	FOUND_BUG;
+    ASSERT(pred_def != NULL);
 
-    if (pred_def->type != TYPE_BOOL_BUILTIN_1)
-	FOUND_BUG;
+    ASSERT(pred_def->type == TYPE_BOOL_BUILTIN_1);
 
     bool result = pred_def->b_bool_func_1(obj);
 

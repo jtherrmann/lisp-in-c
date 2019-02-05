@@ -312,8 +312,7 @@ LispObject * get_sym(char * str) {
 // get_builtin_eval
 // Construct the builtin eval function.
 LispObject * get_builtin_eval(LispObject * builtin_name) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->builtin_name = builtin_name;
     return obj;
@@ -324,8 +323,7 @@ LispObject * get_builtin_eval(LispObject * builtin_name) {
 // Construct a builtin function that takes no arguments.
 LispObject * get_builtin_0(LispObject * builtin_name,
 			   LispObject * (* b_func_0)()) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BUILTIN_0);
     obj->b_func_0 = b_func_0;
     obj->builtin_name = builtin_name;
@@ -337,8 +335,7 @@ LispObject * get_builtin_0(LispObject * builtin_name,
 // Construct a builtin function that takes one argument.
 LispObject * get_builtin_1(LispObject * builtin_name,
 			   LispObject * (* b_func_1)(LispObject *)) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BUILTIN_1);
     obj->b_func_1 = b_func_1;
     obj->builtin_name = builtin_name;
@@ -350,8 +347,7 @@ LispObject * get_builtin_1(LispObject * builtin_name,
 // Construct a builtin function that takes two arguments.
 LispObject * get_builtin_2(LispObject * builtin_name,
 			   LispObject * (* b_func_2)(LispObject *, LispObject *)) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
     obj->b_func_2 = b_func_2;
     obj->builtin_name = builtin_name;
@@ -363,8 +359,7 @@ LispObject * get_builtin_2(LispObject * builtin_name,
 // Construct a builtin function that takes one argument and returns a bool.
 LispObject * get_bool_builtin_1(LispObject * builtin_name,
 				bool (* b_bool_func_1)(LispObject *)) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
     obj->b_bool_func_1 = b_bool_func_1;
     obj->builtin_name = builtin_name;
@@ -376,8 +371,7 @@ LispObject * get_bool_builtin_1(LispObject * builtin_name,
 // Construct a builtin function that takes two arguments and returns a bool.
 LispObject * get_bool_builtin_2(LispObject * builtin_name,
 				bool (* b_bool_func_2)(LispObject *, LispObject *)) {
-    if (!b_symbol_pred(builtin_name))
-	FOUND_BUG;
+    ASSERT(b_symbol_pred(builtin_name));
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
     obj->builtin_name = builtin_name;
@@ -410,8 +404,7 @@ LispObject * b_cdr(LispObject * obj) {
 // car
 // car function for internal use by the interpreter.
 LispObject * car(LispObject * obj) {
-    if (!b_pair_pred(obj))
-	FOUND_BUG;
+    ASSERT(b_pair_pred(obj));
     return obj->car;
 }
 
@@ -419,8 +412,7 @@ LispObject * car(LispObject * obj) {
 // cdr
 // cdr function for internal use by the interpreter.
 LispObject * cdr(LispObject * obj) {
-    if (!b_pair_pred(obj))
-	FOUND_BUG;
+    ASSERT(b_pair_pred(obj));
     return obj->cdr;
 }
 

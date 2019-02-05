@@ -94,8 +94,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     }
 
     if (!b_list_pred(expr)) {
-	if (!b_pair_pred(expr))
-	    FOUND_BUG;
+	ASSERT(b_pair_pred(expr));
 	INVALID_EXPR;
 	printf("Cannot evaluate a non-list pair\n");
 	return NULL;
