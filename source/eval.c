@@ -52,7 +52,7 @@ LispObject * get_new_env(LispObject * arg_names,
 //
 // On error:
 // - Return NULL.
-LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
+LispObject * b_eval(LispObject * expr, LispObject * env_list) {
     if (b_int_pred(expr)
 	|| b_null_pred(expr)
 	|| expr->type == TYPE_LAMBDA
@@ -141,7 +141,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    // protected from GC because car(clause) is reachable from clause;
 	    // and b_eval's pre that env_list is protected from GC is still
 	    // true here.
-	    bool_val = b_eval(car(clause), env_list, false);
+	    bool_val = b_eval(car(clause), env_list);
 
 	    if (bool_val == NULL)
 		return NULL;
@@ -151,7 +151,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 		// is protected from GC because car(cdr(clause)) is reachable
 		// from clause; and b_eval's pre that env_list is protected
 		// from GC is still true here.
-		return b_eval(car(cdr(clause)), env_list, false);
+		return b_eval(car(cdr(clause)), env_list);
 
 	    // The new value of clauses is still protected from GC because
 	    // cdr(clauses) is reachable from the old value of clauses.
@@ -161,13 +161,6 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
     }
 
     if(b_equal_pred(car(expr), LISP_DEFINE)) {
-	if (!toplevel) {
-	    INVALID_EXPR;
-	    print_obj(LISP_DEFINE);
-	    printf(" can only occur at the top level\n");
-	    return NULL;
-	}
-
 	if (length(cdr(expr)) != 2) {
 	    INVALID_EXPR;
 	    print_obj(LISP_DEFINE);
@@ -183,7 +176,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	LispObject * def = b_eval(car(cdr(cdr(expr))), env_list, false);
+	LispObject * def = b_eval(car(cdr(cdr(expr))), env_list);
 	if (def == NULL)
 	    return NULL;
 
@@ -194,7 +187,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    print_obj(sym);
 	    printf("\n");
 	}
-	return NULL;
+	return def;
     }
 
     if(b_equal_pred(car(expr), LISP_LAMBDA)) {
@@ -263,7 +256,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 
     // expr represents a function application.
 
-    LispObject * func = b_eval(car(expr), env_list, false);
+    LispObject * func = b_eval(car(expr), env_list);
 
     if (func == NULL)
 	return NULL;
@@ -301,7 +294,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	LispObject * arg1 = b_eval(car(cdr(expr)), env_list, false);
+	LispObject * arg1 = b_eval(car(cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func
 	    return NULL;
@@ -315,7 +308,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 
 	else
 	    // func == LISP_BUILTIN_EVAL
-	    result = b_eval(arg1, LISP_EMPTY, false);
+	    result = b_eval(arg1, LISP_EMPTY);
     }
     else if (func->type == TYPE_BUILTIN_2 || func->type == TYPE_BOOL_BUILTIN_2) {
 	builtin = true;
@@ -328,7 +321,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	    return NULL;
 	}
 
-	LispObject * arg1 = b_eval(car(cdr(expr)), env_list, false);
+	LispObject * arg1 = b_eval(car(cdr(expr)), env_list);
 	if (arg1 == NULL) {
 	    pop();  // pop func;
 	    return NULL;
@@ -338,7 +331,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 	// second argument.
 	push(arg1);
 
-	LispObject * arg2 = b_eval(car(cdr(cdr(expr))), env_list, false);
+	LispObject * arg2 = b_eval(car(cdr(cdr(expr))), env_list);
 
 	pop(); // pop arg1
 
@@ -407,7 +400,7 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 
     // func is protected from GC, so it meets b_eval's pre that expr is
     // protected from GC, because func->body is reachable from func.
-    result = b_eval(func->body, new_env_list, false);
+    result = b_eval(func->body, new_env_list);
 
     pop();  // pop new_env_list
     pop();  // pop func
@@ -457,7 +450,7 @@ LispObject * get_new_env(LispObject * arg_names,
 	// car(arg_exprs) is reachable from arg_exprs; and get_new_env's pre
 	// that env_list is protected from GC meets b_eval's pre that env_list
 	// is protected from GC.
-	arg_val = b_eval(car(arg_exprs), env_list, false);
+	arg_val = b_eval(car(arg_exprs), env_list);
 
 	if (arg_val == NULL) {
 	    pop();  // pop new_env

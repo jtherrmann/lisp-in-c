@@ -61,7 +61,7 @@ void process_input() {
 	    // LISP_EMPTY is part of the initial set of objects protected
 	    // from GC, so it meets b_eval's pre that its second arg is
 	    // protected from GC.
-	    obj = b_eval(obj, LISP_EMPTY, true);
+	    obj = b_eval(obj, LISP_EMPTY);
 
 	    pop();
 
