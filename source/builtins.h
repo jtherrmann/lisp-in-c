@@ -25,17 +25,6 @@ LispObject * b_div(LispObject * obj1, LispObject * obj2);
 
 
 // ============================================================================
-// Boolean logic
-// ============================================================================
-
-LispObject * b_and(LispObject * obj1, LispObject * obj2);
-
-LispObject * b_or(LispObject * obj1, LispObject * obj2);
-
-LispObject * b_not(LispObject * obj);
-
-
-// ============================================================================
 // Comparison functions
 // ============================================================================
 
