@@ -24,18 +24,18 @@ LispObject * get_empty_list();
 
 LispObject * get_sym(char * str);
 
-LispObject * get_builtin_0(char * name_str, LispObject * (* b_func_0)());
+void make_builtin_0(char * name_str, LispObject * (* b_func_0)());
 
-LispObject * get_builtin_1(char * name_str,
+void make_builtin_1(char * name_str,
 			   LispObject * (* b_func_1)(LispObject *));
 
-LispObject * get_builtin_2(char * name_str,
+void make_builtin_2(char * name_str,
 			   LispObject * (* b_func_2)(LispObject *, LispObject *));
 
-LispObject * get_bool_builtin_1(char * name_str,
+void make_bool_builtin_1(char * name_str,
 				bool (* b_bool_func_1)(LispObject *));
 
-LispObject * get_bool_builtin_2(char * name_str,
+void make_bool_builtin_2(char * name_str,
 				bool (* b_bool_func_2)(LispObject *, LispObject *));
 
 
@@ -59,38 +59,38 @@ void make_initial_objs() {
     LISP_DEFINE = get_sym("define");
     LISP_LAMBDA = get_sym("lambda");
 
-    get_builtin_1("eval", &b_eval);
-    get_builtin_2("cons", &b_cons);
-    get_builtin_1("car", &b_car);
-    get_builtin_1("cdr", &b_cdr);
-    get_builtin_1("length", &b_length);
+    make_builtin_1("eval", &b_eval);
+    make_builtin_2("cons", &b_cons);
+    make_builtin_1("car", &b_car);
+    make_builtin_1("cdr", &b_cdr);
+    make_builtin_1("length", &b_length);
 
-    get_builtin_2("+", &b_add);
-    get_builtin_2("-", &b_sub);
-    get_builtin_2("*", &b_mul);
-    get_builtin_2("/", &b_div);
+    make_builtin_2("+", &b_add);
+    make_builtin_2("-", &b_sub);
+    make_builtin_2("*", &b_mul);
+    make_builtin_2("/", &b_div);
 
-    get_bool_builtin_2("equal?", &b_equal_pred);
-    get_builtin_2("<", &b_lt);
+    make_bool_builtin_2("equal?", &b_equal_pred);
+    make_builtin_2("<", &b_lt);
 
-    get_bool_builtin_1("null?", &b_null_pred);
-    get_bool_builtin_1("symbol?", &b_symbol_pred);
-    get_bool_builtin_1("function?", &b_function_pred);
+    make_bool_builtin_1("null?", &b_null_pred);
+    make_bool_builtin_1("symbol?", &b_symbol_pred);
+    make_bool_builtin_1("function?", &b_function_pred);
 
     char int_pred_str[] = "int?";
-    get_bool_builtin_1(int_pred_str, &b_int_pred);
+    make_bool_builtin_1(int_pred_str, &b_int_pred);
     LISP_INT_PRED_SYM = get_sym(int_pred_str);
 
     char pair_pred_str[] = "pair?";
-    get_bool_builtin_1(pair_pred_str, &b_pair_pred);
+    make_bool_builtin_1(pair_pred_str, &b_pair_pred);
     LISP_PAIR_PRED_SYM = get_sym(pair_pred_str);
 
     char list_pred_str[] = "list?";
-    get_bool_builtin_1(list_pred_str, &b_list_pred);
+    make_bool_builtin_1(list_pred_str, &b_list_pred);
     LISP_LIST_PRED_SYM = get_sym(list_pred_str);
 
-    get_builtin_0("print-weakrefs", &b_print_weakrefs);
-    get_builtin_1("print-env", &b_print_env);
+    make_builtin_0("print-weakrefs", &b_print_weakrefs);
+    make_builtin_1("print-env", &b_print_env);
 
     LISP_GC_OUTPUT = get_sym("gc-output");
     bind(LISP_GC_OUTPUT, LISP_EMPTY, false);
@@ -220,68 +220,63 @@ LispObject * get_sym(char * str) {
 }
 
 
-// get_builtin_0
+// make_builtin_0
 // Construct a builtin function that takes no arguments.
-LispObject * get_builtin_0(char * name_str,
+void make_builtin_0(char * name_str,
 			   LispObject * (* b_func_0)()) {
     LispObject * name = get_sym(name_str);
     LispObject * obj = get_obj(TYPE_BUILTIN_0);
     obj->b_func_0 = b_func_0;
     obj->builtin_name = name;
     bind(name, obj, true);
-    return obj;
 }
 
 
-// get_builtin_1
+// make_builtin_1
 // Construct a builtin function that takes one argument.
-LispObject * get_builtin_1(char * name_str,
+void make_builtin_1(char * name_str,
 			   LispObject * (* b_func_1)(LispObject *)) {
     LispObject * name = get_sym(name_str);
     LispObject * obj = get_obj(TYPE_BUILTIN_1);
     obj->b_func_1 = b_func_1;
     obj->builtin_name = name;
     bind(name, obj, true);
-    return obj;
 }
 
 
-// get_builtin_2
+// make_builtin_2
 // Construct a builtin function that takes two arguments.
-LispObject * get_builtin_2(char * name_str,
+void make_builtin_2(char * name_str,
 			   LispObject * (* b_func_2)(LispObject *, LispObject *)) {
     LispObject * name = get_sym(name_str);
     LispObject * obj = get_obj(TYPE_BUILTIN_2);
     obj->b_func_2 = b_func_2;
     obj->builtin_name = name;
     bind(name, obj, true);
-    return obj;
 }
 
 
-// get_bool_builtin_1
+// make_bool_builtin_1
 // Construct a builtin function that takes one argument and returns a bool.
-LispObject * get_bool_builtin_1(char * name_str,
+void make_bool_builtin_1(char * name_str,
 				bool (* b_bool_func_1)(LispObject *)) {
     LispObject * name = get_sym(name_str);
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_1);
     obj->b_bool_func_1 = b_bool_func_1;
     obj->builtin_name = name;
     bind(name, obj, true);
-    return obj;
 }
 
 
-// get_bool_builtin_2
+// make_bool_builtin_2
 // Construct a builtin function that takes two arguments and returns a bool.
-LispObject * get_bool_builtin_2(char * name_str,
+void make_bool_builtin_2(char * name_str,
 				bool (* b_bool_func_2)(LispObject *, LispObject *)) {
     LispObject * name = get_sym(name_str);
     LispObject * obj = get_obj(TYPE_BOOL_BUILTIN_2);
     obj->b_bool_func_2 = b_bool_func_2;
     obj->builtin_name = name;
     bind(name, obj, true);
-    return obj;
 }
 
 
