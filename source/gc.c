@@ -49,8 +49,9 @@ void mark() {
     // TODO: once object interning is implemented, we won't have to mark these,
     // because they are symbols that are bound to values in the global
     // environment. Currently, the only reason we have to mark them is that
-    // they may be redefined, in which case a new identical symbol object is
-    // created and used in the binding, and these ones can be GC'd.
+    // they may be redefined, in which case a new symbol object with the same
+    // name is created and used in the binding, which means the original symbol
+    // is no longer part of the global env and can be GC'd.
     mark_obj(LISP_GC_OUTPUT);
     mark_obj(LISP_STACK_OUTPUT);
     mark_obj(LISP_T);

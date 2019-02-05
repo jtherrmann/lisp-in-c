@@ -34,8 +34,8 @@ typedef enum {
 // Initial objects
 // ============================================================================
 
-// TODO: this will become valid after object interning is implemented. Add a
-// note about that to the explanation below.
+// TODO: the comment below will become valid after object interning is
+// implemented. See the TODO in the mark function in gc.c.
 //
 // Each initial object must be protected from garbage collection unless it is a
 // name (symbol) that is bound in the global environment. Objects reachable
