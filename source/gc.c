@@ -55,6 +55,10 @@ void mark() {
     mark_obj(LISP_GC_OUTPUT);
     mark_obj(LISP_STACK_OUTPUT);
     mark_obj(LISP_T);
+
+    // TODO: and these aren't actually bound in the global environment, but
+    // after object interning, they will be (see how these are used in
+    // make_initial_objs)
     mark_obj(LISP_PAIR_PRED_SYM);
     mark_obj(LISP_LIST_PRED_SYM);
     mark_obj(LISP_INT_PRED_SYM);
