@@ -122,21 +122,6 @@ void make_initial_objs() {
     LispObject * lt_def = get_builtin_2(lt_name, &b_lt);
     bind(lt_name, lt_def, true);
 
-    char lte_str[] = "<=";
-    LispObject * lte_name = get_sym(lte_str);
-    LispObject * lte_def = get_builtin_2(lte_name, &b_lte);
-    bind(lte_name, lte_def, true);
-
-    char gt_str[] = ">";
-    LispObject * gt_name = get_sym(gt_str);
-    LispObject * gt_def = get_builtin_2(gt_name, &b_gt);
-    bind(gt_name, gt_def, true);
-
-    char gte_str[] = ">=";
-    LispObject * gte_name = get_sym(gte_str);
-    LispObject * gte_def = get_builtin_2(gte_name, &b_gte);
-    bind(gte_name, gte_def, true);
-
     char null_pred_str[] = "null?";
     LispObject * null_pred_name = get_sym(null_pred_str);
     LispObject * null_pred_def = get_bool_builtin_1(null_pred_name, &b_null_pred);

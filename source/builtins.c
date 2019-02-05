@@ -143,33 +143,3 @@ LispObject * b_lt(LispObject * obj1, LispObject * obj2) {
 	return NULL;
     return (obj1->value < obj2->value ? LISP_T : LISP_EMPTY);
 }
-
-
-// b_lte
-// Builtin Lisp function <=.
-LispObject * b_lte(LispObject * obj1, LispObject * obj2) {
-    if (!typecheck(obj1, LISP_INT_PRED_SYM)
-	|| !typecheck(obj2, LISP_INT_PRED_SYM))
-	return NULL;
-    return (obj1->value <= obj2->value ? LISP_T : LISP_EMPTY);
-}
-
-
-// b_gt
-// Builtin Lisp function >.
-LispObject * b_gt(LispObject * obj1, LispObject * obj2) {
-    if (!typecheck(obj1, LISP_INT_PRED_SYM)
-	|| !typecheck(obj2, LISP_INT_PRED_SYM))
-	return NULL;
-    return (obj1->value > obj2->value ? LISP_T : LISP_EMPTY);
-}
-
-
-// b_gte
-// Builtin Lisp function >=.
-LispObject * b_gte(LispObject * obj1, LispObject * obj2) {
-    if (!typecheck(obj1, LISP_INT_PRED_SYM)
-	|| !typecheck(obj2, LISP_INT_PRED_SYM))
-	return NULL;
-    return (obj1->value >= obj2->value ? LISP_T : LISP_EMPTY);
-}

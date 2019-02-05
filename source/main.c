@@ -87,6 +87,18 @@ void eval_lisp_code() {
 
     input = "(define or (lambda (x y) (cond ((null? x) y) (t x))))";
     process_input();
+
+    input = "(define >= (lambda (x y) (not (< x y))))";
+    process_input();
+
+    input = "(define <= (lambda (x y) (not (< y x))))";
+    process_input();
+
+    input = "(define > (lambda (x y) (< y x)))";
+    process_input();
+
+    input = "(define = (lambda (x y) (not (or (< x y) (< y x)))))";
+    process_input();
 }
 
 

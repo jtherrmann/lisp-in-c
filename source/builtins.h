@@ -43,11 +43,5 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2);
 
 LispObject * b_lt(LispObject * obj1, LispObject * obj2);
 
-LispObject * b_lte(LispObject * obj1, LispObject * obj2);
-
-LispObject * b_gt(LispObject * obj1, LispObject * obj2);
-
-LispObject * b_gte(LispObject * obj1, LispObject * obj2);
-
 
 #endif
