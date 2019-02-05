@@ -16,10 +16,7 @@
 // ============================================================================
 
 bool stack_output() {
-    LispObject * def = get_def(LISP_STACK_OUTPUT);
-    if (def == NULL)
-	FOUND_BUG;
-    return to_bool(def);
+    return get_config_bool(LISP_STACK_OUTPUT);
 }
 
 

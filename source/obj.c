@@ -515,6 +515,16 @@ bool is_builtin(LispObject * obj) {
 // Miscellaneous utilities
 // ============================================================================
 
+bool get_config_bool(LispObject * obj) {
+    ASSERT(b_equal_pred(obj, LISP_STACK_OUTPUT)
+	   || b_equal_pred(obj, LISP_GC_OUTPUT));
+
+    LispObject * def = get_def(obj);
+    ASSERT(def != NULL);
+    return to_bool(def);
+}
+
+
 bool to_bool(LispObject * obj) {
     return (b_null_pred(obj) ? false : true);
 }

@@ -162,10 +162,7 @@ void free_obj(LispObject * obj) {
 
 
 bool gc_output() {
-    LispObject * def = get_def(LISP_GC_OUTPUT);
-    if (def == NULL)
-	FOUND_BUG;
-    return to_bool(def);
+    return get_config_bool(LISP_GC_OUTPUT);
 }
 	
 

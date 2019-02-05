@@ -179,6 +179,8 @@ bool is_builtin(LispObject * obj);
 // Miscellaneous utilities
 // ============================================================================
 
+bool get_config_bool(LispObject * obj);
+
 bool to_bool(LispObject * obj);
 
 

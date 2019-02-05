@@ -11,6 +11,8 @@
 #include "obj.h"
 
 
+#define ASSERT(b) if (!(b)) FOUND_BUG;
+
 #define FOUND_BUG found_bug(__FILE__, __LINE__, __func__);
 
 
