@@ -178,6 +178,10 @@ void make_initial_objs() {
     LispObject * print_env_name = get_sym(print_env_str);
     LispObject * print_env_def = get_builtin_1(print_env_name, &b_print_env);
     bind(print_env_name, print_env_def, true);
+
+    char gc_output_str[] = "gc-output";
+    LISP_GC_OUTPUT = get_sym(gc_output_str);
+    bind(LISP_GC_OUTPUT, LISP_EMPTY, false);
 }
 
 
@@ -502,3 +506,11 @@ bool is_builtin(LispObject * obj) {
 	|| obj == LISP_BUILTIN_EVAL;
 }
 
+
+// ============================================================================
+// Miscellaneous utilities
+// ============================================================================
+
+bool to_bool(LispObject * obj) {
+    return (b_null_pred(obj) ? false : true);
+}

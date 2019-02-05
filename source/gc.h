@@ -17,8 +17,6 @@ LispObject * weakrefs_head;
 
 unsigned long weakrefs_count;
 
-bool gc_output;
-
 
 // ============================================================================
 // Public functions

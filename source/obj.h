@@ -34,6 +34,15 @@ typedef enum {
 // Initial objects
 // ============================================================================
 
+// TODO: this will become valid after object interning is implemented. Add a
+// note about that to the explanation below.
+//
+// Each initial object must be protected from garbage collection unless it is a
+// name (symbol) that is bound in the global environment. Objects reachable
+// from the global environment are protected from garbage collection and there
+// is no way to delete a name from the global environment, so once a name has
+// been bound, it is permanently protected from garbage collection.
+
 // The empty list object.
 LispObject * LISP_EMPTY;
 
@@ -54,6 +63,8 @@ LispObject * LISP_BUILTIN_EVAL;
 LispObject * LISP_PAIR_PRED_SYM;
 LispObject * LISP_LIST_PRED_SYM;
 LispObject * LISP_INT_PRED_SYM;
+
+LispObject * LISP_GC_OUTPUT;
 
 
 // ============================================================================
@@ -161,6 +172,13 @@ bool b_list_pred(LispObject * obj);
 bool b_function_pred(LispObject * obj);
 
 bool is_builtin(LispObject * obj);
+
+
+// ============================================================================
+// Miscellaneous utilities
+// ============================================================================
+
+bool to_bool(LispObject * obj);
 
 
 #endif

@@ -97,7 +97,6 @@ int main() {
     // Initialize the stack pointer.
     sp = 0;
 
-    gc_output = false;
     stack_output = false;
 
     weakrefs_head = NULL;

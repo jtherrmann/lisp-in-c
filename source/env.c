@@ -70,7 +70,7 @@ LispObject * get_def(LispObject * sym) {
 
 
 LispObject * b_print_env(LispObject * indices) {
-    print_env(b_null_pred(indices) ? false : true);
+    print_env(to_bool(indices));
     return LISP_EMPTY;
 }
 

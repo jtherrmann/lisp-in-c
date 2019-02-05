@@ -30,6 +30,8 @@ void sweep();
 
 void free_obj(LispObject * obj);
 
+bool gc_output();
+
 
 // ============================================================================
 // Private functions
@@ -39,13 +41,25 @@ void free_obj(LispObject * obj);
 // Mark the initial set of objects and objects reachable from the global
 // environment or the stack.
 void mark() {
-    mark_obj(LISP_EMPTY);
-    mark_obj(LISP_T);
-
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_COND);
     mark_obj(LISP_DEFINE);
     mark_obj(LISP_LAMBDA);
+
+    // TODO: once object interning is implemented, we won't have to mark these,
+    // because they are symbols that are bound to values in the global
+    // environment. Currently, the only reason we have to mark them is that
+    // they may be redefined, in which case a new identical symbol object is
+    // created and used in the binding, and these ones can be GC'd.
+    mark_obj(LISP_GC_OUTPUT);
+    mark_obj(LISP_T);
+    mark_obj(LISP_PAIR_PRED_SYM);
+    mark_obj(LISP_LIST_PRED_SYM);
+    mark_obj(LISP_INT_PRED_SYM);
+
+    // TODO: once LISP_EMPTY is converted to the symbol nil, we won't have to
+    // mark it because it will be bound in the global environment.
+    mark_obj(LISP_EMPTY);
 
     struct binding * b;
     for (long i = 0; i < ENV_SIZE; ++i) {
@@ -68,7 +82,7 @@ void mark_obj(LispObject * obj) {
     // obj; for example, if obj is a pair and the cdr of obj is obj.
     if (!obj->marked) {
 
-	if (gc_output) {
+	if (gc_output()) {
 	    printf("mark: ");
 	    print_obj(obj);
 	    printf("\n");
@@ -132,7 +146,7 @@ void free_obj(LispObject * obj) {
     if (weakrefs_count <= 0)
 	FOUND_BUG;
 
-    if (gc_output) {
+    if (gc_output()) {
 	printf("free: ");
 	print_obj(obj);
 	printf("\n");
@@ -145,6 +159,13 @@ void free_obj(LispObject * obj) {
     --weakrefs_count;
 }
 
+
+bool gc_output() {
+    LispObject * def = get_def(LISP_GC_OUTPUT);
+    if (def == NULL)
+	FOUND_BUG;
+    return to_bool(def);
+}
 	
 
 // ============================================================================
@@ -156,12 +177,12 @@ void free_obj(LispObject * obj) {
 void collect_garbage() {
     mark();
 
-    if (gc_output)
+    if (gc_output())
 	printf("\n");
 
     sweep();
 
-    if (gc_output)
+    if (gc_output())
 	printf("\n");
 }
 
