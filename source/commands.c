@@ -29,14 +29,6 @@ void print_env(bool print_hash);
 void exec_command(char cmd) {
     switch (cmd) {
 
-    case 'e':
-	print_env(false);
-	break;
-
-    case 'E':
-	print_env(true);
-	break;
-
     case 'g':
 	gc_output = !gc_output;
 	printf("GC output: %s\n", gc_output ? "on" : "off");
@@ -50,31 +42,5 @@ void exec_command(char cmd) {
     default:
 	printf("Unrecognized command.\n");
 	break;
-    }
-}
-
-
-// ============================================================================
-// Private functions
-// ============================================================================
-
-
-// print_env
-// Print the global environment.
-void print_env(bool print_hash) {
-    struct binding * b;
-    for (long i = 0; i < ENV_SIZE; ++i) {
-	if (print_hash && global_env[i] != NULL) {
-	    printf("---\n");
-	    printf("%ld\n", i);
-	    printf("---\n");
-	}
-	for (b = global_env[i]; b != NULL; b = b->next) {
-	    print_obj(b->name);
-	    printf("\n");
-	    print_obj(b->def);
-	    printf("\n");
-	    printf("\n");
-	}
     }
 }

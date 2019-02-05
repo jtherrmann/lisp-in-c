@@ -21,6 +21,8 @@ unsigned hash(LispObject * sym);
 
 struct binding * lookup(LispObject * sym, unsigned hashval);
 
+void print_env(bool print_indices);
+
 
 // ============================================================================
 // Public functions
@@ -67,6 +69,12 @@ LispObject * get_def(LispObject * sym) {
 }
 
 
+LispObject * b_print_env(LispObject * indices) {
+    print_env(b_null_pred(indices) ? false : true);
+    return LISP_EMPTY;
+}
+
+
 // ============================================================================
 // Private functions
 // ============================================================================
@@ -95,3 +103,23 @@ struct binding * lookup(LispObject * sym, unsigned hashval) {
     return NULL;
 }
 
+
+// print_env
+// Print the global environment.
+void print_env(bool print_indices) {
+    struct binding * b;
+    for (long i = 0; i < ENV_SIZE; ++i) {
+	if (print_indices && global_env[i] != NULL) {
+	    printf("---\n");
+	    printf("%ld\n", i);
+	    printf("---\n");
+	}
+	for (b = global_env[i]; b != NULL; b = b->next) {
+	    print_obj(b->name);
+	    printf("\n");
+	    print_obj(b->def);
+	    printf("\n");
+	    printf("\n");
+	}
+    }
+}

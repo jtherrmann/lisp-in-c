@@ -173,6 +173,11 @@ void make_initial_objs() {
     LispObject * print_weakrefs_name = get_sym(print_weakrefs_str);
     LispObject * print_weakrefs_def = get_builtin_0(print_weakrefs_name, &b_print_weakrefs);
     bind(print_weakrefs_name, print_weakrefs_def, true);
+
+    char print_env_str[] = "print-env";
+    LispObject * print_env_name = get_sym(print_env_str);
+    LispObject * print_env_def = get_builtin_1(print_env_name, &b_print_env);
+    bind(print_env_name, print_env_def, true);
 }
 
 

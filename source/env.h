@@ -33,5 +33,7 @@ bool bind(LispObject * sym, LispObject * def, bool constant);
 
 LispObject * get_def(LispObject * name);
 
+LispObject * b_print_env(LispObject * indices);
+
 
 #endif
