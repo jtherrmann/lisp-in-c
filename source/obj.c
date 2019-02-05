@@ -430,12 +430,8 @@ LispObject * b_length(LispObject * obj) {
 }
 
 
-// length
-// Return the length of a Lisp list.
-//
-// Pre:
-// - b_list_pred(obj)
 long length(LispObject * obj) {
+    ASSERT(b_list_pred(obj));
     long count = 0;
     while (!b_null_pred(obj)) {
 	++count;

@@ -12,17 +12,11 @@
 
 // typecheck
 // Type-check obj using the builtin type predicate function bound to pred_sym.
-//
-// Pre:
-// - b_symbol_pred(pred_sym)
-// - get_def(pred_sym) != NULL
-// - get_def(pred_sym)->type == TYPE_BOOL_BUILTIN_1
 bool typecheck(LispObject * obj, LispObject * pred_sym) {
     ASSERT(b_symbol_pred(pred_sym));
 
     LispObject * pred_def = get_def(pred_sym);
     ASSERT(pred_def != NULL);
-
     ASSERT(pred_def->type == TYPE_BOOL_BUILTIN_1);
 
     bool result = pred_def->b_bool_func_1(obj);

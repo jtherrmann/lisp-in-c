@@ -432,7 +432,6 @@ LispObject * b_eval(LispObject * expr, LispObject * env_list, bool toplevel) {
 // Pre:
 // - arg_names, arg_exprs, and env_list are protected from garbage collection.
 // - arg_names is the empty list or a list of symbols.
-// - arg_exprs is a list of the same length as arg_names.
 // - env_list is the current list of local environments, of the same form as
 //   described by b_eval's pre.
 //
@@ -442,6 +441,8 @@ LispObject * get_new_env(LispObject * arg_names,
 			 LispObject * arg_exprs,
 			 LispObject * env_list)
 {
+    ASSERT(length(arg_exprs) == length(arg_names));
+
     LispObject * new_env = LISP_EMPTY;
     LispObject * binding;
     LispObject * arg_val;

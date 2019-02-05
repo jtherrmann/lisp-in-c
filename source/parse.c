@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "parse.h"
+#include "error.h"
 #include "builtins.h"
 #include "obj.h"
 #include "stack.h"
@@ -38,15 +39,14 @@ bool is_sym_start_char(char ch);
 // parse
 // Convert part of the input str to a Lisp object.
 //
-// Pre:
-// - input[input_index] is a non-space char.
-//
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
 //
 // On error:
 // - Return NULL.
 LispObject * parse() {
+    ASSERT(input[input_index] != ' ');
+
     if (is_digit(input[input_index])
 	|| (input[input_index] == '-' && is_digit(input[input_index + 1])))
 	return parseint();  // parseint fulfills parse's post.
@@ -54,7 +54,7 @@ LispObject * parse() {
     if (input[input_index] == '(') {
 	// Skip the '(' to start at the first element of the list.
 	input_index += 1;
-	skipspace();  // Meet parselist's pre.
+	skipspace();
 	return parselist();  // parselist fulfills parse's post.
     }
 
@@ -98,16 +98,14 @@ void show_input_char() {
 // parseint
 // Convert part of the input str to a Lisp int.
 //
-// Pre:
-// - is_digit(input[input_index])
-//   || (input[input_index] == '-' && is_digit(input[input_index + 1]))
-//
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
 //
 // On error:
 // - Return NULL.
 LispObject * parseint() {
+    ASSERT(is_digit(input[input_index])
+	   || (input[input_index] == '-' && is_digit(input[input_index + 1])));
 
     bool positive = true;
     if (input[input_index] == '-') {
@@ -156,15 +154,13 @@ LispObject * parseint() {
 // parsesym
 // Convert part of the input str to a Lisp symbol.
 //
-// Pre:
-// - is_sym_start_char(input[input_index])
-//
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
 //
 // On error:
 // - Return NULL.
 LispObject * parsesym() {
+    ASSERT(is_sym_start_char(input[input_index]));
 
     // Go to the end of the substr that represents the symbol.
     long begin = input_index;
@@ -190,15 +186,14 @@ LispObject * parsesym() {
 // parselist
 // Convert part of the input str to a Lisp list.
 //
-// Pre:
-// - input[input_index] is not a space.
-//
 // Post:
 // - input[input_index] is the first non-space char after the parsed substr.
 //
 // On error:
 // - Return NULL.
 LispObject * parselist() {
+    ASSERT(input[input_index] != ' ');
+
     if (input[input_index] == ')') {
 	// Fulfill post.
 	++input_index;
@@ -214,9 +209,7 @@ LispObject * parselist() {
 	return NULL;
     }
 
-    // Invariant: pre still true.
-
-    LispObject * car = parse();  // parselist's pre meets parse's pre.
+    LispObject * car = parse();
 
     if (car == NULL)
 	return NULL;
@@ -239,10 +232,9 @@ LispObject * parselist() {
 
 // power
 // Return b to the power of n.
-//
-// Pre:
-// - n >= 0
 long power(long b, long n) {
+    ASSERT(n >= 0);
+
     if (n == 0)
 	return 1;
 

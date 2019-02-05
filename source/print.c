@@ -60,10 +60,9 @@ void print_obj(LispObject * obj) {
 
 // print_pair
 // Print up to the first 100 car values in a chain of Lisp pairs.
-//
-// Pre:
-// - b_pair_pred(obj)
 void print_pair(LispObject * obj) {
+    ASSERT(b_pair_pred(obj));
+
     printf("(");
 
     long i = 0;

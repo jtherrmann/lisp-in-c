@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "env.h"
+#include "error.h"
 #include "builtins.h"
 #include "hash.h"
 #include "print.h"
@@ -17,9 +18,9 @@
 // Private function prototypes
 // ============================================================================
 
-unsigned hash(LispObject * sym);
+unsigned get_index(LispObject * sym);
 
-struct binding * lookup(LispObject * sym, unsigned hashval);
+struct binding * lookup(LispObject * sym, unsigned index);
 
 void print_env(bool print_indices);
 
@@ -31,18 +32,17 @@ void print_env(bool print_indices);
 // bind
 // Bind a name to a definition.
 //
-// Pre:
-// - b_symbol_pred(sym)
-//
 // On error:
 // - Return false.
 bool bind(LispObject * sym, LispObject * def, bool constant) {
-    unsigned hashval = hash(sym);
-    struct binding * b = lookup(sym, hashval);
+    ASSERT(b_symbol_pred(sym));
+
+    unsigned index = get_index(sym);
+    struct binding * b = lookup(sym, index);
     if (b == NULL) {
 	b = malloc(sizeof(struct binding));
-	b->next = global_env[hashval];
-	global_env[hashval] = b;
+	b->next = global_env[index];
+	global_env[index] = b;
     }
     else if (b->constant)
 	return false;
@@ -57,12 +57,10 @@ bool bind(LispObject * sym, LispObject * def, bool constant) {
 // get_def
 // Return the definition bound to the given name, or NULL if the name is
 // undefined.
-//
-// Pre:
-// - b_symbol_pred(sym)
 LispObject * get_def(LispObject * sym) {
-    unsigned hashval = hash(sym);
-    struct binding * b = lookup(sym, hashval);
+    ASSERT(b_symbol_pred(sym));
+    unsigned index = get_index(sym);
+    struct binding * b = lookup(sym, index);
     if (b == NULL)
 	return NULL;
     return b->def;
@@ -79,25 +77,21 @@ LispObject * b_print_env(LispObject * indices) {
 // Private functions
 // ============================================================================
 
-// hash
-// Hash a symbol.
-//
-// Pre:
-// - b_symbol_pred(sym)
-unsigned hash(LispObject * sym) {
+unsigned get_index(LispObject * sym) {
+    ASSERT(b_symbol_pred(sym));
     return hash_string(sym->print_name) % ENV_SIZE;
 }
 
 
 // lookup
-// Return the binding for the given symbol and hash value, or NULL if the
-// binding does not exist.
+// Return the binding for the given symbol and index, or NULL if the binding
+// does not exist.
 //
 // Pre:
-// - b_symbol_pred(sym)
-// - hashval == hash(sym)
-struct binding * lookup(LispObject * sym, unsigned hashval) {
-    for (struct binding * b = global_env[hashval]; b != NULL; b = b->next)
+// - index == get_index(sym)
+struct binding * lookup(LispObject * sym, unsigned index) {
+    ASSERT(b_symbol_pred(sym));
+    for (struct binding * b = global_env[index]; b != NULL; b = b->next)
 	if (b_equal_pred(sym, b->name))
 	    return b;
     return NULL;
