@@ -32,7 +32,7 @@ void bad_stack() {
 // Pre:
 // - input points to the input string.
 void process_input() {
-    // Stores the return values of parse and b_eval.
+    // Stores the return values of parse and eval.
     LispObject * obj;
 
     input_index = 0;
@@ -55,13 +55,13 @@ void process_input() {
 	}
 
 	if (obj != NULL) {
-	    // Meet b_eval's pre by protecting its first arg from GC.
+	    // Meet eval's pre by protecting its first arg from GC.
 	    push(obj);
 
 	    // LISP_EMPTY is part of the initial set of objects protected
-	    // from GC, so it meets b_eval's pre that its second arg is
+	    // from GC, so it meets eval's pre that its second arg is
 	    // protected from GC.
-	    obj = b_eval(obj, LISP_EMPTY);
+	    obj = eval(obj, LISP_EMPTY);
 
 	    pop();
 

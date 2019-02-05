@@ -55,9 +55,6 @@ LispObject * LISP_COND;
 LispObject * LISP_DEFINE;
 LispObject * LISP_LAMBDA;
 
-// Builtin eval function.
-LispObject * LISP_BUILTIN_EVAL;
-
 // Symbols bound to builtin type predicate functions used by other builtin
 // functions to type-check arguments.
 LispObject * LISP_PAIR_PRED_SYM;

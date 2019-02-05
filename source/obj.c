@@ -24,8 +24,6 @@ LispObject * get_empty_list();
 
 LispObject * get_sym(char * str);
 
-LispObject * get_builtin_eval(LispObject * builtin_name);
-
 LispObject * get_builtin_0(LispObject * builtin_name,
 			   LispObject * (* b_func_0)());
 
@@ -71,8 +69,8 @@ void make_initial_objs() {
 
     char eval_str[] = "eval";
     LispObject * eval_name = get_sym(eval_str);
-    LISP_BUILTIN_EVAL = get_builtin_eval(eval_name);
-    bind(eval_name, LISP_BUILTIN_EVAL, true);
+    LispObject * eval_def = get_builtin_1(eval_name, &b_eval);
+    bind(eval_name, eval_def, true);
 
     char cons_str[] = "cons";
     LispObject * cons_name = get_sym(cons_str);
@@ -225,7 +223,7 @@ LispObject * get_sym_by_substr(char * str, long begin, long end) {
 // - args, body, and env_list are protected from garbage collection.
 // - args is the empty list or a list of symbols.
 // - env_list is the current list of local environments, of the same form as
-//   described by b_eval's pre.
+//   described by eval's pre.
 LispObject * get_lambda(LispObject * args, LispObject * body, LispObject * env_list) {
     LispObject * obj = get_obj(TYPE_LAMBDA);
     obj->args = args;
@@ -305,16 +303,6 @@ LispObject * get_sym(char * str) {
 	obj->print_name[i] = str[i];
     obj->print_name[len] = '\0';
     
-    return obj;
-}
-
-
-// get_builtin_eval
-// Construct the builtin eval function.
-LispObject * get_builtin_eval(LispObject * builtin_name) {
-    ASSERT(b_symbol_pred(builtin_name));
-    LispObject * obj = get_obj(TYPE_UNIQUE);
-    obj->builtin_name = builtin_name;
     return obj;
 }
 
@@ -494,8 +482,7 @@ bool is_builtin(LispObject * obj) {
 	|| obj->type == TYPE_BUILTIN_1
 	|| obj->type == TYPE_BUILTIN_2
 	|| obj->type == TYPE_BOOL_BUILTIN_1
-	|| obj->type == TYPE_BOOL_BUILTIN_2
-	|| obj == LISP_BUILTIN_EVAL;
+	|| obj->type == TYPE_BOOL_BUILTIN_2;
 }
 
 
