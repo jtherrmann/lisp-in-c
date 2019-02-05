@@ -52,6 +52,7 @@ void mark() {
     // they may be redefined, in which case a new identical symbol object is
     // created and used in the binding, and these ones can be GC'd.
     mark_obj(LISP_GC_OUTPUT);
+    mark_obj(LISP_STACK_OUTPUT);
     mark_obj(LISP_T);
     mark_obj(LISP_PAIR_PRED_SYM);
     mark_obj(LISP_LIST_PRED_SYM);

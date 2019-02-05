@@ -6,7 +6,6 @@
 #include <editline/readline.h>
 #include <editline/history.h>
 
-#include "commands.h"
 #include "env.h"
 #include "eval.h"
 #include "gc.h"
@@ -97,8 +96,6 @@ int main() {
     // Initialize the stack pointer.
     sp = 0;
 
-    stack_output = false;
-
     weakrefs_head = NULL;
     weakrefs_count = 0;
 
@@ -112,16 +109,8 @@ int main() {
     while (true) {
 	input = readline("> ");
 	add_history(input);
-
-	input_index = 0;
-	skipspace();
-	if (input[input_index] == ':')
-	    exec_command(input[input_index + 1]);
-	else
-	    process_input();
-
+	process_input();
 	free(input);
     }
-
-    return 0;
+    FOUND_BUG;
 }

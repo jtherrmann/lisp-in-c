@@ -182,6 +182,10 @@ void make_initial_objs() {
     char gc_output_str[] = "gc-output";
     LISP_GC_OUTPUT = get_sym(gc_output_str);
     bind(LISP_GC_OUTPUT, LISP_EMPTY, false);
+
+    char stack_output_str[] = "stack-output";
+    LISP_STACK_OUTPUT = get_sym(stack_output_str);
+    bind(LISP_STACK_OUTPUT, LISP_EMPTY, false);
 }
 
 

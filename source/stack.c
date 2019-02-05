@@ -4,9 +4,23 @@
 
 #include <stdio.h>
 
+#include "env.h"
+#include "error.h"
 #include "obj.h"
 #include "print.h"
 #include "stack.h"
+
+
+// ============================================================================
+// Private functions
+// ============================================================================
+
+bool stack_output() {
+    LispObject * def = get_def(LISP_STACK_OUTPUT);
+    if (def == NULL)
+	FOUND_BUG;
+    return to_bool(def);
+}
 
 
 // ============================================================================
@@ -24,7 +38,7 @@ void push(LispObject * obj) {
     ++sp;
     stack[sp] = obj;
 
-    if (stack_output) {
+    if (stack_output()) {
 	printf("push  ");
 	print_stack();
 	printf("\n");
@@ -42,7 +56,7 @@ void pop() {
 
     --sp;
 
-    if (stack_output) {
+    if (stack_output()) {
 	printf("pop   ");
 	print_stack();
 	printf("\n");

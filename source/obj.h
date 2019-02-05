@@ -65,6 +65,7 @@ LispObject * LISP_LIST_PRED_SYM;
 LispObject * LISP_INT_PRED_SYM;
 
 LispObject * LISP_GC_OUTPUT;
+LispObject * LISP_STACK_OUTPUT;
 
 
 // ============================================================================
