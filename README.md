@@ -2,9 +2,8 @@ TODO: Update README to reflect changes.
 
 # Lisp in C
 
-This is my first attempt at any sort of parser or interpreter. The language is
-similar to a small subset of Scheme, though I made no attempt to conform to
-R5RS or any other standard.
+This project began as my first attempt to write an interpreter. The language is
+inspired by various dialects of Lisp, particularly Scheme.
 
 ## Contents
 
