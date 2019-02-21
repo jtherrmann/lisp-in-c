@@ -20,6 +20,7 @@ inspired by various dialects of Lisp, particularly Scheme.
   - [quote](#quote)
 - [Builtin functions](#builtin-functions)
 - [Pre-defined Lisp functions](#pre-defined-lisp-functions)
+- [Special variables](#special-variables)
 - [Garbage collection](#garbage-collection)
 - [TODO](#todo)
 
@@ -190,11 +191,23 @@ Evaluates to *object*.
 - `<` returns whether the first number is less than the second.
 - `int?`, `symbol?`, `pair?`, `list?`, `null?`, and `function?` are type
   predicates.
+- `print-weakrefs` prints the list of weak references.
+- `print-env` prints the contents of the hash table that represents the global
+  environment; if given a parameter other than `f`, it also prints the index of
+  each bucket.
 
 ## Pre-defined Lisp functions
 
 - `and`, `or`, and `not` perform boolean logic.
 - `<=`, `>`, `>=`, and `=` compare numbers.
+
+## Special variables
+
+- If `stack-output` is set to a value other than `f`, the interpreter displays
+  debugging output when objects are pushed to or popped from the garbage
+  collection stack.
+- If `gc-output` is set to a value other than `f`, the interpreter displays
+  debugging output when the garbage collector runs.
 
 ## Garbage collection
 
