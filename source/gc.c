@@ -41,6 +41,8 @@ bool gc_output();
 // Mark the initial set of objects and objects reachable from the global
 // environment or the stack.
 void mark() {
+    mark_obj(LISP_EMPTY);
+
     mark_obj(LISP_QUOTE);
     mark_obj(LISP_COND);
     mark_obj(LISP_DEFINE);
@@ -63,10 +65,6 @@ void mark() {
     mark_obj(LISP_PAIR_PRED_SYM);
     mark_obj(LISP_LIST_PRED_SYM);
     mark_obj(LISP_INT_PRED_SYM);
-
-    // TODO: once LISP_EMPTY is converted to the symbol nil, we won't have to
-    // mark it because it will be bound in the global environment.
-    mark_obj(LISP_EMPTY);
 
     struct binding * b;
     for (long i = 0; i < ENV_SIZE; ++i) {
