@@ -46,8 +46,9 @@ typedef enum {
 // The empty list object.
 LispObject * LISP_EMPTY;
 
-// Standard truth symbol.
+// Boolean symbols.
 LispObject * LISP_T;
+LispObject * LISP_F;
 
 // Symbols representing special forms.
 LispObject * LISP_QUOTE;

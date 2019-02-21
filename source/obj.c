@@ -56,6 +56,9 @@ void make_initial_objs() {
     LISP_T = get_sym("t");
     bind(LISP_T, LISP_T, true);
 
+    LISP_F = get_sym("f");
+    bind(LISP_F, LISP_F, true);
+
     LISP_QUOTE = get_sym("quote");
     LISP_COND = get_sym("cond");
     LISP_DEFINE = get_sym("define");
@@ -95,10 +98,10 @@ void make_initial_objs() {
     make_builtin_1("print-env", &b_print_env);
 
     LISP_GC_OUTPUT = get_sym("gc-output");
-    bind(LISP_GC_OUTPUT, LISP_EMPTY, false);
+    bind(LISP_GC_OUTPUT, LISP_F, false);
 
     LISP_STACK_OUTPUT = get_sym("stack-output");
-    bind(LISP_STACK_OUTPUT, LISP_EMPTY, false);
+    bind(LISP_STACK_OUTPUT, LISP_F, false);
 }
 
 
@@ -398,5 +401,5 @@ bool get_config_bool(LispObject * obj) {
 
 
 bool to_bool(LispObject * obj) {
-    return (b_null_pred(obj) ? false : true);
+    return (obj == LISP_F ? false : true);
 }

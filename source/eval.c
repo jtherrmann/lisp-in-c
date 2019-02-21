@@ -154,7 +154,7 @@ LispObject * eval(LispObject * expr, LispObject * env_list) {
 	    if (bool_val == NULL)
 		return NULL;
 
-	    if (bool_val != LISP_EMPTY)
+	    if (bool_val != LISP_F)
 		// clause being protected from GC meets eval's pre that expr
 		// is protected from GC because car(cdr(clause)) is reachable
 		// from clause; and eval's pre that env_list is protected
@@ -312,7 +312,7 @@ LispObject * eval(LispObject * expr, LispObject * env_list) {
 	    result = func->b_func_1(arg1);
 	else {
 	    ASSERT(func->type == TYPE_BOOL_BUILTIN_1);
-	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_EMPTY);
+	    result = (func->b_bool_func_1(arg1) ? LISP_T : LISP_F);
 	}
     }
     else if (func->type == TYPE_BUILTIN_2
@@ -351,7 +351,7 @@ LispObject * eval(LispObject * expr, LispObject * env_list) {
 	    result = func->b_func_2(arg1, arg2);
 	else {
 	    ASSERT(func->type == TYPE_BOOL_BUILTIN_2);
-	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_EMPTY);
+	    result = (func->b_bool_func_2(arg1, arg2) ? LISP_T : LISP_F);
 	}
     }
     else

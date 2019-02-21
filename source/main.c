@@ -79,13 +79,13 @@ void process_input() {
 
 // TODO: eval from a source file
 void eval_lisp_code() {
-    input = "(define not (lambda (x) (cond ((null? x) t) (t ()))))";
+    input = "(define not (lambda (x) (cond (x f) (t t))))";
     process_input();
 
-    input = "(define and (lambda (x y) (cond ((null? x) x) (t y))))";
+    input = "(define and (lambda (x y) (cond ((not x) x) (t y))))";
     process_input();
 
-    input = "(define or (lambda (x y) (cond ((null? x) y) (t x))))";
+    input = "(define or (lambda (x y) (cond ((not x) y) (t x))))";
     process_input();
 
     input = "(define >= (lambda (x y) (not (< x y))))";

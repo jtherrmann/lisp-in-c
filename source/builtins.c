@@ -141,5 +141,5 @@ LispObject * b_lt(LispObject * obj1, LispObject * obj2) {
     if (!typecheck(obj1, LISP_INT_PRED_SYM)
 	|| !typecheck(obj2, LISP_INT_PRED_SYM))
 	return NULL;
-    return (obj1->value < obj2->value ? LISP_T : LISP_EMPTY);
+    return (obj1->value < obj2->value ? LISP_T : LISP_F);
 }
