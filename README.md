@@ -11,7 +11,6 @@ inspired by various dialects of Lisp, particularly Scheme.
 - [Objects](#objects)
   - [Ints](#ints)
   - [Symbols](#symbols)
-  - [Bools](#bools)
   - [Pairs and lists](#pairs-and-lists)
   - [Functions](#functions)
 - [Special forms](#special-forms)
@@ -64,16 +63,9 @@ A symbol evaluates to the object to which it is bound.
     > (quote x)
     x
 
-### Bools
-
-A bool is either true, `#t`, or false, `#f`, and evaluates to itself.
-
-    > #t
-    #t
-    > #f
-    #f
-    > (null? ())
-    #t
+`f` is bound to itself and represents false, while any other value represents
+true. `t` is bound to itself and is used to represent true where no other value
+is appropriate.
 
 ### Pairs and lists
 
@@ -95,9 +87,9 @@ A list is the empty list, `()`, or any pair whose cdr is a list:
     > (cdr (cdr (cdr l)))
     ()
     > (pair? l)
-    #t
+    t
     > (list? l)
-    #t
+    t
 
 The empty list evaluates to itself, while a non-empty list evaluates as a
 function application:
@@ -145,11 +137,11 @@ Each *clause* has the form *predicate expression*.
 Evaluates to the result of evaluating the first *expression* whose *predicate*
 evaluates to true.
 
-    > (cond (#t 1) (#t 2) (#f 3))
+    > (cond (t 1) (t 2) (f 3))
     1
     > (cond ((int? ()) ()) ((int? 5) 5))
     5
-    > (cond ((null? 1) 0) ((null? 2) 1) (#t 2))
+    > (cond ((null? 1) 0) ((null? 2) 1) (t 2))
     2
 
 ### define
@@ -259,53 +251,53 @@ Each takes two arguments.
 
 `and`, `or`, `not`
 
-    > (and #t #f)
-    #f
-    > (or #t #f)
-    #t
-    > (not #t)
-    #f
+    > (and t f)
+    f
+    > (or t f)
+    t
+    > (not t)
+    f
 
 ### Comparison functions
 
 `equal?`, `<`, `<=`, `>`, `>=`
 
     > (equal? 1 2)
-    #f
+    f
     > (equal? (quote (1 2 3)) (quote (1 2 3)))
-    #t
+    t
     > (< 1 2)
-    #t
+    t
     > (< 5 1)
-    #f
+    f
     > (>= 3 3)
-    #t
+    t
 
 ### Type predicates
 
-`int?`, `symbol?`, `bool?`, `pair?`, `list?`, `null?`, `function?`
+`int?`, `symbol?`, `pair?`, `list?`, `null?`, `function?`
 
 Each takes an argument *object* and returns true if *object* is of the
 corresponding type and false otherwise.
 
     > (int? 5)
-    #t
+    t
     > (symbol? (quote foo))
-    #t
+    t
     > (pair? (cons 1 2))
-    #t
+    t
     > (list? (cons 1 2))
-    #f
+    f
     > (pair? (cons 1 ()))
-    #t
+    t
     > (list? (cons 1 ()))
-    #t
+    t
     > (pair? ())
-    #f
+    f
     > (list? ())
-    #t
+    t
     > (null? ())
-    #t
+    t
 
 ## Garbage collection
 
