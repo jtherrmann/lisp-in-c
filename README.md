@@ -58,6 +58,7 @@ An int is a signed integer and evaluates to itself.
 A symbol evaluates to the object to which it is bound.
 
     > (define x 3)
+    3
     > x
     3
     > (quote x)
@@ -79,7 +80,6 @@ A bool is either true, `#t`, or false, `#f`, and evaluates to itself.
 A pair is an object with two data members, car and cdr.
 
     > (define p (cons 1 2))
-    > p
     (1 . 2)
     > (car p)
     1
@@ -89,7 +89,6 @@ A pair is an object with two data members, car and cdr.
 A list is the empty list, `()`, or any pair whose cdr is a list:
 
     > (define l (cons 1 (cons 2 (cons 3 ()))))
-    > l
     (1 2 3)
     > (cdr l)
     (2 3)
@@ -108,6 +107,7 @@ function application:
     > (+ 1 2)
     3
     > (define sum3 (lambda (x y z) (+ x (+ y z))))
+    #<function>
     > (sum3 1 2 3)
     6
 
@@ -128,7 +128,9 @@ may be built-in or created with `lambda` and evaluates to itself.
 Functions created with `lambda` are lexically scoped:
 
     > (define addx (lambda (x) (lambda (n) (+ n x))))
+    #<function>
     > (define add2 (addx 2))
+    #<function>
     > (add2 3)
     5
 
@@ -154,10 +156,13 @@ evaluates to true.
 
 special form: **define** *name* *definition*
 
-Binds the symbol *name* to the result of evaluating *definition*.
+Binds the symbol *name* to the result of evaluating *definition* and evaluates
+to the bound value.
 
     > (define x 1)
+    1
     > (define y 2)
+    2
     > (cons x y)
     (1 . 2)
 
@@ -170,6 +175,7 @@ body is given by *body*, where *args* is a list of symbols and *body* is a
 single expression.
 
     > (define add (lambda (x y) (+ x y)))
+    #<function>
     > (add 1 2)
     3
 
@@ -197,6 +203,7 @@ Evaluates to *object*.
     > (eval (quote (+ 1 2)))
     3
     > (define x 1)
+    1
     > (quote x)
     x
     > (eval (quote x))
