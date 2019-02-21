@@ -8,7 +8,6 @@ inspired by various dialects of Lisp, particularly Scheme.
 ## Contents
 
 - [Getting started](#getting-started)
-- [Interpreter commands](#interpreter-commands)
 - [Objects](#objects)
   - [Ints](#ints)
   - [Symbols](#symbols)
@@ -40,15 +39,6 @@ Known to work on Debian GNU/Linux 9.5 (stretch).
 
         gcc -ledit *.c -o lisp
         ./lisp
-
-## Interpreter commands
-
-- `:w` prints the objects in the weak references list.
-- `:e` prints the global environment.
-- `:E` prints the global environment, including the indices of the buckets in
-  the hash table.
-- `:g` toggles debug output for the garbage collector.
-- `:s` toggles debug output for the garbage collection stack.
 
 ## Objects
 
