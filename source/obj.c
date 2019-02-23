@@ -45,11 +45,6 @@ void make_bool_builtin_2(char * name_str,
 // LispObject
 // ============================================================================
 
-// make_initial_objs
-// Construct an initial set of Lisp objects.
-//
-// This function must be called exactly once. Garbage collection must not be
-// triggered for the first time until after this function is called.
 void make_initial_objs() {
     LISP_EMPTY = get_empty_list();
 
