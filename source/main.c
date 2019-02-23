@@ -19,7 +19,7 @@
 // bad_stack
 // Handle an invalid stack state.
 void bad_stack() {
-    printf("\nAbort! Stack pointer is %ld but should be 0.\nStack contents: ", sp);
+    printf("\nAbort! Stack pointer is %ld but should be 0.\nStack contents: ", stack_ptr);
     print_stack();
     printf("\n");
     FOUND_BUG;
@@ -38,7 +38,7 @@ void parse_eval_print(char * input_str) {
     if (input[input_index] != INPUT_END && input[input_index] != ';') {
 	obj = parse();
 
-	if (sp != 0)
+	if (stack_ptr != 0)
 	    bad_stack();
 
 	if (obj != NULL
@@ -62,7 +62,7 @@ void parse_eval_print(char * input_str) {
 
 	    pop();
 
-	    if (sp != 0)
+	    if (stack_ptr != 0)
 		bad_stack();
 
 	    if (obj != NULL) {
@@ -87,8 +87,7 @@ void eval_lisp_code() {
 
 
 void init_setup() {
-    // Initialize the stack pointer.
-    sp = 0;
+    stack_ptr = 0;
 
     weakrefs_head = NULL;
     weakrefs_count = 0;

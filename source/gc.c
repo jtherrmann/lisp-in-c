@@ -74,7 +74,7 @@ void mark() {
 	}
     }
 
-    for (long i = sp; i > 0; --i)
+    for (long i = stack_ptr; i > 0; --i)
 	mark_obj(stack[i]);
 }
 

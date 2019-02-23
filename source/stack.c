@@ -27,13 +27,13 @@ bool stack_output() {
 // push
 // Push an object to the stack.
 void push(LispObject * obj) {
-    if (sp >= STACK_SIZE - 1) {
+    if (stack_ptr >= STACK_SIZE - 1) {
 	printf("\nStack overflow.\n");
 	exit(1);
     }
 
-    ++sp;
-    stack[sp] = obj;
+    ++stack_ptr;
+    stack[stack_ptr] = obj;
 
     if (stack_output()) {
 	printf("push  ");
@@ -46,12 +46,12 @@ void push(LispObject * obj) {
 // pop
 // Decrement the stack pointer.
 void pop() {
-    if (sp <= 0) {
+    if (stack_ptr <= 0) {
 	printf("\nStack underflow.\n");
 	exit(1);
     }
 
-    --sp;
+    --stack_ptr;
 
     if (stack_output()) {
 	printf("pop   ");
@@ -64,7 +64,7 @@ void pop() {
 // print_stack
 // Print the stack.
 void print_stack() {
-    for (long i = 1; i <= sp; ++i) {
+    for (long i = 1; i <= stack_ptr; ++i) {
 	print_obj(stack[i]);
 	printf("  ");
     }
