@@ -102,9 +102,7 @@ void eval_lisp_code() {
 }
 
 
-// main
-// Set up the interpreter and run the REPL.
-int main() {
+void init_setup() {
     // Initialize the stack pointer.
     sp = 0;
 
@@ -113,11 +111,15 @@ int main() {
 
     make_initial_objs();
     eval_lisp_code();
+}
+
+
+int main() {
+    init_setup();
 
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
-    // REPL.
     while (true) {
 	input = readline("> ");
 	add_history(input);
