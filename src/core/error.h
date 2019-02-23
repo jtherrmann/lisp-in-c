@@ -2,8 +2,8 @@
 // Header for error handling utilities.
 
 
-#ifndef MISC_H
-#define MISC_H
+#ifndef ERROR_H
+#define ERROR_H
 
 
 #include <stdbool.h>
