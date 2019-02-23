@@ -1,5 +1,3 @@
-TODO: Update README to reflect changes.
-
 # Lisp in C
 
 This project began as my first attempt to write an interpreter. The language is
