@@ -130,6 +130,8 @@ void make_initial_objs();
 
 LispObject * get_int(long value);
 
+LispObject * get_sym(char * str);
+
 LispObject * get_sym_by_substr(char * str, long begin, long end);
 
 LispObject * get_lambda(LispObject * args, LispObject * body, LispObject * env_list);

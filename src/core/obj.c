@@ -113,6 +113,24 @@ LispObject * get_int(long value) {
 }
 
 
+// get_sym
+// Construct a Lisp symbol from str.
+LispObject * get_sym(char * str) {
+    long len = 0;
+    while (str[len] != '\0')
+	++len;
+
+    LispObject * obj = get_obj(TYPE_SYM);
+    obj->print_name = malloc((len + 1) * sizeof(char));
+
+    for (long i = 0; i < len; ++i)
+	obj->print_name[i] = str[i];
+    obj->print_name[len] = '\0';
+    
+    return obj;
+}
+
+
 // get_sym_by_substr
 // Construct a Lisp symbol from a substr of str.
 LispObject * get_sym_by_substr(char * str, long begin, long end) {
@@ -198,24 +216,6 @@ LispObject * get_obj(LispType type) {
 LispObject * get_empty_list() {
     LispObject * obj = get_obj(TYPE_UNIQUE);
     obj->is_list = true;
-    return obj;
-}
-
-
-// get_sym
-// Construct a Lisp symbol from str.
-LispObject * get_sym(char * str) {
-    long len = 0;
-    while (str[len] != '\0')
-	++len;
-
-    LispObject * obj = get_obj(TYPE_SYM);
-    obj->print_name = malloc((len + 1) * sizeof(char));
-
-    for (long i = 0; i < len; ++i)
-	obj->print_name[i] = str[i];
-    obj->print_name[len] = '\0';
-    
     return obj;
 }
 
