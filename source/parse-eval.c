@@ -24,6 +24,8 @@ void bad_stack() {
 // Public functions
 // ============================================================================
 
+// TODO: this function may not be needed after sufficient refactoring to parse,
+// eval, and related functions
 LispObject * parse_eval(char * input_str) {
     input = input_str;
 
