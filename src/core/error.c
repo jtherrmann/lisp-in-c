@@ -31,12 +31,3 @@ bool typecheck(LispObject * obj, LispObject * pred_sym) {
     }
     return true;
 }
-
-
-// found_bug
-// Handle a bug.
-void found_bug(const char * file, long line, const char * func) {
-    printf("\n%s, line %ld, in %s:\nIt looks like you have found a bug!\n\n",
-	   file, line, func);
-    exit(1);
-}

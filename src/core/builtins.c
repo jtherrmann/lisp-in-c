@@ -131,7 +131,6 @@ bool b_equal_pred(LispObject * obj1, LispObject * obj2) {
 	return false;
 
     FOUND_BUG;
-    exit(1);  // Avoid gcc warning about missing return.
 }
 
 
