@@ -7,6 +7,10 @@
 #include "setup.h"
 
 
+// TODO: assure GC doesn't run at all during tests, then run them all again w/
+// GC running every time
+
+
 void test_parse_eval_positive_ints() {
     ASSERT(b_equal_pred(parse_eval("0"), get_int(0)));
     ASSERT(b_equal_pred(parse_eval("1"), get_int(1)));
