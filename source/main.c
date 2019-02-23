@@ -26,9 +26,7 @@ void bad_stack() {
 }
 
 
-// process_input
-// Parse and evaluate an input expression and print the result.
-void process_input(char * input_str) {
+void parse_eval_print(char * input_str) {
     input = input_str;
 
     // Stores the return values of parse and eval.
@@ -78,13 +76,13 @@ void process_input(char * input_str) {
 
 // TODO: eval from a source file
 void eval_lisp_code() {
-    process_input("(define not (lambda (x) (cond (x f) (t t))))");
-    process_input("(define and (lambda (x y) (cond ((not x) x) (t y))))");
-    process_input("(define or (lambda (x y) (cond ((not x) y) (t x))))");
-    process_input("(define >= (lambda (x y) (not (< x y))))");
-    process_input("(define <= (lambda (x y) (not (< y x))))");
-    process_input("(define > (lambda (x y) (< y x)))");
-    process_input("(define = (lambda (x y) (not (or (< x y) (< y x)))))");
+    parse_eval_print("(define not (lambda (x) (cond (x f) (t t))))");
+    parse_eval_print("(define and (lambda (x y) (cond ((not x) x) (t y))))");
+    parse_eval_print("(define or (lambda (x y) (cond ((not x) y) (t x))))");
+    parse_eval_print("(define >= (lambda (x y) (not (< x y))))");
+    parse_eval_print("(define <= (lambda (x y) (not (< y x))))");
+    parse_eval_print("(define > (lambda (x y) (< y x)))");
+    parse_eval_print("(define = (lambda (x y) (not (or (< x y) (< y x)))))");
 }
 
 
@@ -109,7 +107,7 @@ int main() {
     while (true) {
 	input = readline("> ");
 	add_history(input);
-	process_input(input);
+	parse_eval_print(input);
 	free(input);
     }
     FOUND_BUG;
