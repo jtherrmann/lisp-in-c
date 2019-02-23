@@ -26,9 +26,16 @@ void test_parse_eval_negative_ints() {
 }
 
 
+void test_parse_eval_quoted_symbols() {
+    ASSERT(b_equal_pred(parse_eval("(quote x)"), get_sym("x")));
+    ASSERT(b_equal_pred(parse_eval("(quote foo)"), get_sym("foo")));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
     test_parse_eval_negative_ints();
+    test_parse_eval_quoted_symbols();
     printf("All tests passed.");
 }
