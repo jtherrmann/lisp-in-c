@@ -27,9 +27,9 @@ inspired by various dialects of Lisp, particularly Scheme.
 Known to work on Debian GNU/Linux 9.5 (stretch).
 
 1. Install `libedit-dev`.
-2. Clone this repo, `cd` into `source/`, and run:
+2. Clone this repo and run:
 
-        gcc -ledit *.c -o lisp
+        ./build
         ./lisp
 
 ## Objects
