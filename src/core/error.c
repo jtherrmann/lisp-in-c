@@ -10,8 +10,8 @@
 #include "print.h"
 
 
-// typecheck
-// Type-check obj using the builtin type predicate function bound to pred_sym.
+// TODO: this function doesn't belong here because it's part of the Lisp error
+// handling system
 bool typecheck(LispObject * obj, LispObject * pred_sym) {
     ASSERT(b_symbol_pred(pred_sym));
 
