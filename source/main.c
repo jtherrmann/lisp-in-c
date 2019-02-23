@@ -25,11 +25,11 @@ void bad_stack() {
 }
 
 
-void parse_eval_print(char * input_str) {
+LispObject * parse_eval(char * input_str) {
     input = input_str;
 
     // Stores the return values of parse and eval.
-    LispObject * obj;
+    LispObject * obj = NULL;
 
     input_index = 0;
     skipspace();  // Meet parse's pre.
@@ -63,25 +63,21 @@ void parse_eval_print(char * input_str) {
 
 	    if (stack_ptr != 0)
 		bad_stack();
-
-	    if (obj != NULL) {
-		print_obj(obj);
-		printf("\n");
-	    }
 	}
     }
+    return obj;
 }
 
 
 // TODO: eval from a source file
 void eval_lisp_code() {
-    parse_eval_print("(define not (lambda (x) (cond (x f) (t t))))");
-    parse_eval_print("(define and (lambda (x y) (cond ((not x) x) (t y))))");
-    parse_eval_print("(define or (lambda (x y) (cond ((not x) y) (t x))))");
-    parse_eval_print("(define >= (lambda (x y) (not (< x y))))");
-    parse_eval_print("(define <= (lambda (x y) (not (< y x))))");
-    parse_eval_print("(define > (lambda (x y) (< y x)))");
-    parse_eval_print("(define = (lambda (x y) (not (or (< x y) (< y x)))))");
+    parse_eval("(define not (lambda (x) (cond (x f) (t t))))");
+    parse_eval("(define and (lambda (x y) (cond ((not x) x) (t y))))");
+    parse_eval("(define or (lambda (x y) (cond ((not x) y) (t x))))");
+    parse_eval("(define >= (lambda (x y) (not (< x y))))");
+    parse_eval("(define <= (lambda (x y) (not (< y x))))");
+    parse_eval("(define > (lambda (x y) (< y x)))");
+    parse_eval("(define = (lambda (x y) (not (or (< x y) (< y x)))))");
 }
 
 
@@ -102,10 +98,15 @@ int main() {
     printf("Welcome to Lisp!\n");
     printf("Exit with Ctrl-c\n\n");
 
+    LispObject * result;
     while (true) {
 	input = readline("> ");
 	add_history(input);
-	parse_eval_print(input);
+	result = parse_eval(input);
+	if (result != NULL) {
+	    print_obj(result);
+	    printf("\n");
+	}
 	free(input);
     }
     FOUND_BUG;
