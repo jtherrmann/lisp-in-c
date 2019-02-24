@@ -57,6 +57,10 @@ void test_parse_eval_empty_list() {
 }
 
 
+void test_parse_eval_non_function_list() {
+    ASSERT(parse_eval("(not-a-function 1 2)") == NULL);
+}
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
@@ -66,5 +70,6 @@ int main() {
     test_parse_eval_defined_symbols();
     test_parse_eval_bool_symbols();
     test_parse_eval_empty_list();
+    test_parse_eval_non_function_list();
     printf("\nAll tests PASSED.");
 }
