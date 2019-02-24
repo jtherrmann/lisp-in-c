@@ -45,6 +45,12 @@ void test_parse_eval_defined_symbols() {
 }
 
 
+void test_parse_eval_bool_symbols() {
+    ASSERT(b_equal_pred(parse_eval("t"), get_sym("t")));
+    ASSERT(b_equal_pred(parse_eval("f"), get_sym("f")));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
@@ -52,5 +58,6 @@ int main() {
     test_parse_eval_quoted_symbols();
     test_parse_eval_undefined_symbols();
     test_parse_eval_defined_symbols();
+    test_parse_eval_bool_symbols();
     printf("\nAll tests PASSED.");
 }
