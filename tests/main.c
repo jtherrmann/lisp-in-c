@@ -32,10 +32,16 @@ void test_parse_eval_quoted_symbols() {
 }
 
 
+void test_parse_eval_undefined_symbols() {
+    ASSERT(parse_eval("x") == NULL);
+    ASSERT(parse_eval("foo") == NULL);
+}
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
     test_parse_eval_negative_ints();
     test_parse_eval_quoted_symbols();
-    printf("All tests passed.");
+    test_parse_eval_undefined_symbols();
+    printf("\nAll tests PASSED.");
 }
