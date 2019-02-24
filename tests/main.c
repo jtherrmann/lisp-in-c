@@ -26,6 +26,7 @@ void test_parse_eval_negative_ints() {
 }
 
 
+// TODO: remove this test after adding tests for quote with each object type
 void test_parse_eval_quoted_symbols() {
     ASSERT(b_equal_pred(parse_eval("(quote x)"), get_sym("x")));
     ASSERT(b_equal_pred(parse_eval("(quote foo)"), get_sym("foo")));
