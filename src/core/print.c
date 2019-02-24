@@ -49,8 +49,9 @@ void print_obj(LispObject * obj) {
 	printf(">");
     }
 
-    else
+    else {
 	FOUND_BUG;
+    }
 }
 
 
