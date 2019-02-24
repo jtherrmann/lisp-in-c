@@ -81,6 +81,11 @@ void test_parse_eval_lambda_function() {
 }
 
 
+void test_parse_eval_builtin_function() {
+    ASSERT(b_equal_pred(parse_eval("(eval cons)"), parse_eval("cons")));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
@@ -93,5 +98,6 @@ int main() {
     test_parse_eval_non_function_list();
     test_parse_eval_function_app();
     test_parse_eval_lambda_function();
+    test_parse_eval_builtin_function();
     printf("\nAll tests PASSED.");
 }
