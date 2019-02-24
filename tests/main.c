@@ -61,6 +61,13 @@ void test_parse_eval_non_function_list() {
     ASSERT(parse_eval("(not-a-function 1 2)") == NULL);
 }
 
+
+void test_parse_eval_improper_list() {
+    // TODO: add this test when improper lists can be parsed
+    /* ASSERT(parse_eval("(+ 1 . 2)") == NULL); */
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
