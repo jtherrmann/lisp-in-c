@@ -37,11 +37,20 @@ void test_parse_eval_undefined_symbols() {
     ASSERT(parse_eval("foo") == NULL);
 }
 
+
+void test_parse_eval_defined_symbols() {
+    ASSERT(parse_eval("test-defined-symbol") == NULL);
+    parse_eval("(define test-defined-symbol 500)");
+    ASSERT(b_equal_pred(parse_eval("test-defined-symbol"), get_int(500)));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
     test_parse_eval_negative_ints();
     test_parse_eval_quoted_symbols();
     test_parse_eval_undefined_symbols();
+    test_parse_eval_defined_symbols();
     printf("\nAll tests PASSED.");
 }
