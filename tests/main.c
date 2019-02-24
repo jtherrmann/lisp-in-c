@@ -62,6 +62,12 @@ void test_parse_eval_non_function_list() {
 }
 
 
+void test_parse_eval_function_app() {
+    ASSERT(b_equal_pred(parse_eval("((lambda (x y) (+ x y)) 2 3)"),
+			get_int(5)));
+}
+
+
 void test_parse_eval_improper_list() {
     // TODO: add this test when improper lists can be parsed
     /* ASSERT(parse_eval("(+ 1 . 2)") == NULL); */
@@ -78,5 +84,6 @@ int main() {
     test_parse_eval_bool_symbols();
     test_parse_eval_empty_list();
     test_parse_eval_non_function_list();
+    test_parse_eval_function_app();
     printf("\nAll tests PASSED.");
 }
