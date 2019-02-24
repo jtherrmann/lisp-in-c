@@ -52,6 +52,11 @@ void test_parse_eval_bool_symbols() {
 }
 
 
+void test_parse_eval_empty_list() {
+    ASSERT(b_equal_pred(parse_eval("()"), LISP_EMPTY));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
@@ -60,5 +65,6 @@ int main() {
     test_parse_eval_undefined_symbols();
     test_parse_eval_defined_symbols();
     test_parse_eval_bool_symbols();
+    test_parse_eval_empty_list();
     printf("\nAll tests PASSED.");
 }
