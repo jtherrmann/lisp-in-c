@@ -86,6 +86,10 @@ void test_parse_eval_builtin_function() {
 }
 
 
+// TODO: add test_parse_eval functions for: closures, special forms, builtin
+// functions, and pre-defined Lisp functions
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
