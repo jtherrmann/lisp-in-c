@@ -74,6 +74,13 @@ void test_parse_eval_improper_list() {
 }
 
 
+void test_parse_eval_lambda_function() {
+    parse_eval("(define test-eval-lambda (lambda (x) x))");
+    ASSERT(b_equal_pred(parse_eval("(eval test-eval-lambda)"),
+			parse_eval("test-eval-lambda")));
+}
+
+
 int main() {
     init_setup();
     test_parse_eval_positive_ints();
@@ -85,5 +92,6 @@ int main() {
     test_parse_eval_empty_list();
     test_parse_eval_non_function_list();
     test_parse_eval_function_app();
+    test_parse_eval_lambda_function();
     printf("\nAll tests PASSED.");
 }
