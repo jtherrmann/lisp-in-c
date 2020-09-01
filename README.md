@@ -1,7 +1,6 @@
 # Lisp in C
 
-This project began as my first attempt to write an interpreter. The language is
-inspired by various dialects of Lisp, particularly Scheme.
+This was my first attempt to write any sort of interpreter. I was very new to Lisp and I wanted to figure out most of the implementation on my own, so there are some rough parts. For example, function application is built directly into `eval` because I did not know about `apply`. At some point I may write another Lisp interpreter in order to improve my understanding of the fundamentals.
 
 ## Contents
 
